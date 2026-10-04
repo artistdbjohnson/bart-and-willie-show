@@ -1,7 +1,4 @@
-"use client";
-
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { ChalkPlay } from "@/components/chalk-play";
 import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
@@ -12,32 +9,18 @@ import { CHANNEL_URL } from "@/lib/youtube";
 
 type HeroVideo = Pick<ChannelVideo, "id" | "title" | "url" | "thumbnail">;
 
-declare global {
-  interface Window {
-    YT?: {
-      Player: new (
-        element: string,
-        options: {
-          videoId: string;
-          host?: string;
-          playerVars?: Record<string, number | string>;
-          events?: { onReady?: (event: { target: YtPlayer }) => void };
-        },
-      ) => YtPlayer;
-    };
-    onYouTubeIframeAPIReady?: () => void;
+async function titleFrame(video: HeroVideo) {
+  const max = `https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`;
+  try {
+    const response = await fetch(max, { method: "HEAD", next: { revalidate: 1800 } });
+    if (response.ok && response.headers.get("content-type")?.includes("image")) return max;
+  } catch {
+    /* the feed thumbnail is the frame YouTube already published */
   }
+  return video.thumbnail;
 }
 
-type YtPlayer = {
-  mute: () => void;
-  playVideo: () => void;
-  getCurrentTime: () => number;
-  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
-  destroy: () => void;
-};
-
-export function Hero({
+export async function Hero({
   locale,
   video,
 }: {
@@ -45,28 +28,23 @@ export function Hero({
   video: HeroVideo | null;
 }) {
   const t = copy[locale];
-  const [motionOk, setMotionOk] = useState(false);
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setMotionOk(!reduce);
-  }, []);
+  const watch = video?.url ?? CHANNEL_URL;
+  const still = video ? await titleFrame(video) : null;
 
   return (
     <section className="relative min-h-[calc(100svh-4.5rem)] overflow-hidden">
       <div className="hero-media absolute inset-0 bg-field">
-        {video ? (
+        {still ? (
           <Image
-            src={video.thumbnail}
+            src={still}
             alt=""
             fill
             priority
             sizes="100vw"
-            className="object-cover opacity-70"
+            className="object-cover opacity-80"
           />
         ) : null}
-        {video && motionOk ? <HeroPlayer id={video.id} /> : null}
-        <div className="absolute inset-0 bg-gradient-to-t from-field via-field/80 to-field/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-field via-field/75 to-field/35" />
       </div>
       <p
         aria-hidden
@@ -85,18 +63,17 @@ export function Hero({
             {t.hero.lede}
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild>
+              <a href={watch}>
+                <PlayMark />
+                {video ? t.hero.watch : t.hero.channel}
+              </a>
+            </Button>
             {video ? (
-              <Button asChild>
-                <a href={video.url}>{t.hero.watch}</a>
-              </Button>
-            ) : (
-              <Button asChild>
+              <Button asChild variant="outline">
                 <a href={CHANNEL_URL}>{t.hero.channel}</a>
               </Button>
-            )}
-            <Button asChild variant="outline">
-              <a href={CHANNEL_URL}>{t.hero.channel}</a>
-            </Button>
+            ) : null}
           </div>
           <p className="mt-4 max-w-md font-serif text-sm text-chalk/80">
             {video ? t.hero.opening : t.hero.unavailable}
@@ -107,64 +84,10 @@ export function Hero({
   );
 }
 
-function HeroPlayer({ id }: { id: string }) {
-  useEffect(() => {
-    let player: YtPlayer | undefined;
-    let timer = 0;
-    let cancelled = false;
-
-    const start = () => {
-      if (cancelled || !window.YT?.Player) return;
-      player = new window.YT.Player("baw-hero-player", {
-        videoId: id,
-        host: "https://www.youtube-nocookie.com",
-        playerVars: {
-          autoplay: 1,
-          mute: 1,
-          controls: 0,
-          modestbranding: 1,
-          rel: 0,
-          playsinline: 1,
-          start: 0,
-          disablekb: 1,
-          fs: 0,
-          iv_load_policy: 3,
-          cc_load_policy: 0,
-          origin: window.location.origin,
-        },
-        events: {
-          onReady: (event) => {
-            event.target.mute();
-            event.target.playVideo();
-          },
-        },
-      });
-      timer = window.setInterval(() => {
-        if (!player || typeof player.getCurrentTime !== "function") return;
-        if (player.getCurrentTime() >= 12) player.seekTo(0, true);
-      }, 500);
-    };
-
-    if (window.YT?.Player) start();
-    else {
-      window.onYouTubeIframeAPIReady = start;
-      if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
-        const tag = document.createElement("script");
-        tag.src = "https://www.youtube.com/iframe_api";
-        document.body.appendChild(tag);
-      }
-    }
-
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-      player?.destroy();
-    };
-  }, [id]);
-
+function PlayMark() {
   return (
-    <div className="hero-frame absolute inset-0">
-      <div id="baw-hero-player" />
-    </div>
+    <svg viewBox="0 0 12 12" className="size-3 fill-current" aria-hidden="true">
+      <path d="M3 1.4v9.2l7.4-4.6z" />
+    </svg>
   );
 }
