@@ -86,12 +86,12 @@ function Thumbnail({
       data-post={post.id}
       className={
         fill
-          ? "flex h-full min-h-0 w-full flex-col text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+          ? "profile-tile flex h-full min-h-0 w-full flex-col text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
           : "w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
       }
       onClick={onOpen}
     >
-      <span className={fill ? "flex min-h-0 flex-1 items-center justify-center" : "flex w-full items-center justify-center"}>
+      <span className={fill ? "profile-photo flex min-h-0 flex-1 items-center justify-center" : "flex w-full items-center justify-center"}>
         {/* Instagram CDN links expire, so the image is loaded through this site. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
