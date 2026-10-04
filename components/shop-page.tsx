@@ -158,7 +158,7 @@ function PieceCard({ label, piece }: { label: string; piece: Piece }) {
     <figure className="border border-chalk/15">
       <div className="relative flex aspect-[4/5] items-center justify-center bg-[#f7f4ea]">
         {piece === "tee" ? <Tee /> : <Hoodie />}
-        <div className="pointer-events-none absolute top-[46%] left-1/2 w-[42%] -translate-x-1/2 -translate-y-[42%]">
+        <div className="pointer-events-none absolute top-[48%] left-1/2 w-[58%] -translate-x-1/2 -translate-y-1/2">
           <Lockup size="shop" />
         </div>
         <span className="absolute inset-x-0 bottom-0 h-1 bg-signal" aria-hidden="true" />

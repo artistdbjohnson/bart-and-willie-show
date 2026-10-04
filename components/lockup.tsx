@@ -11,13 +11,13 @@ export function Lockup({
 }) {
   const type =
     size === "shop"
-      ? "text-[1.05rem] sm:text-[1.2rem]"
+      ? "text-[1.35rem] sm:text-[1.55rem]"
       : size === "footer"
         ? "text-[clamp(1.35rem,10cqi,3.15rem)]"
         : "text-[clamp(2rem,7.4vw,3.4rem)] lg:text-[4.15rem]";
   const scriptClass =
     size === "shop"
-      ? "mt-1 ml-1 font-script text-[1.35rem] leading-none text-chalk"
+      ? "mt-1 ml-1 font-script text-[1.7rem] leading-none text-chalk"
       : "mt-2 ml-2 font-script text-[clamp(1.6rem,3vw,2.4rem)] leading-none text-chalk";
   return (
     <div className={cn(size === "footer" || size === "shop" ? "@container w-full max-w-full" : "w-max max-w-full", className)}>

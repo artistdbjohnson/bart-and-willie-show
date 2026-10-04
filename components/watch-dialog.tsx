@@ -171,7 +171,6 @@ function WatchDialog({
                   setEnded(true);
                 }
               },
-              onError: () => setEnded(true),
             },
           );
         })
