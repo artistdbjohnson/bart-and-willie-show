@@ -62,13 +62,14 @@ Not shipped, and not imported: Colir, Zoxilsi exports, Aceternity, paid packs, R
 Each of these is its own component, with type, spacing, hover, focus, empty, and a small-screen layout.
 
 - Navigation. Official mark, tracked links, current page, day/night, English/Portuguese. On a small screen the menu opens in the flow under the bar. It is not a sticky trap.
-- Episode stage. Featured player held at 16:9, title beside it from the medium breakpoint up. Choosing another episode swaps the player in that same frame. Grid pictures scale on hover when the device can hover and motion is allowed.
+- Episode stage, on the episodes pages. Featured player held at 16:9, title beside it from the medium breakpoint up. Choosing another episode swaps the player in that same frame. Grid pictures scale on hover when the device can hover and motion is allowed.
+- Latest nest, on the homepage. The featured episode, each later full episode, the YouTube rail, and the Instagram rail are cards in one stack. The stack pins to one viewport. The next card slides up over the one before it and leaves a 10px edge. Each extra card adds 28vh of scroll, not another full section. `prefers-reduced-motion` drops the pin and shows a short list. The motion is the scroll itself. No bounce. The reference for the nesting was https://seanfalyon.vercel.app/ (sticky cards, the next one covering the last). Not taken: that site’s black page, gold type, logos, or chrome.
 - YouTube rail. Horizontal snap scroll of the public channel feed, shorts labeled, previous and next buttons, empty state if the feed fails.
 - Instagram rail. Same scroll behavior, different card: square frame, post or clip, caption, link. Empty state names the block honestly and links to the profile.
 - About and the Jets years. Prose, not cards. The Jets seasons are a section with their own page, not a line under a bio.
 - Owned list. Name and email, inline errors, sending state, success that says where the row actually went, export, and an empty export state.
 
-Motion is slow and ease-out. Nothing bounces. The field color itself eases over 700ms when day and night change, because `--field` is a registered color and the page reads that variable. The featured player fades in over 640ms inside the same 16:9 frame. Rails scroll smoothly. `prefers-reduced-motion` removes the chalk draw, the fade distance, the hover scale, the player fade, the color ease, and smooth scrolling. The hero has no player. The featured player does not autoplay. Language changes do not slide the page. The header is not sticky.
+Motion is slow and ease-out. Nothing bounces. The field color itself eases over 700ms when day and night change, because `--field` is a registered color and the page reads that variable. The featured player fades in over 640ms inside the same 16:9 frame. Rails scroll smoothly. The homepage nest moves only with the scroll, one card covering the last. `prefers-reduced-motion` removes the chalk draw, the fade distance, the hover scale, the player fade, the color ease, smooth scrolling, and the nest pin. The hero has no player. The featured player does not autoplay. Language changes do not slide the page. The header is not sticky.
 
 ## Color
 

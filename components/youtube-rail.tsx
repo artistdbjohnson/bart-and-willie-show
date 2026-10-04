@@ -10,18 +10,31 @@ export function YouTubeRail({
   locale,
   videos,
   feedOk,
+  nested = false,
 }: {
   locale: Locale;
   videos: ChannelVideo[];
   feedOk: boolean;
+  nested?: boolean;
 }) {
   const t = copy[locale];
-  return (
-    <section className="border-t border-chalk/15">
-      <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
+  const body = (
+    <>
+      {nested ? (
+        <div>
+          <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
+            {t.channel.kicker}
+          </p>
+          <h2 className="mt-2 font-display text-[clamp(2.4rem,7vw,4.6rem)] leading-[0.86] tracking-tight">
+            {t.channel.title}
+          </h2>
+          <p className="mt-3 max-w-xl font-serif text-base text-chalk/85">{t.channel.lede}</p>
+        </div>
+      ) : (
         <SectionHeading kicker={t.channel.kicker} title={t.channel.title} lede={t.channel.lede} />
-        <div className="mt-10">
-          {!feedOk || videos.length === 0 ? (
+      )}
+      <div className={nested ? "mt-6" : "mt-10"}>
+        {!feedOk || videos.length === 0 ? (
             <div className="border border-dashed border-chalk/35 px-6 py-10">
               <p className="max-w-xl font-serif text-lg">{t.channel.empty}</p>
               <div className="mt-6">
@@ -61,8 +74,22 @@ export function YouTubeRail({
               ))}
             </Rail>
           )}
-        </div>
       </div>
+    </>
+  );
+
+  if (nested) {
+    return (
+      <article className="flex h-full min-h-0 flex-col bg-field">
+        <div className="h-1 shrink-0 bg-signal" />
+        <div className="min-h-0 flex-1 overflow-auto px-5 py-6 sm:px-8 sm:py-8">{body}</div>
+      </article>
+    );
+  }
+
+  return (
+    <section className="border-t border-chalk/15">
+      <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">{body}</div>
     </section>
   );
 }

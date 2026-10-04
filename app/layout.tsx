@@ -68,7 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       </head>
       <body>
         <noscript>
-          <style>{`.blur-fade,.in-view{opacity:1!important;filter:none!important;transform:none!important}`}</style>
+          <style>{`.blur-fade,.in-view{opacity:1!important;filter:none!important;transform:none!important}.card-nest{height:auto!important}.card-nest-pin{position:static;height:auto;overflow:visible;display:grid;gap:1.25rem}.nest-card{position:static!important;inset:auto!important;transform:none!important}`}</style>
         </noscript>
         {children}
       </body>

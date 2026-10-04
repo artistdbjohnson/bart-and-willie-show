@@ -139,6 +139,76 @@ html.reduce-motion .in-view {
   pointer-events: none;
 }
 
+.card-nest-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.nest-card {
+  position: absolute;
+  inset: 0;
+  background: var(--field);
+  transform: translate3d(0, 100%, 0);
+}
+
+.nest-card:first-child {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-nest {
+    height: auto !important;
+  }
+
+  .card-nest-pin {
+    position: static;
+    height: auto;
+    overflow: visible;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .nest-card,
+  .nest-card:first-child {
+    position: static;
+    inset: auto;
+    transform: none !important;
+  }
+
+  .episode-face > a {
+    grid-template-columns: 7.5rem 1fr;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .face-media {
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+html.reduce-motion .card-nest {
+  height: auto !important;
+}
+
+html.reduce-motion .card-nest-pin {
+  position: static;
+  height: auto;
+  overflow: visible;
+  display: grid;
+  gap: 1.25rem;
+}
+
+html.reduce-motion .nest-card,
+html.reduce-motion .nest-card:first-child {
+  position: static;
+  inset: auto;
+  transform: none !important;
+}
+
 .hero-copy {
   transform: translateZ(0);
 }

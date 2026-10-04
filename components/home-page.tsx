@@ -1,11 +1,9 @@
-import { EpisodeStage } from "@/components/episode-stage";
 import { Hero } from "@/components/hero";
-import { InstagramRail } from "@/components/instagram-rail";
 import { JetsSection } from "@/components/jets-section";
+import { LatestNest } from "@/components/latest-nest";
 import { PageShell } from "@/components/page-shell";
 import { StatsRow } from "@/components/stats-row";
 import { SubscribeForm } from "@/components/subscribe-form";
-import { YouTubeRail } from "@/components/youtube-rail";
 import { getInstagram } from "@/lib/instagram";
 import type { Locale } from "@/lib/paths";
 import { fullEpisodes, getChannel } from "@/lib/youtube";
@@ -18,9 +16,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
     <PageShell locale={locale}>
       <Hero locale={locale} video={lead} />
       <StatsRow locale={locale} />
-      <EpisodeStage locale={locale} videos={channel.videos} feedOk={channel.ok} />
-      <YouTubeRail locale={locale} videos={channel.videos} feedOk={channel.ok} />
-      <InstagramRail locale={locale} feed={instagram} />
+      <LatestNest
+        locale={locale}
+        videos={channel.videos}
+        feedOk={channel.ok}
+        instagram={instagram}
+      />
       <JetsSection locale={locale} videos={channel.videos} />
       <SubscribeForm locale={locale} />
     </PageShell>
