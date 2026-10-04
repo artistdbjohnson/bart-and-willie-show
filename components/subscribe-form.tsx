@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import Image from "next/image";
+import { useEffect, useState, type FormEvent } from "react";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,13 +32,18 @@ function csvEscape(value: string) {
   return value;
 }
 
-export function SubscribeForm({ locale }: { locale: Locale }) {
+export function SubscribeForm({ locale, image }: { locale: Locale; image?: string | null }) {
   const t = copy[locale].list;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
   const [fieldError, setFieldError] = useState<"name" | "email" | null>(null);
+  const [operator, setOperator] = useState(false);
+
+  useEffect(() => {
+    setOperator(new URLSearchParams(window.location.search).get("operator") === "1");
+  }, []);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -61,13 +67,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
       if (!response.ok || payload.error) {
         setStatus("error");
         setFieldError(payload.error === "name" || payload.error === "email" ? payload.error : null);
-        setMessage(
-          payload.error === "name"
-            ? t.nameError
-            : payload.error === "email"
-              ? t.emailError
-              : t.genericError,
-        );
+        setMessage(t.failed);
         return;
       }
       if (payload.entry && payload.persisted === false) {
@@ -75,13 +75,12 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
         writeLocal([...local, payload.entry]);
       }
       setStatus("done");
-      const saved = payload.persisted ? t.persisted : t.browser;
-      setMessage(payload.duplicate ? `${t.duplicate} ${saved}` : saved);
+      setMessage(t.saved);
       setName("");
       setEmail("");
     } catch {
       setStatus("error");
-      setMessage(t.genericError);
+      setMessage(t.failed);
     }
   }
 
@@ -100,11 +99,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
     const merged = new Map<string, Row>();
     for (const row of [...server, ...local]) merged.set(row.email, row);
     const rows = [...merged.values()];
-    if (rows.length === 0) {
-      setStatus("error");
-      setMessage(t.empty);
-      return;
-    }
+    if (rows.length === 0) return;
     const lines = [
       "name,email,locale,createdAt",
       ...rows.map((row) =>
@@ -124,14 +119,37 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
 
   return (
     <section className="border-t border-chalk/15">
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 md:py-28 lg:grid-cols-12">
-        <div className="lg:col-span-6">
-          <SectionHeading kicker={t.kicker} title={t.title} lede={t.lede} />
-          <p className="mt-6 max-w-md font-serif text-base leading-relaxed text-chalk/85">{t.note}</p>
+      <div className="mx-auto grid max-w-6xl items-end gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-12 lg:gap-12">
+        <div className="relative lg:col-span-6">
+          <div className="relative aspect-[4/5] overflow-hidden bg-signal sm:aspect-[5/4]">
+            {image ? (
+              <Image src={image} alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+            ) : (
+              <Image
+                src="/brand/mark.jpg"
+                alt="The Bart & Willie Show"
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-field via-field/20 to-transparent" />
+            {image ? (
+              <Image
+                src="/brand/mark.jpg"
+                alt=""
+                width={512}
+                height={512}
+                className="absolute top-4 left-4 size-14 object-cover sm:top-6 sm:left-6 sm:size-16"
+              />
+            ) : null}
+          </div>
         </div>
+        <div className="lg:col-span-5 lg:col-start-8">
+          <SectionHeading kicker={t.kicker} title={t.title} lede={t.lede} />
         <form
           onSubmit={onSubmit}
-          className="border-t-4 border-signal pt-8 lg:col-span-5 lg:col-start-8"
+          className="mt-8 border-t-4 border-signal pt-8"
           noValidate
         >
           <div className="grid gap-5">
@@ -165,11 +183,13 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
             </div>
             <div className="flex flex-wrap gap-3 pt-2">
               <Button type="submit" disabled={status === "sending"} aria-busy={status === "sending"}>
-                {status === "sending" ? t.sending : t.submit}
+                {t.submit}
               </Button>
-              <Button type="button" variant="outline" onClick={exportCsv}>
-                {t.export}
-              </Button>
+              {operator ? (
+                <Button type="button" variant="outline" onClick={exportCsv}>
+                  {t.export}
+                </Button>
+              ) : null}
             </div>
             <p
               role={status === "error" ? "alert" : "status"}
@@ -179,6 +199,8 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
             </p>
           </div>
         </form>
+        <p className="mt-6 max-w-md font-serif text-base leading-relaxed text-chalk/85">{t.note}</p>
+        </div>
       </div>
     </section>
   );

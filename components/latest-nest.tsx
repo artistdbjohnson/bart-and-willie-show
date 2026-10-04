@@ -7,7 +7,7 @@ import { copy, formatWhen } from "@/lib/copy";
 import type { InstagramFeed } from "@/lib/instagram";
 import type { Locale } from "@/lib/paths";
 import { cn } from "@/lib/utils";
-import { CHANNEL_URL, excerpt, fullEpisodes, type ChannelVideo } from "@/lib/youtube";
+import { CHANNEL_URL, fullEpisodes, isOct2Show, type ChannelVideo } from "@/lib/youtube";
 
 export function LatestNest({
   locale,
@@ -25,13 +25,18 @@ export function LatestNest({
   const [lead, ...rest] = episodes;
   const hasLead = Boolean(feedOk && lead);
 
-  const cards = [
+  const episodeSheets = [
     hasLead && lead ? (
       <EpisodeSheet key={lead.id} locale={locale} video={lead} featured />
     ) : (
       <EmptySheet key="empty" locale={locale} />
     ),
     ...rest.map((video) => <EpisodeSheet key={video.id} locale={locale} video={video} />),
+  ];
+  // Five sheets: the newest episodes, the channel rail, then the profile.
+  // On a phone the stack stops on those five yellow edges.
+  const cards = [
+    ...episodeSheets.slice(0, 3),
     <YouTubeRail key="youtube" locale={locale} videos={videos} feedOk={feedOk} nested />,
     <InstagramRail key="instagram" locale={locale} feed={instagram} nested />,
   ];
@@ -57,7 +62,8 @@ function EpisodeSheet({
   featured?: boolean;
 }) {
   const t = copy[locale];
-  const blurb = featured ? excerpt(video.description) : "";
+  const oct2 = isOct2Show(video);
+  const blurb = oct2 ? t.episodes.featuredLine : "";
 
   return (
     <article className="episode-sheet flex h-full min-h-0 flex-col bg-field">
@@ -83,10 +89,10 @@ function EpisodeSheet({
             className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.03]"
           />
         </span>
-        {featured ? (
+        {featured || oct2 ? (
           <span className="sheet-extra shrink-0 pt-3 pb-4">
             {blurb ? (
-              <span className="line-clamp-2 block font-serif text-base leading-relaxed text-chalk/85">
+              <span className="block font-serif text-base leading-relaxed text-chalk/85">
                 {blurb}
               </span>
             ) : null}

@@ -8,6 +8,7 @@ export type InstagramPost = {
   shortcode: string;
   caption: string;
   imageUrl: string;
+  videoUrl: string | null;
   permalink: string;
   kind: "clip" | "post";
 };
@@ -43,8 +44,26 @@ type IgNode = {
   product_type?: string;
   display_url?: string;
   thumbnail_src?: string;
+  video_url?: string;
   edge_media_to_caption?: { edges?: { node?: { text?: string } }[] };
 };
+
+export function instagramCdn(url: URL) {
+  return (
+    url.protocol === "https:" &&
+    (url.hostname.endsWith(".cdninstagram.com") || url.hostname.endsWith(".fbcdn.net"))
+  );
+}
+
+function playableVideo(value: string | undefined) {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    return instagramCdn(url) ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
 
 async function readProfile(): Promise<string | null> {
   try {
@@ -88,7 +107,17 @@ async function readProfile(): Promise<string | null> {
   return null;
 }
 
+let memory: { at: number; feed: InstagramFeed } | null = null;
+
 export async function getInstagram(): Promise<InstagramFeed> {
+  const now = Date.now();
+  if (memory && now - memory.at < (memory.feed.ok ? 90_000 : 4_000)) return memory.feed;
+  const feed = await loadInstagram();
+  memory = { at: now, feed };
+  return feed;
+}
+
+async function loadInstagram(): Promise<InstagramFeed> {
   try {
     const raw = await readProfile();
     if (!raw) return { ok: false, posts: [] };
@@ -119,6 +148,7 @@ export async function getInstagram(): Promise<InstagramFeed> {
           shortcode: node.shortcode,
           caption,
           imageUrl,
+          videoUrl: playableVideo(node.video_url),
           permalink: clip
             ? `https://www.instagram.com/reel/${node.shortcode}/`
             : `https://www.instagram.com/p/${node.shortcode}/`,

@@ -1,8 +1,7 @@
+import { instagramCdn } from "@/lib/instagram";
+
 function allowed(url: URL) {
-  return (
-    url.protocol === "https:" &&
-    (url.hostname.endsWith(".cdninstagram.com") || url.hostname.endsWith(".fbcdn.net"))
-  );
+  return instagramCdn(url);
 }
 
 export async function GET(request: Request) {
