@@ -177,12 +177,17 @@ html.reduce-motion .in-view {
 
 .nest-card {
   position: sticky;
-  display: flex;
   height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
   min-width: 0;
   width: 100%;
+  background: transparent;
+}
+
+.nest-face {
+  display: flex;
+  height: 100%;
   flex-direction: column;
-  background: var(--field);
+  background-color: var(--field);
 }
 
 .sheet-edge {
@@ -208,6 +213,10 @@ html.reduce-motion .in-view {
     top: auto !important;
     height: auto;
     margin-bottom: 0 !important;
+  }
+
+  .nest-face {
+    height: auto;
   }
 
   .episode-sheet .sheet-link {
@@ -250,6 +259,10 @@ html.reduce-motion .nest-card {
   top: auto !important;
   height: auto;
   margin-bottom: 0 !important;
+}
+
+html.reduce-motion .nest-face {
+  height: auto;
 }
 
 html.reduce-motion .episode-sheet .sheet-link {
