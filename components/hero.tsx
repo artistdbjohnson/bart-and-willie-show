@@ -2,6 +2,7 @@ import { ChalkPlay } from "@/components/chalk-play";
 import { HeroCycle } from "@/components/hero-cycle";
 import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
+import { HeroWatch } from "@/components/watch-dialog";
 import { copy } from "@/lib/copy";
 import type { Locale } from "@/lib/paths";
 import { CHANNEL_URL, type ShortBeat } from "@/lib/youtube";
@@ -42,12 +43,19 @@ export function Hero({
               {t.hero.lede}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Button asChild>
-                <a href={watch}>
+              {video ? (
+                <HeroWatch videoId={video.id} title={video.title} poster={video.thumbnail}>
                   <PlayMark />
-                  {video ? t.hero.watch : t.hero.channel}
-                </a>
-              </Button>
+                  {t.hero.watch}
+                </HeroWatch>
+              ) : (
+                <Button asChild>
+                  <a href={watch}>
+                    <PlayMark />
+                    {t.hero.channel}
+                  </a>
+                </Button>
+              )}
               {video ? (
                 <Button asChild variant="outline">
                   <a href={CHANNEL_URL}>{t.hero.channel}</a>

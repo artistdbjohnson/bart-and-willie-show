@@ -81,8 +81,14 @@ export async function getChannel(): Promise<
       next: { revalidate: 1800 },
     });
     if (!response.ok) return { ok: false, videos: [] };
-    const videos = parseFeed(await response.text());
-    if (videos.length === 0) return { ok: false, videos: [] };
+    const parsed = parseFeed(await response.text());
+    if (parsed.length === 0) return { ok: false, videos: [] };
+    const videos = await Promise.all(
+      parsed.map(async (video) => ({
+        ...video,
+        thumbnail: await sharpFrame(video.id, video.thumbnail),
+      })),
+    );
     return { ok: true, videos };
   } catch {
     return { ok: false, videos: [] };
@@ -104,65 +110,69 @@ export function shortsFrom(videos: ChannelVideo[]) {
   return videos.filter((video) => video.kind === "short");
 }
 
-export async function titleFrame(video: Pick<ChannelVideo, "id" | "thumbnail">) {
-  const max = `https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`;
-  try {
-    const response = await fetch(max, { method: "HEAD", next: { revalidate: 1800 } });
-    if (response.ok && response.headers.get("content-type")?.includes("image")) return max;
-  } catch {
-    /* the feed thumbnail is the frame YouTube already published */
+export type ShortBeat = { id: string };
+
+type FrameHit = { url: string; pixels: number };
+
+const frameMemo = new Map<string, Promise<string>>();
+
+function jpegSize(bytes: Uint8Array) {
+  if (bytes[0] !== 0xff || bytes[1] !== 0xd8) return null;
+  let i = 2;
+  while (i < bytes.length - 8) {
+    if (bytes[i] !== 0xff) {
+      i += 1;
+      continue;
+    }
+    const marker = bytes[i + 1];
+    if (marker === 0xc0 || marker === 0xc1 || marker === 0xc2) {
+      const height = (bytes[i + 5] << 8) | bytes[i + 6];
+      const width = (bytes[i + 7] << 8) | bytes[i + 8];
+      return { width, height };
+    }
+    const size = (bytes[i + 2] << 8) | bytes[i + 3];
+    if (size < 2) return null;
+    i += 2 + size;
   }
-  return video.thumbnail;
+  return null;
 }
 
-export type ShortBeat = {
-  id: string;
-  poster: string;
-  src: string | null;
-};
-
-// A direct file, when YouTube will hand one over. Otherwise the beat is the poster.
-export async function shortFile(id: string): Promise<string | null> {
+async function probeFrame(url: string): Promise<FrameHit | null> {
   try {
-    const response = await fetch("https://www.youtube.com/youtubei/v1/player?prettyPrint=false", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent":
-          "com.google.android.youtube/20.10.38 (Linux; U; Android 14) gzip",
-      },
-      body: JSON.stringify({
-        videoId: id,
-        context: {
-          client: {
-            clientName: "ANDROID",
-            clientVersion: "20.10.38",
-            androidSdkVersion: 34,
-            hl: "en",
-            gl: "US",
-            osName: "Android",
-            osVersion: "14",
-          },
-        },
-      }),
-      signal: AbortSignal.timeout(2500),
-      cache: "no-store",
+    const response = await fetch(url, {
+      headers: { Range: "bytes=0-65535" },
+      signal: AbortSignal.timeout(8000),
+      next: { revalidate: 86400 },
     });
-    if (!response.ok) return null;
-    const payload = (await response.json()) as {
-      playabilityStatus?: { status?: string };
-      streamingData?: {
-        formats?: { mimeType?: string; url?: string; contentLength?: string }[];
-      };
-    };
-    if (payload.playabilityStatus?.status !== "OK") return null;
-    const files = (payload.streamingData?.formats ?? []).filter(
-      (format) => format.url && format.mimeType?.includes("video/mp4"),
-    );
-    files.sort((a, b) => Number(a.contentLength ?? 0) - Number(b.contentLength ?? 0));
-    const file = files.find((format) => Number(format.contentLength ?? 0) > 0) ?? files[0];
-    return file?.url ?? null;
+    if (!response.ok && response.status !== 206) return null;
+    const size = jpegSize(new Uint8Array(await response.arrayBuffer()));
+    if (!size) return null;
+    const long = Math.max(size.width, size.height);
+    if (long < 720) return null;
+    return { url, pixels: size.width * size.height };
   } catch {
     return null;
   }
+}
+
+/** Largest real YouTube frame. Skips the 120px placeholder and hq/mq defaults. */
+export function sharpFrame(id: string, fallback: string) {
+  const cached = frameMemo.get(id);
+  if (cached) return cached;
+  const pending = (async () => {
+    const hits = (
+      await Promise.all([
+        probeFrame(`https://i.ytimg.com/vi/${id}/maxresdefault.jpg`),
+        probeFrame(`https://i.ytimg.com/vi/${id}/oardefault.jpg`),
+      ])
+    ).filter((hit): hit is FrameHit => hit !== null);
+    hits.sort((a, b) => b.pixels - a.pixels);
+    return hits[0]?.url ?? fallback;
+  })();
+  frameMemo.set(id, pending);
+  return pending;
+}
+
+export async function titleFrame(video: Pick<ChannelVideo, "id" | "thumbnail">) {
+  return sharpFrame(video.id, video.thumbnail);
 }

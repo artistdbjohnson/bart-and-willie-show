@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { copy, formatWhen } from "@/lib/copy";
 import { localizePath, type Locale } from "@/lib/paths";
 import { jetsStory, sources } from "@/lib/story";
+import { WatchTarget } from "@/components/watch-dialog";
 import { mentionsJets, type ChannelVideo } from "@/lib/youtube";
 
 export function JetsSection({
@@ -58,16 +59,20 @@ export function JetsSection({
             <ul className="mt-8 divide-y divide-chalk/15 border-y border-chalk/15">
               {matched.map((video) => (
                 <li key={video.id}>
-                  <a
-                    href={video.url}
-                    className="group grid gap-4 py-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:grid-cols-[180px_1fr] sm:items-center"
+                  <WatchTarget
+                    id={video.id}
+                    title={video.title}
+                    kind={video.kind}
+                    poster={video.thumbnail}
+                    className="group grid w-full gap-4 py-5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:grid-cols-[180px_1fr] sm:items-center"
                   >
                     <span className="relative block aspect-video overflow-hidden bg-field-bright/25">
                       <Image
                         src={video.thumbnail}
                         alt=""
                         fill
-                        sizes="180px"
+                        unoptimized
+                        sizes="(min-width: 640px) 180px, 100vw"
                         className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.04]"
                       />
                     </span>
@@ -77,7 +82,7 @@ export function JetsSection({
                       </span>
                       <span className="mt-2 block font-serif text-2xl leading-snug">{video.title}</span>
                     </span>
-                  </a>
+                  </WatchTarget>
                 </li>
               ))}
             </ul>

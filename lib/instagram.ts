@@ -8,6 +8,8 @@ export type InstagramPost = {
   shortcode: string;
   caption: string;
   imageUrl: string;
+  width: number | null;
+  height: number | null;
   videoUrl: string | null;
   permalink: string;
   kind: "clip" | "post";
@@ -45,8 +47,22 @@ type IgNode = {
   display_url?: string;
   thumbnail_src?: string;
   video_url?: string;
+  dimensions?: { width?: number; height?: number };
+  display_resources?: { src?: string; config_width?: number; config_height?: number }[];
   edge_media_to_caption?: { edges?: { node?: { text?: string } }[] };
 };
+
+function largestImage(node: IgNode) {
+  const resources = (node.display_resources ?? [])
+    .filter((item) => item.src && (item.config_width ?? 0) > 0)
+    .sort((a, b) => (b.config_width ?? 0) - (a.config_width ?? 0));
+  const best = resources[0];
+  return {
+    imageUrl: best?.src || node.display_url || node.thumbnail_src || "",
+    width: best?.config_width || node.dimensions?.width || null,
+    height: best?.config_height || node.dimensions?.height || null,
+  };
+}
 
 export function instagramCdn(url: URL) {
   return (
@@ -139,15 +155,17 @@ async function loadInstagram(): Promise<InstagramFeed> {
       .map((edge) => {
         const node = edge.node;
         if (!node?.shortcode) return null;
-        const imageUrl = node.display_url || node.thumbnail_src || "";
-        if (!imageUrl) return null;
+        const image = largestImage(node);
+        if (!image.imageUrl) return null;
         const clip = Boolean(node.is_video) || node.product_type === "clips";
         const caption = node.edge_media_to_caption?.edges?.[0]?.node?.text?.trim() ?? "";
         const post: InstagramPost = {
           id: node.shortcode,
           shortcode: node.shortcode,
           caption,
-          imageUrl,
+          imageUrl: image.imageUrl,
+          width: image.width,
+          height: image.height,
           videoUrl: playableVideo(node.video_url),
           permalink: clip
             ? `https://www.instagram.com/reel/${node.shortcode}/`

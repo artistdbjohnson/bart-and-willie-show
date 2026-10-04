@@ -7,6 +7,7 @@ import { copy, formatWhen } from "@/lib/copy";
 import type { InstagramFeed } from "@/lib/instagram";
 import type { Locale } from "@/lib/paths";
 import { cn } from "@/lib/utils";
+import { WatchTarget } from "@/components/watch-dialog";
 import { CHANNEL_URL, fullEpisodes, isOct2Show, type ChannelVideo } from "@/lib/youtube";
 
 export function LatestNest({
@@ -69,8 +70,11 @@ function EpisodeSheet({
 
   return (
     <article className="episode-sheet flex h-full min-h-0 flex-col bg-field">
-      <a
-        href={video.url}
+      <WatchTarget
+        id={video.id}
+        title={video.title}
+        kind="video"
+        poster={video.thumbnail}
         className="sheet-link group flex min-h-0 flex-1 flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-chalk"
       >
         <span className="sheet-lead sheet-copy shrink-0 pt-4 pb-3">
@@ -87,6 +91,7 @@ function EpisodeSheet({
             src={video.thumbnail}
             alt=""
             fill
+            unoptimized
             sizes="100vw"
             className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.03]"
           />
@@ -108,7 +113,7 @@ function EpisodeSheet({
             </span>
           </span>
         ) : null}
-      </a>
+      </WatchTarget>
     </article>
   );
 }

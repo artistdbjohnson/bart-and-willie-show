@@ -4,8 +4,6 @@ import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } f
 import { Button } from "@/components/ui/button";
 import type { InstagramPost } from "@/lib/instagram";
 
-const SPEED = 28;
-
 export function ProfileTicker({
   posts,
   previous,
@@ -36,11 +34,14 @@ export function ProfileTicker({
   const view = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const setWidth = useRef(0);
+  const stride = useRef(0);
   const offset = useRef(0);
   const paused = useRef(false);
   const locked = useRef(false);
   const nudging = useRef(false);
   const moved = useRef(false);
+  const holdUntil = useRef(0);
+  const anim = useRef<{ from: number; to: number; start: number } | null>(null);
   const drag = useRef<{ x: number; y: number; offset: number; horizontal: boolean; vertical: boolean } | null>(null);
   const [lockOn, setLockOn] = useState(false);
   const [open, setOpen] = useState<InstagramPost | null>(null);
@@ -48,9 +49,11 @@ export function ProfileTicker({
   useEffect(() => {
     const measure = () => {
       const node = track.current?.querySelector<HTMLElement>("[data-ticker-set]");
-      if (!node) return;
-      const gap = 12;
+      if (!node || posts.length === 0) return;
+      const styles = getComputedStyle(node);
+      const gap = Number.parseFloat(styles.columnGap || styles.gap) || 12;
       setWidth.current = node.offsetWidth + gap;
+      stride.current = setWidth.current / posts.length;
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -63,20 +66,38 @@ export function ProfileTicker({
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       document.documentElement.classList.contains("reduce-motion");
     let frame = 0;
-    let last = performance.now();
-    const apply = () => {
-      const loop = setWidth.current;
-      if (loop > 0) offset.current = ((offset.current % loop) + loop) % loop;
+    holdUntil.current = performance.now() + 3600;
+    const paint = () => {
       if (track.current) {
         track.current.style.transform = `translate3d(${-offset.current}px, 0, 0)`;
       }
     };
     const tick = (now: number) => {
-      const dt = Math.min(40, now - last);
-      last = now;
-      if (!reduced() && !paused.current && !locked.current && !drag.current && !nudging.current) {
-        offset.current += (dt * SPEED) / 1000;
-        apply();
+      const motion = anim.current;
+      if (motion) {
+        const progress = Math.min(1, (now - motion.start) / 560);
+        const eased = 1 - (1 - progress) ** 3;
+        offset.current = motion.from + (motion.to - motion.from) * eased;
+        if (progress === 1) {
+          anim.current = null;
+          nudging.current = false;
+          const loop = setWidth.current;
+          if (loop > 0 && offset.current >= loop - 0.5) offset.current -= loop;
+          holdUntil.current = now + 3600;
+        }
+        paint();
+      } else if (
+        !reduced() &&
+        !paused.current &&
+        !locked.current &&
+        !drag.current &&
+        stride.current > 0 &&
+        now >= holdUntil.current
+      ) {
+        const from = offset.current;
+        const to = from + stride.current;
+        anim.current = { from, to, start: now };
+        nudging.current = true;
       }
       frame = window.requestAnimationFrame(tick);
     };
@@ -84,39 +105,42 @@ export function ProfileTicker({
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
-  function applyOffset(value: number) {
+  function paintOffset(value: number) {
     const loop = setWidth.current;
     offset.current = loop > 0 ? ((value % loop) + loop) % loop : value;
     if (track.current) track.current.style.transform = `translate3d(${-offset.current}px, 0, 0)`;
   }
 
   function nudge(direction: number) {
-    const card = (view.current?.clientWidth ?? 320) * 0.78 + 12;
-    const from = offset.current;
-    const to = from + direction * card;
+    const step = stride.current || (view.current?.clientWidth ?? 320);
+    const loop = setWidth.current;
+    anim.current = null;
+    nudging.current = false;
+    let from = offset.current;
+    let to = from + direction * step;
+    if (loop > 0 && to < 0) {
+      from += loop;
+      to += loop;
+      offset.current = from;
+    }
     const reduced =
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       document.documentElement.classList.contains("reduce-motion");
+    holdUntil.current = performance.now() + 3600;
     if (reduced) {
-      applyOffset(to);
+      paintOffset(to);
       return;
     }
     nudging.current = true;
-    const start = performance.now();
-    const step = (now: number) => {
-      const t = Math.min(1, (now - start) / 560);
-      const eased = 1 - (1 - t) ** 3;
-      applyOffset(from + (to - from) * eased);
-      if (t < 1) window.requestAnimationFrame(step);
-      else nudging.current = false;
-    };
-    window.requestAnimationFrame(step);
+    anim.current = { from, to, start: performance.now() };
   }
 
   function onPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
     if (event.button !== 0) return;
     paused.current = true;
     moved.current = false;
+    anim.current = null;
+    nudging.current = false;
     drag.current = {
       x: event.clientX,
       y: event.clientY,
@@ -141,13 +165,18 @@ export function ProfileTicker({
       moved.current = true;
       event.currentTarget.setPointerCapture(event.pointerId);
     }
-    applyOffset(start.offset - (event.clientX - start.x));
+    paintOffset(start.offset - (event.clientX - start.x));
   }
 
   function onPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
-    const dragged = moved.current || Boolean(drag.current?.vertical);
+    const wasDrag = drag.current;
+    const dragged = moved.current || Boolean(wasDrag?.horizontal) || Boolean(wasDrag?.vertical);
     drag.current = null;
+    if (wasDrag?.horizontal && stride.current > 0) {
+      paintOffset(Math.round(offset.current / stride.current) * stride.current);
+    }
     paused.current = false;
+    holdUntil.current = performance.now() + 3600;
     if (dragged) {
       const block = (click: Event) => {
         click.preventDefault();
@@ -274,16 +303,16 @@ function Thumbnail({
       className="w-[100cqi] shrink-0 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[calc((100cqi-0.75rem)/2)] lg:w-[calc((100cqi-1.5rem)/3)]"
       onClick={onOpen}
     >
-      <span className="relative block h-32 overflow-hidden bg-field-bright/25 sm:h-36">
+      <span className="flex h-[min(42svh,28rem)] w-full items-center justify-center">
         {/* Instagram CDN links expire, so the image is loaded through this site. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`/api/ig-image?src=${encodeURIComponent(post.imageUrl)}`}
           alt=""
-          width={640}
-          height={480}
+          width={post.width ?? undefined}
+          height={post.height ?? undefined}
           draggable={false}
-          className="h-full w-full object-cover"
+          className="max-h-full max-w-full object-contain"
         />
       </span>
       <span className="mt-3 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
@@ -347,9 +376,11 @@ function PostView({
       role="dialog"
       aria-modal="true"
       aria-label={post.caption?.slice(0, 80) || thePost}
-      className="fixed inset-0 z-[70] flex flex-col bg-field"
+      className="watch-layer is-open fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-8"
     >
-      <div className="flex items-center justify-end gap-2 px-4 py-3 sm:px-6">
+      <button type="button" className="watch-backdrop absolute inset-0" aria-label={close} onClick={onClose} />
+      <div className="watch-panel relative z-[1] flex max-h-full w-full max-w-3xl flex-col">
+      <div className="mb-3 flex items-center justify-end gap-2">
         {showVideo ? (
           <>
             <Button
@@ -393,7 +424,7 @@ function PostView({
             ref={video}
             src={`/api/ig-media?src=${encodeURIComponent(post.videoUrl ?? "")}`}
             poster={`/api/ig-image?src=${encodeURIComponent(post.imageUrl)}`}
-            className="max-h-full max-w-full bg-ink"
+            className="max-h-[82svh] max-w-full object-contain"
             autoPlay
             muted
             playsInline
@@ -414,6 +445,7 @@ function PostView({
             </Button>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

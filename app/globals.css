@@ -340,12 +340,61 @@ html.reduce-motion .episode-sheet .sheet-extra {
   padding: 0;
 }
 
-.hero-fade.is-shown {
+.hero-fade.is-shown,
+.hero-fade.is-armed {
   visibility: visible;
+}
+
+.hero-fade.is-shown {
   opacity: 1;
   transition:
     opacity 1100ms ease-out,
     visibility 0s linear;
+}
+
+.hero-fade.is-armed {
+  opacity: 0;
+  transition: none;
+}
+
+.hero-player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  border: 0;
+}
+
+.watch-backdrop {
+  background: color-mix(in srgb, var(--ink) 72%, transparent);
+  opacity: 0;
+  transition: opacity 700ms ease-out;
+}
+
+.watch-layer.is-open .watch-backdrop {
+  opacity: 1;
+}
+
+.watch-panel {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 700ms ease-out,
+    transform 700ms ease-out;
+}
+
+.watch-layer.is-open .watch-panel {
+  opacity: 1;
+  transform: none;
+}
+
+.watch-panel iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 .hero-fade.is-hidden {
@@ -365,13 +414,19 @@ html.reduce-motion .episode-sheet .sheet-extra {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-fade.is-shown,
-  .hero-fade.is-hidden {
+  .hero-fade.is-hidden,
+  .hero-fade.is-armed,
+  .watch-backdrop,
+  .watch-panel {
     transition: none;
   }
 }
 
 html.reduce-motion .hero-fade.is-shown,
-html.reduce-motion .hero-fade.is-hidden {
+html.reduce-motion .hero-fade.is-hidden,
+html.reduce-motion .hero-fade.is-armed,
+html.reduce-motion .watch-backdrop,
+html.reduce-motion .watch-panel {
   transition: none;
 }
 
