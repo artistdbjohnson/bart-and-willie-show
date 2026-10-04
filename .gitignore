@@ -3,5 +3,6 @@ node_modules
 out
 .vercel
 data/subscribers.json
+data/shop-orders.json
 *.log
 .DS_Store

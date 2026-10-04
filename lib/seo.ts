@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { copy } from "@/lib/copy";
 import { localizePath, type Locale } from "@/lib/paths";
 
-type PageKey = "home" | "episodes" | "jets" | "about" | "list";
+type PageKey = "home" | "episodes" | "jets" | "about" | "shop" | "list";
 
 const paths: Record<PageKey, string> = {
   home: "/",
   episodes: "/episodes",
   jets: "/jets",
   about: "/about",
+  shop: "/shop",
   list: "/subscribe",
 };
 

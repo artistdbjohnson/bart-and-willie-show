@@ -37,7 +37,7 @@ export function ToTop({ label }: { label: string }) {
     <button
       type="button"
       aria-label={label}
-      className="fixed bottom-6 left-5 z-30 flex size-11 items-center justify-center border border-chalk/45 bg-field text-chalk focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-chalk"
+      className="fixed right-5 bottom-6 z-30 flex size-11 items-center justify-center border border-chalk/45 bg-field text-chalk focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-chalk"
       onClick={() => {
         const reduce =
           window.matchMedia("(prefers-reduced-motion: reduce)").matches ||

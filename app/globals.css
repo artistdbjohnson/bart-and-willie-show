@@ -349,13 +349,11 @@ html.reduce-motion .episode-sheet .sheet-extra {
 
 .hero-fade.is-shown {
   opacity: 1;
-  transition:
-    opacity 1100ms ease-out,
-    visibility 0s linear;
+  transition: opacity 1100ms ease-out;
 }
 
 .hero-fade.is-armed {
-  opacity: 0;
+  opacity: 1;
   transition: none;
 }
 
@@ -379,14 +377,6 @@ html.reduce-motion .episode-sheet .sheet-extra {
 }
 
 .watch-panel {
-  opacity: 0;
-  transform: translateY(10px);
-  transition:
-    opacity 700ms ease-out,
-    transform 700ms ease-out;
-}
-
-.watch-layer.is-open .watch-panel {
   opacity: 1;
   transform: none;
 }
@@ -417,6 +407,7 @@ html.reduce-motion .episode-sheet .sheet-extra {
 .hero-wash.is-quiet {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 1100ms ease-out;
 }
 
 .marquee-view {
@@ -464,6 +455,11 @@ html.reduce-motion .hero-wash,
 html.reduce-motion .watch-backdrop,
 html.reduce-motion .watch-panel {
   transition: none;
+}
+
+html.reduce-motion .hero-lockup.is-quiet .hero-quiet,
+html.reduce-motion .hero-wash.is-quiet {
+  opacity: 1;
 }
 
 .footer-link {

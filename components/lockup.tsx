@@ -7,14 +7,20 @@ export function Lockup({
 }: {
   className?: string;
   script?: boolean;
-  size?: "hero" | "footer";
+  size?: "hero" | "footer" | "shop";
 }) {
   const type =
-    size === "footer"
-      ? "text-[clamp(1.35rem,10cqi,3.15rem)]"
-      : "text-[clamp(2rem,7.4vw,3.4rem)] lg:text-[4.15rem]";
+    size === "shop"
+      ? "text-[1.35rem] sm:text-[1.55rem]"
+      : size === "footer"
+        ? "text-[clamp(1.35rem,10cqi,3.15rem)]"
+        : "text-[clamp(2rem,7.4vw,3.4rem)] lg:text-[4.15rem]";
+  const scriptClass =
+    size === "shop"
+      ? "mt-1 ml-1 font-script text-[1.7rem] leading-none text-chalk"
+      : "mt-2 ml-2 font-script text-[clamp(1.6rem,3vw,2.4rem)] leading-none text-chalk";
   return (
-    <div className={cn(size === "footer" ? "@container w-full max-w-full" : "w-max max-w-full", className)}>
+    <div className={cn(size === "footer" || size === "shop" ? "@container w-full max-w-full" : "w-max max-w-full", className)}>
       <div className="bg-signal px-[0.35em] py-[0.08em] text-ink">
         <p className={cn("font-display leading-[0.84] tracking-[-0.02em] whitespace-nowrap", type)}>
           THE BART &
@@ -26,7 +32,7 @@ export function Lockup({
         </p>
       </div>
       {script ? (
-        <p className="mt-2 ml-2 font-script text-[clamp(1.6rem,3vw,2.4rem)] leading-none text-chalk">
+        <p className={scriptClass}>
           Playmaker
         </p>
       ) : null}
