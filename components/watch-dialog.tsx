@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { loadYoutube, PLAYER_ENDED, type YoutubePlayer } from "@/lib/youtube-player";
+import { attachPlayer, loadYoutube, PLAYER_ENDED, type YoutubePlayer } from "@/lib/youtube-player";
 import { cn } from "@/lib/utils";
 
 export type WatchItem = {
@@ -136,14 +136,12 @@ function WatchDialog({
     hostParent.replaceChildren(host);
 
     void loadYoutube()
-      .then((api) => {
+      .then(() => {
         if (dead) return;
-        player = new api.Player(host, {
-          videoId: item.id,
-          width: "100%",
-          height: "100%",
-          host: "https://www.youtube-nocookie.com",
-          playerVars: {
+        player = attachPlayer(
+          host,
+          item.id,
+          {
             autoplay: 1,
             rel: 0,
             modestbranding: 1,
@@ -151,9 +149,8 @@ function WatchDialog({
             iv_load_policy: 3,
             fs: 1,
             controls: 1,
-            origin: window.location.origin,
           },
-          events: {
+          {
             onStateChange: (event) => {
               if (event.data === PLAYER_ENDED) {
                 try {
@@ -165,7 +162,7 @@ function WatchDialog({
               }
             },
           },
-        });
+        );
       })
       .catch(() => setEnded(true));
 

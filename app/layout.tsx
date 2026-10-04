@@ -45,6 +45,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
+  referrer: "strict-origin-when-cross-origin",
   title: "The Bart & Willie Show",
   description:
     "Bart Scott and Willie Colon, former New York Jets, with new episodes Mondays and Fridays.",

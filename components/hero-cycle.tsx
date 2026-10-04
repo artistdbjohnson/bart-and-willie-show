@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  attachPlayer,
   loadYoutube,
   PLAYER_ENDED,
   PLAYER_PLAYING,
@@ -77,9 +78,8 @@ export function HeroCycle({
     };
 
     const run = async () => {
-      let api: Awaited<ReturnType<typeof loadYoutube>>;
       try {
-        api = await loadYoutube();
+        await loadYoutube();
       } catch {
         return;
       }
@@ -120,12 +120,10 @@ export function HeroCycle({
             resolve(value);
           };
           const stall = window.setTimeout(() => finish("error"), START_LIMIT);
-          active = new api.Player(host, {
-            videoId: next.id,
-            width: "100%",
-            height: "100%",
-            host: "https://www.youtube-nocookie.com",
-            playerVars: {
+          active = attachPlayer(
+            host,
+            next.id,
+            {
               autoplay: 1,
               mute: 1,
               controls: 0,
@@ -136,9 +134,8 @@ export function HeroCycle({
               disablekb: 1,
               playsinline: 1,
               cc_load_policy: 0,
-              origin: window.location.origin,
             },
-            events: {
+            {
               onReady: (event) => {
                 event.target.mute();
                 event.target.playVideo();
@@ -152,7 +149,7 @@ export function HeroCycle({
               },
               onError: () => finish("error"),
             },
-          });
+          );
           player.current = active;
         });
 
