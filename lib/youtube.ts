@@ -9,8 +9,10 @@ export type ChannelVideo = {
   kind: "video" | "short";
 };
 
-const FEED =
-  "https://www.youtube.com/feeds/videos.xml?channel_id=UCynpQXiIDMLylarxGZZz9Dg";
+const CHANNEL_ID = "UCynpQXiIDMLylarxGZZz9Dg";
+const FEED = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+const VIDEOS_TAB = `https://www.youtube.com/channel/${CHANNEL_ID}/videos`;
+const LATEST_EPISODES = 6;
 
 export const CHANNEL_URL = "https://www.youtube.com/@bartandwillieshow";
 
@@ -72,6 +74,122 @@ export function mentionsJets(video: ChannelVideo) {
   return /jets/i.test(chapterBlock);
 }
 
+type TabEpisode = { id: string; title: string; when: string };
+
+function relativeToIso(label: string) {
+  const match = label.trim().match(/^(\d+)\s*(mo|w|d|h|m|s|y)\s*ago$/i);
+  if (!match) return "";
+  const count = Number(match[1]);
+  const unit = match[2].toLowerCase();
+  const day = 86_400_000;
+  const span =
+    unit === "s"
+      ? 1000
+      : unit === "m"
+        ? 60_000
+        : unit === "h"
+          ? 3_600_000
+          : unit === "d"
+            ? day
+            : unit === "w"
+              ? 7 * day
+              : unit === "mo"
+                ? 30 * day
+                : 365 * day;
+  return new Date(Date.now() - count * span).toISOString();
+}
+
+function parseVideosTab(html: string): TabEpisode[] {
+  const marker = html.indexOf("ytInitialData");
+  const start = html.indexOf("{", marker);
+  if (marker < 0 || start < 0) return [];
+  let depth = 0;
+  let end = -1;
+  for (let i = start; i < html.length; i += 1) {
+    const char = html[i];
+    if (char === "{") depth += 1;
+    else if (char === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        end = i + 1;
+        break;
+      }
+    }
+  }
+  if (end < 0) return [];
+  let data: unknown;
+  try {
+    data = JSON.parse(html.slice(start, end));
+  } catch {
+    return [];
+  }
+  const found: TabEpisode[] = [];
+  const seen = new Set<string>();
+  const walk = (node: unknown) => {
+    if (!node || typeof node !== "object") return;
+    if (Array.isArray(node)) {
+      node.forEach(walk);
+      return;
+    }
+    const record = node as Record<string, unknown>;
+    const lockup = record.lockupViewModel;
+    if (lockup && typeof lockup === "object") {
+      const view = lockup as Record<string, unknown>;
+      const id = typeof view.contentId === "string" ? view.contentId : "";
+      const metadata = view.metadata as { lockupMetadataViewModel?: { title?: { content?: string }; metadata?: { contentMetadataViewModel?: { metadataRows?: { metadataParts?: { text?: { content?: string } }[] }[] } } } } | undefined;
+      const title = metadata?.lockupMetadataViewModel?.title?.content ?? "";
+      const parts =
+        metadata?.lockupMetadataViewModel?.metadata?.contentMetadataViewModel?.metadataRows?.flatMap(
+          (row) => row.metadataParts ?? [],
+        ) ?? [];
+      const when = parts.map((part) => part.text?.content ?? "").find((text) => /\d+\s*(?:mo|[smhdwy])\s*ago/i.test(text)) ?? "";
+      if (id && title && !seen.has(id)) {
+        seen.add(id);
+        found.push({ id, title, when });
+      }
+    }
+    Object.values(record).forEach(walk);
+  };
+  walk(data);
+  return found;
+}
+
+/** The videos tab is full episodes, newest first. The RSS window is mostly Shorts. */
+async function newestFullEpisodes(rss: ChannelVideo[]): Promise<ChannelVideo[]> {
+  const fallback = fullEpisodes(rss).slice(0, LATEST_EPISODES);
+  try {
+    const response = await fetch(VIDEOS_TAB, {
+      headers: {
+        Accept: "text/html",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      },
+      signal: AbortSignal.timeout(12000),
+      next: { revalidate: 1800 },
+    });
+    if (!response.ok) return fallback;
+    const tab = parseVideosTab(await response.text()).slice(0, LATEST_EPISODES);
+    if (tab.length === 0) return fallback;
+    const byId = new Map(rss.map((video) => [video.id, video]));
+    return tab.map((item) => {
+      const known = byId.get(item.id);
+      if (known) return { ...known, kind: "video" as const };
+      return {
+        id: item.id,
+        title: item.title,
+        url: `https://www.youtube.com/watch?v=${item.id}`,
+        published: relativeToIso(item.when),
+        thumbnail: `https://i.ytimg.com/vi/${item.id}/hqdefault.jpg`,
+        description: "",
+        views: null,
+        kind: "video" as const,
+      };
+    });
+  } catch {
+    return fallback;
+  }
+}
+
 export async function getChannel(): Promise<
   { ok: true; videos: ChannelVideo[] } | { ok: false; videos: [] }
 > {
@@ -83,8 +201,11 @@ export async function getChannel(): Promise<
     if (!response.ok) return { ok: false, videos: [] };
     const parsed = parseFeed(await response.text());
     if (parsed.length === 0) return { ok: false, videos: [] };
+    const episodes = await newestFullEpisodes(parsed);
+    const seen = new Set(episodes.map((video) => video.id));
+    const merged = [...episodes, ...parsed.filter((video) => !seen.has(video.id))];
     const videos = await Promise.all(
-      parsed.map(async (video) => ({
+      merged.map(async (video) => ({
         ...video,
         thumbnail: await sharpFrame(video.id, video.thumbnail),
       })),
