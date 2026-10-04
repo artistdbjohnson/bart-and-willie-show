@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ const links = [
   { href: "/episodes", key: "episodes" },
   { href: "/jets", key: "jets" },
   { href: "/about", key: "hosts" },
+  { href: "/shop", key: "shop" },
   { href: "/subscribe", key: "list" },
 ] as const;
 
@@ -43,13 +43,12 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           href={localizePath("/", locale)}
           className="flex min-w-0 items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
         >
-          <Image
+          <img
             src="/brand/mark-knockout.png"
             alt="The Bart & Willie Show"
-            width={512}
-            height={512}
-            priority
-            className="size-11 shrink-0 object-contain"
+            width={387}
+            height={224}
+            className="h-11 w-auto shrink-0"
           />
           <span className="hidden font-display text-xl leading-none tracking-tight sm:block">
             THE BART & WILLIE SHOW

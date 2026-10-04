@@ -132,39 +132,52 @@ function WatchDialog({
     let dead = false;
     let player: YoutubePlayer | null = null;
     const host = document.createElement("div");
-    host.className = "h-full w-full";
+    host.className = "absolute inset-0";
     hostParent.replaceChildren(host);
 
-    void loadYoutube()
-      .then(() => {
-        if (dead) return;
-        player = attachPlayer(
-          host,
-          item.id,
-          {
-            autoplay: 1,
-            rel: 0,
-            modestbranding: 1,
-            playsinline: 1,
-            iv_load_policy: 3,
-            fs: 1,
-            controls: 1,
-          },
-          {
-            onStateChange: (event) => {
-              if (event.data === PLAYER_ENDED) {
-                try {
-                  event.target.stopVideo();
-                } catch {
-                  /* already stopped */
-                }
-                setEnded(true);
-              }
+    const start = () => {
+      if (dead || !hostParent.isConnected) return;
+      if (hostParent.clientWidth < 2 || hostParent.clientHeight < 2) {
+        window.requestAnimationFrame(start);
+        return;
+      }
+      void loadYoutube()
+        .then(() => {
+          if (dead) return;
+          player = attachPlayer(
+            host,
+            item.id,
+            {
+              autoplay: 1,
+              rel: 0,
+              modestbranding: 1,
+              playsinline: 1,
+              iv_load_policy: 3,
+              cc_load_policy: 0,
+              fs: 1,
+              controls: 1,
             },
-          },
-        );
-      })
-      .catch(() => setEnded(true));
+            {
+              onReady: (event) => {
+                event.target.playVideo();
+              },
+              onStateChange: (event) => {
+                if (event.data === PLAYER_ENDED) {
+                  try {
+                    event.target.stopVideo();
+                  } catch {
+                    /* already stopped */
+                  }
+                  setEnded(true);
+                }
+              },
+              onError: () => setEnded(true),
+            },
+          );
+        })
+        .catch(() => setEnded(true));
+    };
+    start();
 
     return () => {
       dead = true;
@@ -176,10 +189,8 @@ function WatchDialog({
     };
   }, [ended, item.id]);
 
-  const frameClass =
-    item.kind === "short"
-      ? "relative aspect-[9/16] w-[min(100%,calc(82svh*9/16))] bg-ink"
-      : "relative aspect-video w-full max-w-5xl bg-ink";
+  const shellClass =
+    item.kind === "short" ? "w-[min(100%,calc((100svh-8rem)*9/16))]" : "w-full max-w-5xl";
 
   return (
     <div className={cn("watch-layer fixed inset-0 z-[80]", present && "is-open")}>
@@ -188,34 +199,40 @@ function WatchDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="watch-panel pointer-events-none absolute inset-0 flex items-center justify-center p-4 sm:p-8"
+        className="watch-panel pointer-events-none absolute inset-0 flex items-center justify-center px-4 py-16 sm:px-8"
       >
-        <div className="pointer-events-auto relative">
+        <div className={cn("pointer-events-auto", shellClass)}>
           <p id={titleId} className="sr-only">
             {item.title}
           </p>
-          <Button
-            ref={closeButton}
-            type="button"
-            variant="outline"
-            size="icon"
-            aria-label={closeLabel}
-            className="absolute -top-3 right-0 z-10 translate-y-[-100%] bg-field/80 sm:right-0"
-            onClick={onClose}
+          <div
+            className={
+              item.kind === "short"
+                ? "relative aspect-[9/16] w-full bg-ink"
+                : "relative aspect-video w-full bg-ink"
+            }
           >
-            <CloseIcon />
-          </Button>
-          <div className={frameClass}>
             {ended && item.poster ? (
               // Playback finished. The still replaces the end screen so suggested videos do not stay up.
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={item.poster} alt="" className="h-full w-full object-contain" />
+              <img src={item.poster} alt="" className="absolute inset-0 h-full w-full object-contain" />
             ) : (
               <div ref={mount} className="absolute inset-0" />
             )}
           </div>
         </div>
       </div>
+      <Button
+        ref={closeButton}
+        type="button"
+        variant="outline"
+        size="icon"
+        aria-label={closeLabel}
+        className="absolute top-4 right-4 z-10 bg-field"
+        onClick={onClose}
+      >
+        <CloseIcon />
+      </Button>
     </div>
   );
 }

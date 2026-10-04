@@ -33,7 +33,6 @@ export function HeroCycle({
   const mount = useRef<HTMLDivElement>(null);
   const player = useRef<YoutubePlayer | null>(null);
   const [phase, setPhase] = useState<"hero" | "short">("hero");
-  const [armed, setArmed] = useState(false);
   const [muted, setMuted] = useState(true);
   const [box, setBox] = useState({ width: 0, height: 0 });
 
@@ -92,7 +91,6 @@ export function HeroCycle({
 
       while (!cancelled) {
         setPhase("hero");
-        setArmed(false);
         await wait(STILL_HOLD);
         if (cancelled || reduced()) return;
 
@@ -106,10 +104,21 @@ export function HeroCycle({
         if (failed.has(next.id)) return;
         cursor += 1;
 
-        setArmed(true);
-        await wait(40);
         const hostParent = mount.current;
         if (!hostParent || cancelled) return;
+        if (hostParent.clientWidth < 2 || hostParent.clientHeight < 2) {
+          const node = root.current;
+          if (node) {
+            const width = node.clientWidth;
+            const height = node.clientHeight;
+            if (width && height) {
+              const scale = Math.max(width / 9, height / 16);
+              setBox({ width: 9 * scale, height: 16 * scale });
+            }
+          }
+          await wait(40);
+        }
+        if (cancelled) return;
         const host = document.createElement("div");
         host.className = "h-full w-full";
         hostParent.replaceChildren(host);
@@ -118,7 +127,6 @@ export function HeroCycle({
         const outcome = await new Promise<"ended" | "error">((resolve) => {
           let settled = false;
           let peak = 0;
-          let peakAt = 0;
           const finish = (value: "ended" | "error") => {
             if (settled) return;
             settled = true;
@@ -127,38 +135,52 @@ export function HeroCycle({
             resolve(value);
           };
           const backToStill = () => {
-            if (!cancelled) {
-              setPhase("hero");
-              setArmed(false);
+            try {
+              active?.stopVideo();
+            } catch {
+              /* already stopped */
             }
+            if (!cancelled) setPhase("hero");
             finish("ended");
           };
+          const notePlaying = () => {
+            if (settled) return;
+            window.clearTimeout(stall);
+            shown = true;
+            if (!cancelled) setPhase("short");
+          };
+          // The still returns when the player ends. A loop that jumps back to
+          // the start is not a new Short and is not the end signal.
           const atEnd = (current: YoutubePlayer) => {
+            const state = current.getPlayerState();
+            if (state === PLAYER_PLAYING) notePlaying();
+            if (state === PLAYER_ENDED) return true;
             const duration = current.getDuration();
             const time = current.getCurrentTime();
             if (!Number.isFinite(duration) || !Number.isFinite(time)) return false;
-            if (duration < 2 || time < 1) return false;
-            if (time >= duration - 0.45) return true;
-            if (time > peak) {
-              peak = time;
-              peakAt = performance.now();
-              return false;
-            }
-            return peak >= duration - 1 && performance.now() - peakAt > 900;
+            if (duration < 2) return false;
+            if (time > peak) peak = time;
+            // A loop seeks back to the start. That restart is not the end,
+            // and it must not keep playing in place of the still.
+            if (peak >= duration - 1 && time + 1.5 < peak) return true;
+            if (time < 1) return false;
+            return time >= duration - 0.25;
           };
           const watch = () => {
             stopPoll();
             poll = window.setInterval(() => {
               const current = active;
-              if (!current) return;
+              if (!current || settled) return;
               try {
-                if (current.getPlayerState() === PLAYER_ENDED || atEnd(current)) backToStill();
+                if (atEnd(current)) backToStill();
               } catch {
                 /* the player already released the iframe */
               }
-            }, 250);
+            }, 100);
           };
-          const stall = window.setTimeout(() => finish("error"), START_LIMIT);
+          const stall = window.setTimeout(() => {
+            if (!shown) finish("error");
+          }, START_LIMIT);
           active = attachPlayer(
             host,
             next.id,
@@ -168,6 +190,7 @@ export function HeroCycle({
               controls: 0,
               modestbranding: 1,
               rel: 0,
+              loop: 0,
               iv_load_policy: 3,
               fs: 0,
               disablekb: 1,
@@ -181,18 +204,12 @@ export function HeroCycle({
                 watch();
               },
               onStateChange: (event) => {
-                if (event.data === PLAYER_PLAYING) {
-                  window.clearTimeout(stall);
-                  shown = true;
-                  if (!cancelled) setPhase("short");
-                }
+                if (settled) return;
+                if (event.data === PLAYER_PLAYING) notePlaying();
                 if (event.data === PLAYER_ENDED) backToStill();
               },
               onError: () => {
-                if (shown && !cancelled) {
-                  setPhase("hero");
-                  setArmed(false);
-                }
+                if (shown && !cancelled) setPhase("hero");
                 finish("error");
               },
             },
@@ -202,7 +219,6 @@ export function HeroCycle({
 
         if (shown) {
           setPhase("hero");
-          setArmed(false);
           await wait(FADE_MS);
         }
         destroy();
@@ -220,26 +236,12 @@ export function HeroCycle({
     };
   }, [shorts]);
 
-  const shortClass = phase === "short" ? "is-shown" : armed ? "is-armed" : "is-hidden";
+  const playing = phase === "short";
 
   return (
     <>
       <div ref={root} className="absolute inset-0 overflow-hidden bg-field">
-        <div className={`hero-fade absolute inset-0 ${phase === "hero" ? "is-shown" : "is-hidden"}`}>
-          {still ? (
-            <Image
-              src={still}
-              alt=""
-              fill
-              priority
-              unoptimized
-              sizes="100vw"
-              className="object-cover opacity-80"
-            />
-          ) : null}
-          <div className="absolute inset-0 bg-gradient-to-t from-field via-field/75 to-field/35" />
-        </div>
-        <div className={`hero-fade absolute inset-0 overflow-hidden ${shortClass}`} aria-hidden={phase !== "short"}>
+        <div className="absolute inset-0 overflow-hidden" aria-hidden={!playing}>
           <div
             className="hero-player absolute left-1/2 top-1/2"
             style={{
@@ -251,9 +253,23 @@ export function HeroCycle({
             <div ref={mount} className="h-full w-full" />
           </div>
         </div>
+        <div className={`hero-fade absolute inset-0 z-[2] ${playing ? "is-hidden" : "is-shown"}`}>
+          {still ? (
+            <Image
+              src={still}
+              alt=""
+              fill
+              priority
+              unoptimized
+              sizes="100vw"
+              className="object-cover"
+            />
+          ) : null}
+          <div className="absolute inset-0 bg-gradient-to-t from-field via-field/75 to-field/35" />
+        </div>
       </div>
-      <div className={`hero-wash pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent ${phase === "short" ? "is-quiet" : ""}`} />
-      <div className={`hero-lockup relative z-10 ${phase === "short" ? "is-quiet" : ""}`}>
+      <div className={`hero-wash pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent ${playing ? "is-quiet" : ""}`} />
+      <div className={`hero-lockup relative z-10 ${playing ? "is-quiet" : ""}`}>
         {children}
       </div>
       {phase === "short" ? (

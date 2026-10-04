@@ -17,6 +17,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
     { href: "/episodes", label: t.nav.episodes },
     { href: "/jets", label: t.nav.jets },
     { href: "/about", label: t.nav.hosts },
+    { href: "/shop", label: t.nav.shop },
     { href: "/subscribe", label: t.nav.list },
   ];
 
