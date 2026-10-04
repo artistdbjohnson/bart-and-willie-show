@@ -128,7 +128,7 @@ SNY Jets broadcasts mentioned in the Jets.com profiles are described as separate
 
 Channel id `UCynpQXiIDMLylarxGZZz9Dg`, from https://www.youtube.com/@bartandwillieshow and the public RSS `https://www.youtube.com/feeds/videos.xml?channel_id=UCynpQXiIDMLylarxGZZz9Dg`.
 
-The hero is the latest full upload on that feed (not a Short), official iframe, muted, looping roughly the first 12 seconds, with a link to the same video on YouTube. There is no generated title sequence. If the feed fails, the hero is the field, the lockup, and the channel link.
+The hero is the latest full upload on that feed (not a Short), official iframe, muted, looping roughly the first 12 seconds, with a link to the same video on YouTube. There is no generated title sequence. The player is scaled inside a clipped frame so YouTube’s title bar, sign-in chip, and logo fall outside the hero. The lockup paints above that frame. If the feed fails, the hero is the field, the lockup, and the channel link.
 
 ## YouTube and Instagram
 

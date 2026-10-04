@@ -19,6 +19,7 @@ declare global {
         element: string,
         options: {
           videoId: string;
+          host?: string;
           playerVars?: Record<string, number | string>;
           events?: { onReady?: (event: { target: YtPlayer }) => void };
         },
@@ -53,7 +54,7 @@ export function Hero({
 
   return (
     <section className="relative min-h-[calc(100svh-4.5rem)] overflow-hidden">
-      <div className="absolute inset-0 bg-field">
+      <div className="hero-media absolute inset-0 bg-field">
         {video ? (
           <Image
             src={video.thumbnail}
@@ -74,7 +75,7 @@ export function Hero({
         40
       </p>
       <ChalkPlay className="pointer-events-none absolute right-2 bottom-8 z-[1] hidden h-72 w-auto text-chalk sm:block lg:right-8 lg:bottom-12 lg:h-[26rem]" />
-      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-4.5rem)] max-w-6xl flex-col justify-end px-5 pt-16 pb-10 sm:px-8 sm:pb-14">
+      <div className="hero-copy relative z-10 mx-auto flex min-h-[calc(100svh-4.5rem)] max-w-6xl flex-col justify-end px-5 pt-16 pb-10 sm:px-8 sm:pb-14">
         <div className="max-w-xl">
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-chalk/80">
             {t.hero.kicker}
@@ -116,6 +117,7 @@ function HeroPlayer({ id }: { id: string }) {
       if (cancelled || !window.YT?.Player) return;
       player = new window.YT.Player("baw-hero-player", {
         videoId: id,
+        host: "https://www.youtube-nocookie.com",
         playerVars: {
           autoplay: 1,
           mute: 1,
@@ -126,6 +128,9 @@ function HeroPlayer({ id }: { id: string }) {
           start: 0,
           disablekb: 1,
           fs: 0,
+          iv_load_policy: 3,
+          cc_load_policy: 0,
+          origin: window.location.origin,
         },
         events: {
           onReady: (event) => {
