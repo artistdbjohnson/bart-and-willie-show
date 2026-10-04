@@ -68,7 +68,7 @@ Each of these is its own component, with type, spacing, hover, focus, empty, and
 - About and the Jets years. Prose, not cards. The Jets seasons are a section with their own page, not a line under a bio.
 - Owned list. Name and email, inline errors, sending state, success that says where the row actually went, export, and an empty export state.
 
-Motion is slow and ease-out. Nothing bounces. The field color itself eases over 700ms when day and night change, because `--field` is a registered color and the page reads that variable. The featured player fades in over 640ms inside the same 16:9 frame. Rails scroll smoothly. `prefers-reduced-motion` removes the chalk draw, the fade distance, the hover scale, the hero autoplay, the player fade, the color ease, and smooth scrolling. The hero video is muted. The featured player does not autoplay. Language changes do not slide the page. The header is not sticky.
+Motion is slow and ease-out. Nothing bounces. The field color itself eases over 700ms when day and night change, because `--field` is a registered color and the page reads that variable. The featured player fades in over 640ms inside the same 16:9 frame. Rails scroll smoothly. `prefers-reduced-motion` removes the chalk draw, the fade distance, the hover scale, the player fade, the color ease, and smooth scrolling. The hero has no player. The featured player does not autoplay. Language changes do not slide the page. The header is not sticky.
 
 ## Color
 
@@ -128,7 +128,7 @@ SNY Jets broadcasts mentioned in the Jets.com profiles are described as separate
 
 Channel id `UCynpQXiIDMLylarxGZZz9Dg`, from https://www.youtube.com/@bartandwillieshow and the public RSS `https://www.youtube.com/feeds/videos.xml?channel_id=UCynpQXiIDMLylarxGZZz9Dg`.
 
-The hero is the latest full upload on that feed (not a Short), official iframe, muted, looping roughly the first 12 seconds, with a link to the same video on YouTube. There is no generated title sequence. If the feed fails, the hero is the field, the lockup, and the channel link.
+The hero is the latest full upload’s published title frame (YouTube’s `maxresdefault` still, or the feed thumbnail if that file is missing). There is no iframe in the hero, and no hosted copy of the upload: re-encoding their opener would not be a clip this site has the right to serve. Play opens that same video on YouTube. There is no generated title sequence. If the feed fails, the hero is the field, the lockup, and the channel link. The episode stage below is still a normal YouTube embed.
 
 ## YouTube and Instagram
 

@@ -133,17 +133,14 @@ html.reduce-motion .in-view {
   scrollbar-width: thin;
 }
 
-.hero-frame iframe {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100vw;
-  height: 56.25vw;
-  min-width: 177.78vh;
-  min-height: 100%;
-  transform: translate(-50%, -50%);
-  border: 0;
+.hero-media {
+  z-index: 0;
+  overflow: hidden;
   pointer-events: none;
+}
+
+.hero-copy {
+  transform: translateZ(0);
 }
 
 .footer-link {

@@ -16,7 +16,7 @@ export const copy = {
     hero: {
       kicker: "New episodes on Mondays & Fridays",
       lede: "Bart Scott and Willie Colon. Former New York Jets. Football, twice a week.",
-      opening: "Opening of the latest episode, muted.",
+      opening: "Title frame of the latest episode. Play opens it on YouTube.",
       watch: "Watch the full episode",
       channel: "YouTube channel",
       unavailable: "The channel feed did not load. The show is still on YouTube.",
@@ -158,7 +158,7 @@ export const copy = {
     hero: {
       kicker: "Novos episódios às segundas e sextas",
       lede: "Bart Scott e Willie Colon. Ex-jogadores do New York Jets. Futebol americano, duas vezes por semana.",
-      opening: "Abertura do episódio mais recente, sem som.",
+      opening: "Quadro de título do episódio mais recente. Reproduzir abre no YouTube.",
       watch: "Ver o episódio inteiro",
       channel: "Canal no YouTube",
       unavailable: "A fonte do canal não carregou. O programa continua no YouTube.",
