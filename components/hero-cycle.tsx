@@ -91,14 +91,14 @@ export function HeroCycle({
   return (
     <>
       <div className="absolute inset-0 bg-field">
-        <div className={`hero-fade absolute inset-0 ${phase === "hero" ? "opacity-100" : "opacity-0"}`}>
+        <div className={`hero-fade absolute inset-0 ${phase === "hero" ? "is-shown" : "is-hidden"}`}>
           {still ? (
             <Image src={still} alt="" fill priority sizes="100vw" className="object-cover opacity-80" />
           ) : null}
           <div className="absolute inset-0 bg-gradient-to-t from-field via-field/75 to-field/35" />
         </div>
         <div
-          className={`hero-fade absolute inset-0 bg-field ${phase === "short" ? "opacity-100" : "opacity-0"}`}
+          className={`hero-fade absolute inset-0 bg-field ${phase === "short" ? "is-shown" : "is-hidden"}`}
           aria-hidden={phase !== "short"}
         >
           {beat && file ? (
@@ -110,7 +110,7 @@ export function HeroCycle({
               muted
               playsInline
               preload="metadata"
-              className="h-full w-full object-contain"
+              className="absolute inset-0 h-full w-full object-cover"
               onEnded={() => finishBeat.current?.()}
               onError={() => {
                 setFailed((current) => ({ ...current, [beat.id]: true }));
@@ -120,15 +120,12 @@ export function HeroCycle({
           ) : beat ? (
             // The short's own poster. No iframe, so no YouTube chrome can appear.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={beat.poster} alt="" className="h-full w-full object-contain" />
+            <img src={beat.poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
           ) : null}
         </div>
       </div>
-      <div
-        className={`hero-fade relative z-10 ${phase === "hero" ? "opacity-100" : "pointer-events-none opacity-0"}`}
-      >
-        {children}
-      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent" />
+      <div className="relative z-10">{children}</div>
       {showMute ? (
         <Button
           type="button"

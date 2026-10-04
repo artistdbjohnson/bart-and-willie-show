@@ -41,7 +41,7 @@ export function ProfileTicker({
   const locked = useRef(false);
   const nudging = useRef(false);
   const moved = useRef(false);
-  const drag = useRef<{ x: number; offset: number } | null>(null);
+  const drag = useRef<{ x: number; y: number; offset: number; horizontal: boolean; vertical: boolean } | null>(null);
   const [lockOn, setLockOn] = useState(false);
   const [open, setOpen] = useState<InstagramPost | null>(null);
 
@@ -117,24 +117,48 @@ export function ProfileTicker({
     if (event.button !== 0) return;
     paused.current = true;
     moved.current = false;
-    drag.current = { x: event.clientX, offset: offset.current };
-    event.currentTarget.setPointerCapture(event.pointerId);
+    drag.current = {
+      x: event.clientX,
+      y: event.clientY,
+      offset: offset.current,
+      horizontal: false,
+      vertical: false,
+    };
   }
 
   function onPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
     const start = drag.current;
-    if (!start) return;
+    if (!start || start.vertical) return;
     const dx = event.clientX - start.x;
-    if (Math.abs(dx) > 6) moved.current = true;
-    applyOffset(start.offset - dx);
+    const dy = event.clientY - start.y;
+    if (!start.horizontal) {
+      if (Math.abs(dy) > 8 && Math.abs(dy) >= Math.abs(dx)) {
+        start.vertical = true;
+        return;
+      }
+      if (Math.abs(dx) <= 6 || Math.abs(dx) < Math.abs(dy)) return;
+      start.horizontal = true;
+      moved.current = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    applyOffset(start.offset - (event.clientX - start.x));
   }
 
   function onPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
-    const dragged = moved.current;
-    moved.current = false;
+    const dragged = moved.current || Boolean(drag.current?.vertical);
     drag.current = null;
     paused.current = false;
-    if (dragged) return;
+    if (dragged) {
+      const block = (click: Event) => {
+        click.preventDefault();
+        click.stopPropagation();
+        view.current?.removeEventListener("click", block, true);
+      };
+      view.current?.addEventListener("click", block, true);
+      moved.current = false;
+      return;
+    }
+    moved.current = false;
     const id = document.elementFromPoint(event.clientX, event.clientY)?.closest("[data-post]")?.getAttribute("data-post");
     const post = posts.find((item) => item.id === id);
     if (post) setOpen(post);
@@ -181,7 +205,7 @@ export function ProfileTicker({
       </div>
       <div
         ref={view}
-        className="ticker-view -mx-5 overflow-hidden px-5 sm:mx-0 sm:px-0"
+        className="ticker-view"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -247,28 +271,26 @@ function Thumbnail({
       type="button"
       role="listitem"
       data-post={post.id}
-      className="w-[78cqi] shrink-0 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+      className="w-[100cqi] shrink-0 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[calc((100cqi-0.75rem)/2)] lg:w-[calc((100cqi-1.5rem)/3)]"
       onClick={onOpen}
     >
-      <span className="relative block aspect-square overflow-hidden bg-field-bright/25">
+      <span className="relative block h-32 overflow-hidden bg-field-bright/25 sm:h-36">
         {/* Instagram CDN links expire, so the image is loaded through this site. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={`/api/ig-image?src=${encodeURIComponent(post.imageUrl)}`}
-          alt={post.caption ? post.caption.slice(0, 140) : ""}
+          alt=""
           width={640}
-          height={640}
+          height={480}
           draggable={false}
           className="h-full w-full object-cover"
         />
       </span>
-      <span className="mt-3 hidden font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet sm:block">
+      <span className="mt-3 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
         {post.kind === "clip" ? clipLabel : postLabel}
       </span>
       {post.caption ? (
-        <span className="mt-2 line-clamp-3 hidden font-serif text-base leading-snug sm:block">
-          {post.caption}
-        </span>
+        <span className="mt-2 line-clamp-3 font-serif text-base leading-snug">{post.caption}</span>
       ) : null}
     </button>
   );

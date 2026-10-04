@@ -33,8 +33,10 @@ export function LatestNest({
     ),
     ...rest.map((video) => <EpisodeSheet key={video.id} locale={locale} video={video} />),
   ];
-  // Five sheets: the newest episodes, the channel rail, then the profile.
-  // On a phone the stack stops on those five yellow edges.
+
+  // Five sheets: the newest episodes, then the channel, then the profile.
+  // The nest ends here, so the phone can stop on those yellow edges and
+  // the next scroll lets the stack go.
   const cards = [
     ...episodeSheets.slice(0, 3),
     <YouTubeRail key="youtube" locale={locale} videos={videos} feedOk={feedOk} nested />,
@@ -42,7 +44,7 @@ export function LatestNest({
   ];
 
   return (
-    <section id="episodes" aria-label={t.episodes.title} className="border-t border-chalk/15 px-5 sm:px-8">
+    <section id="episodes" aria-label={t.episodes.title} className="border-t border-chalk/15 bg-field px-5 sm:px-8">
       <div className="stack-head">
         <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">{t.episodes.kicker}</p>
         <h2 className="font-display text-[clamp(2rem,5vw,2.75rem)] leading-none">{t.episodes.title}</h2>
@@ -71,7 +73,7 @@ function EpisodeSheet({
         href={video.url}
         className="sheet-link group flex min-h-0 flex-1 flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-chalk"
       >
-        <span className="sheet-copy shrink-0 pt-3 pb-3">
+        <span className="sheet-lead sheet-copy shrink-0 pt-4 pb-3">
           <span className="font-ui text-[0.68rem] uppercase tracking-[0.16em] text-quiet">
             {featured ? `${t.episodes.featured} · ` : null}
             {formatWhen(video.published, locale)}
@@ -80,7 +82,7 @@ function EpisodeSheet({
             {video.title}
           </span>
         </span>
-        <span className="sheet-media relative block min-h-[40%] flex-1 overflow-hidden bg-ink">
+        <span className="sheet-media relative mt-3 block min-h-0 flex-1 overflow-hidden bg-ink">
           <Image
             src={video.thumbnail}
             alt=""
@@ -114,7 +116,7 @@ function EpisodeSheet({
 function EmptySheet({ locale }: { locale: Locale }) {
   const t = copy[locale];
   return (
-    <article className="flex h-full min-h-0 flex-col bg-field">
+    <article className="flex min-h-0 flex-col bg-field">
       <div className="flex flex-1 flex-col justify-end py-8">
         <p className="max-w-xl font-serif text-lg leading-relaxed">{t.episodes.empty}</p>
         <div className="mt-5">

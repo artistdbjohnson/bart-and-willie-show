@@ -11,16 +11,19 @@ export function YouTubeRail({
   videos,
   feedOk,
   nested = false,
+  flow = false,
 }: {
   locale: Locale;
   videos: ChannelVideo[];
   feedOk: boolean;
   nested?: boolean;
+  flow?: boolean;
 }) {
   const t = copy[locale];
+  const compact = nested || flow;
   const body = (
     <>
-      {nested ? (
+      {compact ? (
         <div>
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
             {t.channel.kicker}
@@ -33,7 +36,7 @@ export function YouTubeRail({
       ) : (
         <SectionHeading kicker={t.channel.kicker} title={t.channel.title} lede={t.channel.lede} />
       )}
-      <div className={nested ? "mt-6" : "mt-10"}>
+      <div className={compact ? "mt-6" : "mt-10"}>
         {!feedOk || videos.length === 0 ? (
             <div className="border border-dashed border-chalk/35 px-6 py-10">
               <p className="max-w-xl font-serif text-lg">{t.channel.empty}</p>
@@ -44,14 +47,23 @@ export function YouTubeRail({
               </div>
             </div>
           ) : (
-            <Rail label={t.channel.region} previous={t.channel.previous} next={t.channel.next}>
+            <Rail
+              label={t.channel.region}
+              previous={t.channel.previous}
+              next={t.channel.next}
+              controlsOnly={compact}
+            >
               {videos.map((video) => (
                 <a
                   key={video.id}
                   href={video.url}
-                  className="group w-[78%] shrink-0 snap-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[320px]"
+                  className={
+                    compact
+                      ? "group w-[100cqi] shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[calc((100cqi-1rem)/2)] lg:w-[calc((100cqi-2rem)/3)]"
+                      : "group w-[78%] shrink-0 snap-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[320px]"
+                  }
                 >
-                  <span className="relative block aspect-video overflow-hidden bg-field-bright/25">
+                  <span className={compact ? "relative block h-28 overflow-hidden bg-field-bright/25 sm:h-32" : "relative block aspect-video overflow-hidden bg-field-bright/25"}>
                     <Image
                       src={video.thumbnail}
                       alt=""
@@ -78,10 +90,18 @@ export function YouTubeRail({
     </>
   );
 
+  if (flow) {
+    return (
+      <section className="border-t border-chalk/15 bg-field" aria-label={t.channel.title}>
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-20">{body}</div>
+      </section>
+    );
+  }
+
   if (nested) {
     return (
       <article className="flex h-full min-h-0 w-full min-w-0 flex-col bg-field">
-        <div className="min-h-0 flex-1 overflow-auto py-4">{body}</div>
+        <div className="bg-field py-4">{body}</div>
       </article>
     );
   }

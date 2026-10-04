@@ -78,7 +78,8 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   html:not(.reduce-motion) {
-    scroll-behavior: smooth;
+    /* Auto, not smooth: smooth on the root animates every wheel tick. */
+    scroll-behavior: auto;
     transition:
       --field 700ms ease-out,
       --field-bright 700ms ease-out;
@@ -164,7 +165,9 @@ html.reduce-motion .in-view {
 }
 
 #episodes {
+  position: relative;
   max-width: 100%;
+  background: var(--field);
 }
 
 .stack-head {
@@ -175,12 +178,36 @@ html.reduce-motion .in-view {
   padding-bottom: var(--stack-peek);
 }
 
+.card-nest {
+  position: relative;
+  background: var(--field);
+}
+
+/* In-flow runway so the last sheet can sit on the five-bar stop.
+   Padding does not count. When this ends, the bars leave with the nest. */
+.nest-release {
+  height: 4.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nest-release {
+    height: 0;
+  }
+}
+
+html.reduce-motion .nest-release {
+  height: 0;
+}
+
+/* Sticky only inside this nest. The nest ends with the last sheet,
+   so the bars leave with the section. */
 .nest-card {
   position: sticky;
   height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
   min-width: 0;
   width: 100%;
-  background: transparent;
+  background: var(--field);
+  touch-action: pan-y;
 }
 
 @media (max-width: 639px) {
@@ -193,7 +220,18 @@ html.reduce-motion .in-view {
   display: flex;
   height: 100%;
   flex-direction: column;
+  overflow: clip;
   background-color: var(--field);
+}
+
+.nest-body {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: clip;
+  background: var(--field);
 }
 
 .sheet-edge {
@@ -302,26 +340,38 @@ html.reduce-motion .episode-sheet .sheet-extra {
   padding: 0;
 }
 
-.hero-copy {
-  transform: translateZ(0);
+.hero-fade.is-shown {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 1100ms ease-out,
+    visibility 0s linear;
 }
 
-.hero-fade {
-  transition: opacity 1100ms ease-out;
+.hero-fade.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 1100ms ease-out,
+    visibility 0s linear 1100ms;
 }
 
-.ticker-view {
+.ticker-view,
+.page-rail {
   container-type: inline-size;
+  overflow-x: clip;
   touch-action: pan-y;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-fade {
+  .hero-fade.is-shown,
+  .hero-fade.is-hidden {
     transition: none;
   }
 }
 
-html.reduce-motion .hero-fade {
+html.reduce-motion .hero-fade.is-shown,
+html.reduce-motion .hero-fade.is-hidden {
   transition: none;
 }
 
