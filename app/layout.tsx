@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Anton, Barlow_Condensed, Newsreader, Yellowtail } from "next/font/google";
+import { RegisterServiceWorker } from "@/components/register-sw";
 import "./globals.css";
 
 const anton = Anton({
@@ -41,11 +42,28 @@ function siteUrl() {
 
 export const viewport: Viewport = {
   viewportFit: "cover",
+  themeColor: "#145c32",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   referrer: "strict-origin-when-cross-origin",
+  applicationName: "The Bart & Willie Show",
+  appleWebApp: {
+    capable: true,
+    title: "The Bart & Willie Show",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
   title: "The Bart & Willie Show",
   description:
     "Bart Scott and Willie Colon, former New York Jets, with new episodes Mondays and Fridays.",
@@ -75,6 +93,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <noscript>
           <style>{`.blur-fade,.in-view{opacity:1!important;filter:none!important;transform:none!important}`}</style>
         </noscript>
+        <RegisterServiceWorker />
         {children}
       </body>
     </html>

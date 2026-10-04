@@ -12,7 +12,8 @@ import {
 } from "@/lib/youtube-player";
 import type { ShortBeat } from "@/lib/youtube";
 
-const HERO_HOLD = 6400;
+const STILL_HOLD = 3000;
+const FADE_MS = 1100;
 const START_LIMIT = 12000;
 
 export function HeroCycle({
@@ -60,11 +61,13 @@ export function HeroCycle({
 
     let cancelled = false;
     let timer = 0;
+    let poll = 0;
     let active: YoutubePlayer | null = null;
     const wait = (ms: number) =>
       new Promise<void>((resolve) => {
         timer = window.setTimeout(resolve, ms);
       });
+    const stopPoll = () => window.clearInterval(poll);
 
     const destroy = () => {
       const current = active;
@@ -90,7 +93,7 @@ export function HeroCycle({
       while (!cancelled) {
         setPhase("hero");
         setArmed(false);
-        await wait(HERO_HOLD);
+        await wait(STILL_HOLD);
         if (cancelled || reduced()) return;
 
         let guard = 0;
@@ -111,13 +114,49 @@ export function HeroCycle({
         host.className = "h-full w-full";
         hostParent.replaceChildren(host);
 
+        let shown = false;
         const outcome = await new Promise<"ended" | "error">((resolve) => {
           let settled = false;
+          let peak = 0;
+          let peakAt = 0;
           const finish = (value: "ended" | "error") => {
             if (settled) return;
             settled = true;
             window.clearTimeout(stall);
+            stopPoll();
             resolve(value);
+          };
+          const backToStill = () => {
+            if (!cancelled) {
+              setPhase("hero");
+              setArmed(false);
+            }
+            finish("ended");
+          };
+          const atEnd = (current: YoutubePlayer) => {
+            const duration = current.getDuration();
+            const time = current.getCurrentTime();
+            if (!Number.isFinite(duration) || !Number.isFinite(time)) return false;
+            if (duration < 2 || time < 1) return false;
+            if (time >= duration - 0.45) return true;
+            if (time > peak) {
+              peak = time;
+              peakAt = performance.now();
+              return false;
+            }
+            return peak >= duration - 1 && performance.now() - peakAt > 900;
+          };
+          const watch = () => {
+            stopPoll();
+            poll = window.setInterval(() => {
+              const current = active;
+              if (!current) return;
+              try {
+                if (current.getPlayerState() === PLAYER_ENDED || atEnd(current)) backToStill();
+              } catch {
+                /* the player already released the iframe */
+              }
+            }, 250);
           };
           const stall = window.setTimeout(() => finish("error"), START_LIMIT);
           active = attachPlayer(
@@ -139,20 +178,33 @@ export function HeroCycle({
               onReady: (event) => {
                 event.target.mute();
                 event.target.playVideo();
+                watch();
               },
               onStateChange: (event) => {
                 if (event.data === PLAYER_PLAYING) {
                   window.clearTimeout(stall);
+                  shown = true;
                   if (!cancelled) setPhase("short");
                 }
-                if (event.data === PLAYER_ENDED) finish("ended");
+                if (event.data === PLAYER_ENDED) backToStill();
               },
-              onError: () => finish("error"),
+              onError: () => {
+                if (shown && !cancelled) {
+                  setPhase("hero");
+                  setArmed(false);
+                }
+                finish("error");
+              },
             },
           );
           player.current = active;
         });
 
+        if (shown) {
+          setPhase("hero");
+          setArmed(false);
+          await wait(FADE_MS);
+        }
         destroy();
         if (outcome === "error") failed.add(next.id);
         if (cancelled) return;
@@ -163,6 +215,7 @@ export function HeroCycle({
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
+      stopPoll();
       destroy();
     };
   }, [shorts]);
@@ -199,8 +252,10 @@ export function HeroCycle({
           </div>
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent" />
-      <div className="relative z-10">{children}</div>
+      <div className={`hero-wash pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent ${phase === "short" ? "is-quiet" : ""}`} />
+      <div className={`hero-lockup relative z-10 ${phase === "short" ? "is-quiet" : ""}`}>
+        {children}
+      </div>
       {phase === "short" ? (
         <Button
           type="button"
