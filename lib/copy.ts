@@ -3,6 +3,7 @@ import type { Locale } from "@/lib/paths";
 export const copy = {
   en: {
     skip: "Skip to content",
+    toTop: "Back to top",
     nav: {
       episodes: "Episodes",
       jets: "Jets",
@@ -23,11 +24,6 @@ export const copy = {
       channel: "The YouTube channel",
       unavailable: "The channel feed did not load. The show is still on YouTube.",
     },
-    stats: [
-      { value: "Mon & Fri", label: "New episodes" },
-      { value: "Scott & Colon", label: "The desk" },
-      { value: "Jets", label: "The club" },
-    ],
     episodes: {
       kicker: "Episodes",
       title: "Latest",
@@ -47,6 +43,8 @@ export const copy = {
       previous: "Previous videos",
       next: "Next videos",
       region: "Recent uploads",
+      pause: "Pause",
+      play: "Play",
       empty: "The YouTube feed did not load. No stand-in titles are listed.",
       views: "views",
     },
@@ -141,6 +139,7 @@ export const copy = {
   },
   pt: {
     skip: "Pular para o conteúdo",
+    toTop: "Voltar ao topo",
     nav: {
       episodes: "Episódios",
       jets: "Jets",
@@ -161,11 +160,6 @@ export const copy = {
       channel: "O canal no YouTube",
       unavailable: "A fonte do canal não carregou. O programa continua no YouTube.",
     },
-    stats: [
-      { value: "Seg e sex", label: "Novos episódios" },
-      { value: "Scott e Colon", label: "A bancada" },
-      { value: "Jets", label: "O clube" },
-    ],
     episodes: {
       kicker: "Episódios",
       title: "Mais recente",
@@ -185,6 +179,8 @@ export const copy = {
       previous: "Vídeos anteriores",
       next: "Próximos vídeos",
       region: "Envios recentes",
+      pause: "Pausa",
+      play: "Tocar",
       empty: "A fonte do YouTube não carregou. Nenhum título foi inventado.",
       views: "visualizações",
     },

@@ -2,7 +2,6 @@ import { Hero } from "@/components/hero";
 import { JetsSection } from "@/components/jets-section";
 import { LatestNest } from "@/components/latest-nest";
 import { PageShell } from "@/components/page-shell";
-import { StatsRow } from "@/components/stats-row";
 import { SubscribeForm } from "@/components/subscribe-form";
 import { getInstagram } from "@/lib/instagram";
 import type { Locale } from "@/lib/paths";
@@ -17,7 +16,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
   return (
     <PageShell locale={locale}>
       <Hero locale={locale} video={lead} still={still} shorts={shorts} />
-      <StatsRow locale={locale} />
       <LatestNest
         locale={locale}
         videos={channel.videos}
@@ -25,7 +23,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         instagram={instagram}
       />
       <JetsSection locale={locale} videos={channel.videos} compactTop />
-      <SubscribeForm locale={locale} image={still} />
+      <SubscribeForm locale={locale} />
     </PageShell>
   );
 }

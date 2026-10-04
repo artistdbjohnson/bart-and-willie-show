@@ -5,6 +5,9 @@ export type YoutubePlayer = {
   playVideo: () => void;
   pauseVideo: () => void;
   stopVideo: () => void;
+  getCurrentTime: () => number;
+  getDuration: () => number;
+  getPlayerState: () => number;
   destroy: () => void;
 };
 
@@ -82,3 +85,4 @@ export function loadYoutube() {
 
 export const PLAYER_PLAYING = 1;
 export const PLAYER_ENDED = 0;
+export const PLAYER_PAUSED = 2;

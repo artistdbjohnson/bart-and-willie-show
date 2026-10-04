@@ -44,12 +44,12 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           className="flex min-w-0 items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
         >
           <Image
-            src="/brand/mark.jpg"
+            src="/brand/mark-knockout.png"
             alt="The Bart & Willie Show"
             width={512}
             height={512}
             priority
-            className="size-11 object-cover"
+            className="size-11 shrink-0 object-contain"
           />
           <span className="hidden font-display text-xl leading-none tracking-tight sm:block">
             THE BART & WILLIE SHOW

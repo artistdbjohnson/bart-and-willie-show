@@ -180,7 +180,7 @@ html.reduce-motion .in-view {
 
 .card-nest {
   position: relative;
-  background: var(--field);
+  background: transparent;
 }
 
 /* In-flow runway so the last sheet can sit on the five-bar stop.
@@ -206,7 +206,9 @@ html.reduce-motion .nest-release {
   height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
   min-width: 0;
   width: 100%;
-  background: var(--field);
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  backdrop-filter: blur(12px) saturate(1.2);
   touch-action: pan-y;
 }
 
@@ -221,7 +223,7 @@ html.reduce-motion .nest-release {
   height: 100%;
   flex-direction: column;
   overflow: clip;
-  background-color: var(--field);
+  background-color: transparent;
 }
 
 .nest-body {
@@ -231,13 +233,13 @@ html.reduce-motion .nest-release {
   flex: 1;
   flex-direction: column;
   overflow: clip;
-  background: var(--field);
+  background: transparent;
 }
 
 .sheet-edge {
   height: var(--stack-peek);
   flex: none;
-  background: var(--field);
+  background: transparent;
 }
 
 .sheet-edge-signal {
@@ -405,6 +407,36 @@ html.reduce-motion .episode-sheet .sheet-extra {
     visibility 0s linear 1100ms;
 }
 
+.hero-quiet,
+.hero-wash {
+  opacity: 1;
+  transition: opacity 1100ms ease-out;
+}
+
+.hero-lockup.is-quiet .hero-quiet,
+.hero-wash.is-quiet {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.marquee-view {
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.newsletter-art {
+  background-color: var(--field);
+  background-image:
+    linear-gradient(180deg, color-mix(in srgb, var(--field-bright) 36%, transparent), transparent 46%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 72px,
+      rgb(247 244 234 / 0.08) 72px,
+      rgb(247 244 234 / 0.08) 73px
+    );
+}
+
 .ticker-view,
 .page-rail {
   container-type: inline-size;
@@ -416,6 +448,8 @@ html.reduce-motion .episode-sheet .sheet-extra {
   .hero-fade.is-shown,
   .hero-fade.is-hidden,
   .hero-fade.is-armed,
+  .hero-quiet,
+  .hero-wash,
   .watch-backdrop,
   .watch-panel {
     transition: none;
@@ -425,6 +459,8 @@ html.reduce-motion .episode-sheet .sheet-extra {
 html.reduce-motion .hero-fade.is-shown,
 html.reduce-motion .hero-fade.is-hidden,
 html.reduce-motion .hero-fade.is-armed,
+html.reduce-motion .hero-quiet,
+html.reduce-motion .hero-wash,
 html.reduce-motion .watch-backdrop,
 html.reduce-motion .watch-panel {
   transition: none;

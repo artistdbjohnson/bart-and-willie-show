@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState, type FormEvent } from "react";
-import { SectionHeading } from "@/components/section-heading";
+import { ChalkPlay } from "@/components/chalk-play";
+import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,12 @@ import type { Locale } from "@/lib/paths";
 type Row = { name: string; email: string; locale: Locale; createdAt: string };
 
 const LOCAL_KEY = "baw-subscribers";
+
+function titleLines(title: string) {
+  const breakAt = title.indexOf(". ");
+  if (breakAt === -1) return [title];
+  return [title.slice(0, breakAt + 1), title.slice(breakAt + 2)];
+}
 
 function readLocal(): Row[] {
   try {
@@ -32,7 +38,7 @@ function csvEscape(value: string) {
   return value;
 }
 
-export function SubscribeForm({ locale, image }: { locale: Locale; image?: string | null }) {
+export function SubscribeForm({ locale }: { locale: Locale }) {
   const t = copy[locale].list;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -119,34 +125,26 @@ export function SubscribeForm({ locale, image }: { locale: Locale; image?: strin
 
   return (
     <section className="border-t border-chalk/15">
-      <div className="mx-auto grid max-w-6xl items-end gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-12 lg:gap-12">
-        <div className="relative lg:col-span-6">
-          <div className="relative aspect-[4/5] overflow-hidden bg-signal sm:aspect-[5/4]">
-            {image ? (
-              <Image src={image} alt="" fill unoptimized sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
-            ) : (
-              <Image
-                src="/brand/mark.jpg"
-                alt="The Bart & Willie Show"
-                fill
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-field via-field/20 to-transparent" />
-            {image ? (
-              <Image
-                src="/brand/mark.jpg"
-                alt=""
-                width={512}
-                height={512}
-                className="absolute top-4 left-4 size-14 object-cover sm:top-6 sm:left-6 sm:size-16"
-              />
-            ) : null}
+      <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-12 lg:gap-12">
+        <div className="newsletter-art @container relative flex aspect-[4/5] items-end overflow-hidden sm:aspect-[5/4] lg:col-span-6">
+          <ChalkPlay className="pointer-events-none absolute top-6 right-2 h-40 w-auto text-chalk sm:h-52" />
+          <div className="relative z-[1] w-full p-6 pb-8 sm:p-8">
+            <Lockup size="footer" />
           </div>
+          <span className="absolute inset-x-0 bottom-0 h-1 bg-signal" aria-hidden="true" />
         </div>
         <div className="lg:col-span-5 lg:col-start-8">
-          <SectionHeading kicker={t.kicker} title={t.title} lede={t.lede} />
+          <div className="@container max-w-3xl">
+            <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">{t.kicker}</p>
+            <h2 className="mt-3 font-display text-[clamp(1.75rem,8.8cqi,3.75rem)] leading-[0.84] tracking-tight">
+              {titleLines(t.title).map((line) => (
+                <span key={line} className="block whitespace-nowrap">
+                  {line}
+                </span>
+              ))}
+            </h2>
+            <p className="mt-6 max-w-2xl font-serif text-lg leading-relaxed text-chalk/85 md:text-xl">{t.lede}</p>
+          </div>
         <form
           onSubmit={onSubmit}
           className="mt-8 border-t-4 border-signal pt-8"

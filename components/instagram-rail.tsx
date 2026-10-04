@@ -83,8 +83,8 @@ export function InstagramRail({
 
   if (nested) {
     return (
-      <article className="flex h-full min-h-0 w-full min-w-0 flex-col bg-field">
-        <div className="min-h-0 bg-field py-4">{body}</div>
+      <article className="flex h-full min-h-0 w-full min-w-0 flex-col">
+        <div className="min-h-0 py-4">{body}</div>
       </article>
     );
   }

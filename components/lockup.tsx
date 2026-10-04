@@ -11,8 +11,8 @@ export function Lockup({
 }) {
   const type =
     size === "footer"
-      ? "text-[clamp(1.2rem,9.5cqi,3.4rem)]"
-      : "text-[clamp(2rem,7.4vw,5.6rem)]";
+      ? "text-[clamp(1.35rem,10cqi,3.15rem)]"
+      : "text-[clamp(2rem,7.4vw,3.4rem)] lg:text-[4.15rem]";
   return (
     <div className={cn(size === "footer" ? "@container w-full max-w-full" : "w-max max-w-full", className)}>
       <div className="bg-signal px-[0.35em] py-[0.08em] text-ink">
