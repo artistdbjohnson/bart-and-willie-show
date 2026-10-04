@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { copy, formatWhen } from "@/lib/copy";
 import type { Locale } from "@/lib/paths";
+import { useWatch } from "@/components/watch-dialog";
 import { CHANNEL_URL, fullEpisodes, isOct2Show, type ChannelVideo } from "@/lib/youtube";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ export function EpisodeStage({
   feedOk: boolean;
 }) {
   const t = copy[locale];
+  const openWatch = useWatch();
   const episodes = useMemo(() => fullEpisodes(videos), [videos]);
   const [activeId, setActiveId] = useState(episodes[0]?.id ?? "");
   const active = episodes.find((video) => video.id === activeId) ?? episodes[0];
@@ -57,8 +59,19 @@ export function EpisodeStage({
                 </p>
               ) : null}
               <div className="mt-6">
-                <Button asChild variant="outline">
-                  <a href={active.url}>{t.episodes.open}</a>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    openWatch({
+                      id: active.id,
+                      title: active.title,
+                      kind: "video",
+                      poster: active.thumbnail,
+                    })
+                  }
+                >
+                  {t.episodes.open}
                 </Button>
               </div>
             </div>
@@ -83,6 +96,7 @@ export function EpisodeStage({
                           src={video.thumbnail}
                           alt=""
                           fill
+                          unoptimized
                           sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
                           className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.04]"
                         />

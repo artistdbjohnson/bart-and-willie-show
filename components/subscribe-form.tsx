@@ -123,7 +123,7 @@ export function SubscribeForm({ locale, image }: { locale: Locale; image?: strin
         <div className="relative lg:col-span-6">
           <div className="relative aspect-[4/5] overflow-hidden bg-signal sm:aspect-[5/4]">
             {image ? (
-              <Image src={image} alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+              <Image src={image} alt="" fill unoptimized sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
             ) : (
               <Image
                 src="/brand/mark.jpg"

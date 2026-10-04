@@ -3,10 +3,16 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  loadYoutube,
+  PLAYER_ENDED,
+  PLAYER_PLAYING,
+  type YoutubePlayer,
+} from "@/lib/youtube-player";
 import type { ShortBeat } from "@/lib/youtube";
 
 const HERO_HOLD = 6400;
-const POSTER_HOLD = 4800;
+const START_LIMIT = 12000;
 
 export function HeroCycle({
   still,
@@ -21,14 +27,29 @@ export function HeroCycle({
   unmute: string;
   children: ReactNode;
 }) {
+  const root = useRef<HTMLDivElement>(null);
+  const mount = useRef<HTMLDivElement>(null);
+  const player = useRef<YoutubePlayer | null>(null);
   const [phase, setPhase] = useState<"hero" | "short">("hero");
-  const [index, setIndex] = useState(0);
+  const [armed, setArmed] = useState(false);
   const [muted, setMuted] = useState(true);
-  const [failed, setFailed] = useState<Record<string, boolean>>({});
-  const video = useRef<HTMLVideoElement>(null);
-  const finishBeat = useRef<(() => void) | null>(null);
-  const beat = shorts[index] ?? null;
-  const file = beat && beat.src && !failed[beat.id] ? beat.src : null;
+  const [box, setBox] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const node = root.current;
+    if (!node) return;
+    const measure = () => {
+      const width = node.clientWidth;
+      const height = node.clientHeight;
+      if (!width || !height) return;
+      const scale = Math.max(width / 9, height / 16);
+      setBox({ width: 9 * scale, height: 16 * scale });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const reduced = () =>
@@ -38,95 +59,152 @@ export function HeroCycle({
 
     let cancelled = false;
     let timer = 0;
+    let active: YoutubePlayer | null = null;
     const wait = (ms: number) =>
       new Promise<void>((resolve) => {
         timer = window.setTimeout(resolve, ms);
       });
 
+    const destroy = () => {
+      const current = active;
+      active = null;
+      player.current = null;
+      try {
+        current?.destroy();
+      } catch {
+        /* the player already released the iframe */
+      }
+    };
+
     const run = async () => {
+      let api: Awaited<ReturnType<typeof loadYoutube>>;
+      try {
+        api = await loadYoutube();
+      } catch {
+        return;
+      }
+      if (cancelled) return;
       let cursor = 0;
+      const failed = new Set<string>();
+
       while (!cancelled) {
         setPhase("hero");
+        setArmed(false);
         await wait(HERO_HOLD);
         if (cancelled || reduced()) return;
-        const next = shorts[cursor % shorts.length];
+
+        let guard = 0;
+        let next = shorts[cursor % shorts.length];
+        while (failed.has(next.id) && guard < shorts.length) {
+          cursor += 1;
+          guard += 1;
+          next = shorts[cursor % shorts.length];
+        }
+        if (failed.has(next.id)) return;
         cursor += 1;
-        setIndex((cursor - 1) % shorts.length);
-        setPhase("short");
-        await new Promise<void>((resolve) => {
-          finishBeat.current = resolve;
-          timer = window.setTimeout(resolve, next.src ? 45000 : POSTER_HOLD);
+
+        setArmed(true);
+        await wait(40);
+        const hostParent = mount.current;
+        if (!hostParent || cancelled) return;
+        const host = document.createElement("div");
+        host.className = "h-full w-full";
+        hostParent.replaceChildren(host);
+
+        const outcome = await new Promise<"ended" | "error">((resolve) => {
+          let settled = false;
+          const finish = (value: "ended" | "error") => {
+            if (settled) return;
+            settled = true;
+            window.clearTimeout(stall);
+            resolve(value);
+          };
+          const stall = window.setTimeout(() => finish("error"), START_LIMIT);
+          active = new api.Player(host, {
+            videoId: next.id,
+            width: "100%",
+            height: "100%",
+            host: "https://www.youtube-nocookie.com",
+            playerVars: {
+              autoplay: 1,
+              mute: 1,
+              controls: 0,
+              modestbranding: 1,
+              rel: 0,
+              iv_load_policy: 3,
+              fs: 0,
+              disablekb: 1,
+              playsinline: 1,
+              cc_load_policy: 0,
+              origin: window.location.origin,
+            },
+            events: {
+              onReady: (event) => {
+                event.target.mute();
+                event.target.playVideo();
+              },
+              onStateChange: (event) => {
+                if (event.data === PLAYER_PLAYING) {
+                  window.clearTimeout(stall);
+                  if (!cancelled) setPhase("short");
+                }
+                if (event.data === PLAYER_ENDED) finish("ended");
+              },
+              onError: () => finish("error"),
+            },
+          });
+          player.current = active;
         });
-        finishBeat.current = null;
+
+        destroy();
+        if (outcome === "error") failed.add(next.id);
+        if (cancelled) return;
       }
     };
 
     void run();
     return () => {
       cancelled = true;
-      finishBeat.current = null;
       window.clearTimeout(timer);
+      destroy();
     };
   }, [shorts]);
 
-  useEffect(() => {
-    const node = video.current;
-    if (!node) return;
-    node.muted = muted;
-    if (phase === "short" && file) {
-      const play = node.play();
-      if (play) {
-        play.catch(() => {
-          setFailed((current) => ({ ...current, [beat?.id ?? ""]: true }));
-          finishBeat.current?.();
-        });
-      }
-    } else {
-      node.pause();
-    }
-  }, [phase, file, muted, beat?.id]);
-
-  const showMute = phase === "short" && Boolean(file);
+  const shortClass = phase === "short" ? "is-shown" : armed ? "is-armed" : "is-hidden";
 
   return (
     <>
-      <div className="absolute inset-0 bg-field">
+      <div ref={root} className="absolute inset-0 overflow-hidden bg-field">
         <div className={`hero-fade absolute inset-0 ${phase === "hero" ? "is-shown" : "is-hidden"}`}>
           {still ? (
-            <Image src={still} alt="" fill priority sizes="100vw" className="object-cover opacity-80" />
+            <Image
+              src={still}
+              alt=""
+              fill
+              priority
+              unoptimized
+              sizes="100vw"
+              className="object-cover opacity-80"
+            />
           ) : null}
           <div className="absolute inset-0 bg-gradient-to-t from-field via-field/75 to-field/35" />
         </div>
-        <div
-          className={`hero-fade absolute inset-0 bg-field ${phase === "short" ? "is-shown" : "is-hidden"}`}
-          aria-hidden={phase !== "short"}
-        >
-          {beat && file ? (
-            <video
-              ref={video}
-              key={beat.id}
-              src={file}
-              poster={beat.poster}
-              muted
-              playsInline
-              preload="metadata"
-              className="absolute inset-0 h-full w-full object-cover"
-              onEnded={() => finishBeat.current?.()}
-              onError={() => {
-                setFailed((current) => ({ ...current, [beat.id]: true }));
-                finishBeat.current?.();
-              }}
-            />
-          ) : beat ? (
-            // The short's own poster. No iframe, so no YouTube chrome can appear.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={beat.poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          ) : null}
+        <div className={`hero-fade absolute inset-0 overflow-hidden ${shortClass}`} aria-hidden={phase !== "short"}>
+          <div
+            className="hero-player absolute left-1/2 top-1/2"
+            style={{
+              width: box.width || "100%",
+              height: box.height || "100%",
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <div ref={mount} className="h-full w-full" />
+          </div>
         </div>
       </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent" />
       <div className="relative z-10">{children}</div>
-      {showMute ? (
+      {phase === "short" ? (
         <Button
           type="button"
           variant="outline"
@@ -134,7 +212,17 @@ export function HeroCycle({
           aria-label={muted ? unmute : mute}
           aria-pressed={!muted}
           className="absolute right-5 bottom-6 z-20 sm:right-8"
-          onClick={() => setMuted((value) => !value)}
+          onClick={() => {
+            const current = player.current;
+            if (!current) return;
+            if (current.isMuted()) {
+              current.unMute();
+              setMuted(false);
+            } else {
+              current.mute();
+              setMuted(true);
+            }
+          }}
         >
           {muted ? <MuteIcon /> : <SoundIcon />}
         </Button>

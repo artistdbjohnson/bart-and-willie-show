@@ -4,6 +4,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { copy, formatViews, formatWhen } from "@/lib/copy";
 import type { Locale } from "@/lib/paths";
+import { WatchTarget } from "@/components/watch-dialog";
 import { CHANNEL_URL, type ChannelVideo } from "@/lib/youtube";
 
 export function YouTubeRail({
@@ -54,9 +55,12 @@ export function YouTubeRail({
               controlsOnly={compact}
             >
               {videos.map((video) => (
-                <a
+                <WatchTarget
                   key={video.id}
-                  href={video.url}
+                  id={video.id}
+                  title={video.title}
+                  kind={video.kind}
+                  poster={video.thumbnail}
                   className={
                     compact
                       ? "group w-[100cqi] shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[calc((100cqi-1rem)/2)] lg:w-[calc((100cqi-2rem)/3)]"
@@ -68,7 +72,8 @@ export function YouTubeRail({
                       src={video.thumbnail}
                       alt=""
                       fill
-                      sizes="320px"
+                      unoptimized
+                      sizes="(min-width: 1024px) 30vw, 100vw"
                       className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.04]"
                     />
                   </span>
@@ -82,7 +87,7 @@ export function YouTubeRail({
                       {formatViews(video.views, locale)} {t.channel.views}
                     </span>
                   ) : null}
-                </a>
+                </WatchTarget>
               ))}
             </Rail>
           )}
