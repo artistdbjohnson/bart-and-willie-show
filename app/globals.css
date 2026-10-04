@@ -178,14 +178,17 @@ html.reduce-motion .in-view {
   }
 
   .episode-face > a {
+    display: grid;
     grid-template-columns: 7.5rem 1fr;
     align-items: center;
+    gap: 0.9rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
   }
 
   .face-media {
     min-height: 0 !important;
+    flex: none;
     aspect-ratio: 16 / 9;
   }
 }
