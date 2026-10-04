@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { copy, formatWhen } from "@/lib/copy";
 import type { Locale } from "@/lib/paths";
-import { CHANNEL_URL, excerpt, fullEpisodes, type ChannelVideo } from "@/lib/youtube";
+import { CHANNEL_URL, fullEpisodes, isOct2Show, type ChannelVideo } from "@/lib/youtube";
 import { cn } from "@/lib/utils";
 
 export function EpisodeStage({
@@ -51,9 +51,9 @@ export function EpisodeStage({
               <p className="mt-3 font-ui text-[0.68rem] uppercase tracking-[0.16em] text-quiet">
                 {formatWhen(active.published, locale)}
               </p>
-              {excerpt(active.description) ? (
+              {isOct2Show(active) ? (
                 <p className="mt-4 font-serif text-lg leading-relaxed text-chalk/80">
-                  {excerpt(active.description)}
+                  {t.episodes.featuredLine}
                 </p>
               ) : null}
               <div className="mt-6">

@@ -7,7 +7,7 @@ import { copy, formatWhen } from "@/lib/copy";
 import type { InstagramFeed } from "@/lib/instagram";
 import type { Locale } from "@/lib/paths";
 import { cn } from "@/lib/utils";
-import { CHANNEL_URL, excerpt, fullEpisodes, type ChannelVideo } from "@/lib/youtube";
+import { CHANNEL_URL, fullEpisodes, isOct2Show, type ChannelVideo } from "@/lib/youtube";
 
 export function LatestNest({
   locale,
@@ -62,7 +62,8 @@ function EpisodeSheet({
   featured?: boolean;
 }) {
   const t = copy[locale];
-  const blurb = featured ? excerpt(video.description) : "";
+  const oct2 = isOct2Show(video);
+  const blurb = oct2 ? t.episodes.featuredLine : "";
 
   return (
     <article className="episode-sheet flex h-full min-h-0 flex-col bg-field">
@@ -88,10 +89,10 @@ function EpisodeSheet({
             className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.03]"
           />
         </span>
-        {featured ? (
+        {featured || oct2 ? (
           <span className="sheet-extra shrink-0 pt-3 pb-4">
             {blurb ? (
-              <span className="line-clamp-2 block font-serif text-base leading-relaxed text-chalk/85">
+              <span className="block font-serif text-base leading-relaxed text-chalk/85">
                 {blurb}
               </span>
             ) : null}

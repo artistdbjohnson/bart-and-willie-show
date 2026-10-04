@@ -72,13 +72,6 @@ export function mentionsJets(video: ChannelVideo) {
   return /jets/i.test(chapterBlock);
 }
 
-export function excerpt(description: string) {
-  const cut = description.split(/chapters:/i)[0].replace(/\s+/g, " ").trim();
-  if (!cut) return "";
-  if (cut.length <= 240) return cut;
-  return `${cut.slice(0, 220).replace(/\s+\S*$/, "")}…`;
-}
-
 export async function getChannel(): Promise<
   { ok: true; videos: ChannelVideo[] } | { ok: false; videos: [] }
 > {
@@ -98,6 +91,13 @@ export async function getChannel(): Promise<
 
 export function fullEpisodes(videos: ChannelVideo[]) {
   return videos.filter((video) => video.kind === "video");
+}
+
+/** The Oct 2, 2026 show. Wren's featured line stays on this episode only. */
+export function isOct2Show(video: Pick<ChannelVideo, "id" | "published" | "title">) {
+  if (video.id === "uKSv6ZVq4xc") return true;
+  if (video.published.slice(0, 10) !== "2026-10-02") return false;
+  return /Honest Take on Jets/i.test(video.title);
 }
 
 export function shortsFrom(videos: ChannelVideo[]) {
