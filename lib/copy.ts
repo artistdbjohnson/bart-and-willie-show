@@ -17,6 +17,8 @@ export const copy = {
       kicker: "New episodes on Mondays & Fridays",
       lede: "Bart Scott and Willie Colon. Former New York Jets. Football, twice a week.",
       opening: "Title frame of the latest episode. Play opens it on YouTube.",
+      mute: "Mute",
+      unmute: "Unmute",
       watch: "Watch the full episode",
       channel: "YouTube channel",
       unavailable: "The channel feed did not load. The show is still on YouTube.",
@@ -58,6 +60,9 @@ export const copy = {
       post: "Post",
       clip: "Clip",
       profile: "The rest of the profile",
+      pause: "Pause",
+      play: "Play",
+      thePost: "The post",
       empty:
         "Instagram did not return a public feed to this page. Nothing here is a stand-in post.",
       count: (shown: number, total: number | null) =>
@@ -159,6 +164,8 @@ export const copy = {
       kicker: "Novos episódios às segundas e sextas",
       lede: "Bart Scott e Willie Colon. Ex-jogadores do New York Jets. Futebol americano, duas vezes por semana.",
       opening: "Quadro de título do episódio mais recente. Reproduzir abre no YouTube.",
+      mute: "Mudo",
+      unmute: "Som",
       watch: "Ver o episódio inteiro",
       channel: "Canal no YouTube",
       unavailable: "A fonte do canal não carregou. O programa continua no YouTube.",
@@ -200,6 +207,9 @@ export const copy = {
       post: "Post",
       clip: "Clipe",
       profile: "O resto do perfil",
+      pause: "Pausa",
+      play: "Tocar",
+      thePost: "A publicação",
       empty:
         "O Instagram não devolveu uma fonte pública para esta página. Nada aqui é uma publicação inventada.",
       count: (shown: number, total: number | null) =>

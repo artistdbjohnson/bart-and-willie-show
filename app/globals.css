@@ -183,6 +183,12 @@ html.reduce-motion .in-view {
   background: transparent;
 }
 
+@media (max-width: 639px) {
+  .nest-card-stop {
+    height: calc(100svh - var(--nav-clear) - (var(--stack-bars) * var(--stack-peek)));
+  }
+}
+
 .nest-face {
   display: flex;
   height: 100%;
@@ -208,7 +214,8 @@ html.reduce-motion .in-view {
     gap: var(--stack-peek);
   }
 
-  .nest-card {
+  .nest-card,
+  .nest-card-stop {
     position: static;
     top: auto !important;
     height: auto;
@@ -254,7 +261,8 @@ html.reduce-motion .card-nest {
   gap: var(--stack-peek);
 }
 
-html.reduce-motion .nest-card {
+html.reduce-motion .nest-card,
+html.reduce-motion .nest-card-stop {
   position: static;
   top: auto !important;
   height: auto;
@@ -296,6 +304,25 @@ html.reduce-motion .episode-sheet .sheet-extra {
 
 .hero-copy {
   transform: translateZ(0);
+}
+
+.hero-fade {
+  transition: opacity 1100ms ease-out;
+}
+
+.ticker-view {
+  container-type: inline-size;
+  touch-action: pan-y;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade {
+    transition: none;
+  }
+}
+
+html.reduce-motion .hero-fade {
+  transition: none;
 }
 
 .footer-link {

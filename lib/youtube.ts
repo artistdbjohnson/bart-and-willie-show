@@ -99,3 +99,70 @@ export async function getChannel(): Promise<
 export function fullEpisodes(videos: ChannelVideo[]) {
   return videos.filter((video) => video.kind === "video");
 }
+
+export function shortsFrom(videos: ChannelVideo[]) {
+  return videos.filter((video) => video.kind === "short");
+}
+
+export async function titleFrame(video: Pick<ChannelVideo, "id" | "thumbnail">) {
+  const max = `https://i.ytimg.com/vi/${video.id}/maxresdefault.jpg`;
+  try {
+    const response = await fetch(max, { method: "HEAD", next: { revalidate: 1800 } });
+    if (response.ok && response.headers.get("content-type")?.includes("image")) return max;
+  } catch {
+    /* the feed thumbnail is the frame YouTube already published */
+  }
+  return video.thumbnail;
+}
+
+export type ShortBeat = {
+  id: string;
+  poster: string;
+  src: string | null;
+};
+
+// A direct file, when YouTube will hand one over. Otherwise the beat is the poster.
+export async function shortFile(id: string): Promise<string | null> {
+  try {
+    const response = await fetch("https://www.youtube.com/youtubei/v1/player?prettyPrint=false", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent":
+          "com.google.android.youtube/20.10.38 (Linux; U; Android 14) gzip",
+      },
+      body: JSON.stringify({
+        videoId: id,
+        context: {
+          client: {
+            clientName: "ANDROID",
+            clientVersion: "20.10.38",
+            androidSdkVersion: 34,
+            hl: "en",
+            gl: "US",
+            osName: "Android",
+            osVersion: "14",
+          },
+        },
+      }),
+      signal: AbortSignal.timeout(2500),
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    const payload = (await response.json()) as {
+      playabilityStatus?: { status?: string };
+      streamingData?: {
+        formats?: { mimeType?: string; url?: string; contentLength?: string }[];
+      };
+    };
+    if (payload.playabilityStatus?.status !== "OK") return null;
+    const files = (payload.streamingData?.formats ?? []).filter(
+      (format) => format.url && format.mimeType?.includes("video/mp4"),
+    );
+    files.sort((a, b) => Number(a.contentLength ?? 0) - Number(b.contentLength ?? 0));
+    const file = files.find((format) => Number(format.contentLength ?? 0) > 0) ?? files[0];
+    return file?.url ?? null;
+  } catch {
+    return null;
+  }
+}

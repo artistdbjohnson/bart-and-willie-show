@@ -25,13 +25,18 @@ export function LatestNest({
   const [lead, ...rest] = episodes;
   const hasLead = Boolean(feedOk && lead);
 
-  const cards = [
+  const episodeSheets = [
     hasLead && lead ? (
       <EpisodeSheet key={lead.id} locale={locale} video={lead} featured />
     ) : (
       <EmptySheet key="empty" locale={locale} />
     ),
     ...rest.map((video) => <EpisodeSheet key={video.id} locale={locale} video={video} />),
+  ];
+  // Five sheets: the newest episodes, the channel rail, then the profile.
+  // On a phone the stack stops on those five yellow edges.
+  const cards = [
+    ...episodeSheets.slice(0, 3),
     <YouTubeRail key="youtube" locale={locale} videos={videos} feedOk={feedOk} nested />,
     <InstagramRail key="instagram" locale={locale} feed={instagram} nested />,
   ];

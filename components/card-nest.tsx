@@ -93,6 +93,14 @@ export function CardNest({ children }: { children: ReactNode[] }) {
         }
         const visual = face.getBoundingClientRect().top;
         const natural = visual - applied[index];
+        // Settled cards keep their 12px chrome. Moving them here would hide
+        // the yellow edges the phone stack stops on.
+        const stickyTop = nav + (index + 1) * PEEK;
+        if (Math.abs(natural - stickyTop) < 1.5) {
+          applied[index] = 0;
+          face.style.transform = "";
+          return;
+        }
         const boxes = list.slice(0, index).flatMap((earlier) => typeBoxes(earlier));
 
         // Step to the near side of the whole run of type the rule would
@@ -152,11 +160,11 @@ export function CardNest({ children }: { children: ReactNode[] }) {
   }, [count]);
 
   return (
-    <div ref={nest} className="card-nest">
+    <div ref={nest} className="card-nest" style={{ ["--stack-bars" as string]: count }}>
       {children.map((child, index) => (
         <div
           key={index}
-          className="nest-card"
+          className={index === count - 1 ? "nest-card nest-card-stop" : "nest-card"}
           style={{
             zIndex: index + 1,
             top: `calc(var(--nav-clear) + ${(index + 1) * PEEK}px)`,

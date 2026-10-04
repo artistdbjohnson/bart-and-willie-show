@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, type FormEvent } from "react";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
@@ -31,7 +32,7 @@ function csvEscape(value: string) {
   return value;
 }
 
-export function SubscribeForm({ locale }: { locale: Locale }) {
+export function SubscribeForm({ locale, image }: { locale: Locale; image?: string | null }) {
   const t = copy[locale].list;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -124,14 +125,38 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
 
   return (
     <section className="border-t border-chalk/15">
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 sm:px-8 md:py-28 lg:grid-cols-12">
-        <div className="lg:col-span-6">
+      <div className="mx-auto grid max-w-6xl items-end gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-12 lg:gap-12">
+        <div className="relative lg:col-span-6">
+          <div className="relative aspect-[4/5] overflow-hidden bg-signal sm:aspect-[5/4]">
+            {image ? (
+              <Image src={image} alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+            ) : (
+              <Image
+                src="/brand/mark.jpg"
+                alt="The Bart & Willie Show"
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-field via-field/20 to-transparent" />
+            {image ? (
+              <Image
+                src="/brand/mark.jpg"
+                alt=""
+                width={512}
+                height={512}
+                className="absolute top-4 left-4 size-14 object-cover sm:top-6 sm:left-6 sm:size-16"
+              />
+            ) : null}
+          </div>
+        </div>
+        <div className="lg:col-span-5 lg:col-start-8">
           <SectionHeading kicker={t.kicker} title={t.title} lede={t.lede} />
           <p className="mt-6 max-w-md font-serif text-base leading-relaxed text-chalk/85">{t.note}</p>
-        </div>
         <form
           onSubmit={onSubmit}
-          className="border-t-4 border-signal pt-8 lg:col-span-5 lg:col-start-8"
+          className="mt-8 border-t-4 border-signal pt-8"
           noValidate
         >
           <div className="grid gap-5">
@@ -179,6 +204,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
             </p>
           </div>
         </form>
+        </div>
       </div>
     </section>
   );
