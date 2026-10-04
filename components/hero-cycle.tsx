@@ -124,11 +124,8 @@ export function HeroCycle({
           ) : null}
         </div>
       </div>
-      <div
-        className={`hero-fade relative z-10 ${phase === "hero" ? "opacity-100" : "pointer-events-none opacity-0"}`}
-      >
-        {children}
-      </div>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent" />
+      <div className="relative z-10">{children}</div>
       {showMute ? (
         <Button
           type="button"

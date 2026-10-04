@@ -78,7 +78,8 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   html:not(.reduce-motion) {
-    scroll-behavior: smooth;
+    /* Auto, not smooth: smooth on the root animates every wheel tick. */
+    scroll-behavior: auto;
     transition:
       --field 700ms ease-out,
       --field-bright 700ms ease-out;
@@ -164,7 +165,10 @@ html.reduce-motion .in-view {
 }
 
 #episodes {
+  position: relative;
+  z-index: 3;
   max-width: 100%;
+  background: var(--field);
 }
 
 .stack-head {
@@ -175,25 +179,31 @@ html.reduce-motion .in-view {
   padding-bottom: var(--stack-peek);
 }
 
-.nest-card {
-  position: sticky;
-  height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
-  min-width: 0;
-  width: 100%;
-  background: transparent;
+.card-nest {
+  position: relative;
+  background: var(--field);
 }
 
-@media (max-width: 639px) {
-  .nest-card-stop {
-    height: calc(100svh - var(--nav-clear) - (var(--stack-bars) * var(--stack-peek)));
-  }
+/* Sheets stick only inside this nest. The nest ends with the last sheet,
+   so the yellow edges leave with the section instead of pinning the page. */
+.nest-card {
+  position: sticky;
+  height: auto;
+  min-width: 0;
+  width: 100%;
+  background: var(--field);
 }
 
 .nest-face {
   display: flex;
-  height: 100%;
+  height: auto;
   flex-direction: column;
   background-color: var(--field);
+}
+
+.nest-body {
+  min-width: 0;
+  background: var(--field);
 }
 
 .sheet-edge {
@@ -308,6 +318,7 @@ html.reduce-motion .episode-sheet .sheet-extra {
 
 .hero-fade {
   transition: opacity 1100ms ease-out;
+  will-change: opacity;
 }
 
 .ticker-view {

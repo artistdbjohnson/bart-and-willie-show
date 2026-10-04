@@ -66,12 +66,12 @@ function EpisodeSheet({
   const blurb = oct2 ? t.episodes.featuredLine : "";
 
   return (
-    <article className="episode-sheet flex h-full min-h-0 flex-col bg-field">
+    <article className="episode-sheet flex min-h-0 flex-col bg-field">
       <a
         href={video.url}
         className="sheet-link group flex min-h-0 flex-1 flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-chalk"
       >
-        <span className="sheet-copy shrink-0 pt-3 pb-3">
+        <span className="sheet-lead sheet-copy shrink-0 pt-4 pb-3">
           <span className="font-ui text-[0.68rem] uppercase tracking-[0.16em] text-quiet">
             {featured ? `${t.episodes.featured} · ` : null}
             {formatWhen(video.published, locale)}
@@ -80,7 +80,7 @@ function EpisodeSheet({
             {video.title}
           </span>
         </span>
-        <span className="sheet-media relative block min-h-[40%] flex-1 overflow-hidden bg-ink">
+        <span className="sheet-media relative mt-3 block h-36 overflow-hidden bg-ink sm:h-44">
           <Image
             src={video.thumbnail}
             alt=""

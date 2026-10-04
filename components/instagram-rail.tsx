@@ -18,7 +18,7 @@ export function InstagramRail({
   const body = (
     <>
       {nested ? (
-        <div>
+        <div className="sheet-lead">
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
             {t.instagram.kicker}
           </p>
@@ -72,8 +72,8 @@ export function InstagramRail({
 
   if (nested) {
     return (
-      <article className="flex h-full min-h-0 w-full min-w-0 flex-col bg-field">
-        <div className="min-h-0 flex-1 overflow-hidden py-4">{body}</div>
+      <article className="flex w-full min-w-0 flex-col bg-field">
+        <div className="bg-field py-4">{body}</div>
       </article>
     );
   }

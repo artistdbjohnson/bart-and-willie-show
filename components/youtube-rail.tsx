@@ -21,7 +21,7 @@ export function YouTubeRail({
   const body = (
     <>
       {nested ? (
-        <div>
+        <div className="sheet-lead">
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
             {t.channel.kicker}
           </p>
@@ -51,7 +51,7 @@ export function YouTubeRail({
                   href={video.url}
                   className="group w-[78%] shrink-0 snap-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[320px]"
                 >
-                  <span className="relative block aspect-video overflow-hidden bg-field-bright/25">
+                  <span className="relative block h-32 overflow-hidden bg-field-bright/25 sm:h-36">
                     <Image
                       src={video.thumbnail}
                       alt=""
@@ -80,8 +80,8 @@ export function YouTubeRail({
 
   if (nested) {
     return (
-      <article className="flex h-full min-h-0 w-full min-w-0 flex-col bg-field">
-        <div className="min-h-0 flex-1 overflow-auto py-4">{body}</div>
+      <article className="flex w-full min-w-0 flex-col bg-field">
+        <div className="bg-field py-4">{body}</div>
       </article>
     );
   }
