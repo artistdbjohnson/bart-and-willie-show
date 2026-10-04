@@ -24,7 +24,7 @@ export function Hero({
   const watch = video?.url ?? CHANNEL_URL;
 
   return (
-    <section data-hero className="relative min-h-[calc(100svh-4.5rem)] overflow-hidden">
+    <section data-hero className="section-snap relative -mt-[var(--nav-clear)] min-h-[100svh] overflow-hidden">
       <HeroCycle still={still} shorts={shorts} mute={t.hero.mute} unmute={t.hero.unmute}>
         <p
           aria-hidden
@@ -33,7 +33,7 @@ export function Hero({
           40
         </p>
         <ChalkPlay className="hero-quiet pointer-events-none absolute right-2 bottom-8 z-[1] hidden h-72 w-auto text-chalk sm:block lg:right-8 lg:bottom-12 lg:h-80" />
-        <div className="hero-copy relative z-10 mx-auto flex min-h-[calc(100svh-4.5rem)] max-w-6xl flex-col justify-end px-5 pt-16 pb-10 sm:px-8 sm:pb-14">
+        <div className="hero-copy relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-5 pt-28 pb-10 sm:px-8 sm:pb-14">
           <div className="max-w-xl lg:max-w-2xl">
             <p className="hero-quiet font-ui text-[0.72rem] uppercase tracking-[0.22em] text-chalk/80">
               {t.hero.kicker}

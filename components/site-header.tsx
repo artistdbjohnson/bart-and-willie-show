@@ -38,6 +38,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       >
         {t.skip}
       </a>
+      <div className="site-header-plate">
       <div className="site-header-bar mx-auto flex max-w-6xl items-center gap-4 px-5 sm:px-8">
         <Link
           href={localizePath("/", locale)}
@@ -92,7 +93,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       </div>
 
       {open ? (
-        <nav className="border-t border-chalk/15 px-5 py-4 md:hidden" aria-label={t.nav.menu}>
+        <nav className="px-5 py-4 md:hidden" aria-label={t.nav.menu}>
           <ul className="grid gap-1">
             {links.map((link) => {
               const current = bare === link.href;
@@ -116,6 +117,9 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           </ul>
         </nav>
       ) : null}
+      </div>
+      <div className="nav-fade" aria-hidden="true" />
+      <div className="nav-haze" aria-hidden="true" />
     </header>
   );
 }

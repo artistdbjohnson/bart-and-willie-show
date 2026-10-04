@@ -18,6 +18,7 @@ export function ProfileTicker({
   thePost,
   postLabel,
   clipLabel,
+  fill = false,
 }: {
   posts: InstagramPost[];
   previous: string;
@@ -31,18 +32,20 @@ export function ProfileTicker({
   thePost: string;
   postLabel: string;
   clipLabel: string;
+  fill?: boolean;
 }) {
   const [open, setOpen] = useState<InstagramPost | null>(null);
 
   return (
-    <div>
-      <Marquee label={region} previous={previous} next={next} pause={pause} play={play}>
+    <div className={fill ? "flex min-h-0 flex-1 flex-col" : undefined}>
+      <Marquee label={region} previous={previous} next={next} pause={pause} play={play} fill={fill} pages>
         {posts.map((post) => (
           <Thumbnail
             key={post.id}
             post={post}
             postLabel={postLabel}
             clipLabel={clipLabel}
+            fill={fill}
             onOpen={() => setOpen(post)}
           />
         ))}
@@ -67,11 +70,13 @@ function Thumbnail({
   post,
   postLabel,
   clipLabel,
+  fill,
   onOpen,
 }: {
   post: InstagramPost;
   postLabel: string;
   clipLabel: string;
+  fill: boolean;
   onOpen: () => void;
 }) {
   return (
@@ -79,10 +84,14 @@ function Thumbnail({
       type="button"
       role="listitem"
       data-post={post.id}
-      className="w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+      className={
+        fill
+          ? "flex h-full min-h-0 w-full flex-col text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+          : "w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+      }
       onClick={onOpen}
     >
-      <span className="flex w-full items-center justify-center">
+      <span className={fill ? "flex min-h-0 flex-1 items-center justify-center" : "flex w-full items-center justify-center"}>
         {/* Instagram CDN links expire, so the image is loaded through this site. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -91,14 +100,18 @@ function Thumbnail({
           width={post.width ?? undefined}
           height={post.height ?? undefined}
           draggable={false}
-          className="h-auto max-h-[min(40svh,22rem)] w-auto max-w-full object-contain"
+          className={
+            fill
+              ? "max-h-full max-w-full object-contain"
+              : "h-auto max-h-[min(40svh,22rem)] w-auto max-w-full object-contain"
+          }
         />
       </span>
-      <span className="mt-3 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
+      <span className="mt-3 shrink-0 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
         {post.kind === "clip" ? clipLabel : postLabel}
       </span>
       {post.caption ? (
-        <span className="mt-2 line-clamp-3 font-serif text-base leading-snug">{post.caption}</span>
+        <span className="mt-2 shrink-0 font-serif text-base leading-snug break-words">{post.caption}</span>
       ) : null}
     </button>
   );
@@ -197,13 +210,13 @@ function PostView({
           <CloseIcon />
         </Button>
       </div>
-      <div className="flex min-h-0 flex-1 items-center justify-center px-4 pb-8 sm:px-10">
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 overflow-y-auto px-4 pb-8 sm:px-10">
         {showVideo ? (
           <video
             ref={video}
             src={`/api/ig-media?src=${encodeURIComponent(post.videoUrl ?? "")}`}
             poster={`/api/ig-image?src=${encodeURIComponent(post.imageUrl)}`}
-            className="max-h-[82svh] max-w-full object-contain"
+            className="max-h-[70svh] max-w-full object-contain"
             autoPlay
             muted
             playsInline
@@ -212,18 +225,21 @@ function PostView({
             onError={() => setFailed(true)}
           />
         ) : (
-          <div className="flex max-h-full max-w-3xl flex-col items-center gap-6">
+          <div className="flex max-h-full max-w-3xl flex-col items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`/api/ig-image?src=${encodeURIComponent(post.imageUrl)}`}
               alt={post.caption ? post.caption.slice(0, 140) : ""}
-              className="max-h-[70svh] w-auto max-w-full object-contain"
+              className="max-h-[62svh] w-auto max-w-full object-contain"
             />
             <Button asChild variant="outline">
               <a href={post.permalink}>{thePost}</a>
             </Button>
           </div>
         )}
+        {post.caption ? (
+          <p className="max-w-xl text-center font-serif text-base leading-snug break-words">{post.caption}</p>
+        ) : null}
       </div>
       </div>
     </div>

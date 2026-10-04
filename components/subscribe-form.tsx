@@ -124,7 +124,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
   }
 
   return (
-    <section className="border-t border-chalk/15">
+    <section className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15">
       <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-12 lg:gap-12">
         <div className="newsletter-art @container relative flex aspect-[4/5] items-end overflow-hidden sm:aspect-[5/4] lg:col-span-6">
           <ChalkPlay className="pointer-events-none absolute top-6 right-2 h-40 w-auto text-chalk sm:h-52" />

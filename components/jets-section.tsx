@@ -23,7 +23,7 @@ export function JetsSection({
   const matched = videos.filter(mentionsJets);
 
   return (
-    <section className="border-t border-chalk/15 bg-field">
+    <section className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15 bg-field">
       <div
         className={
           compactTop

@@ -16,7 +16,7 @@
 }
 
 :root {
-  --nav-bar: 4.5rem;
+  --nav-bar: 5rem;
   --nav-clear: calc(var(--nav-bar) + env(safe-area-inset-top, 0px));
   --stack-head: 4.75rem;
   --stack-peek: 12px;
@@ -27,6 +27,12 @@
   --ink: #111111;
   --quiet: color-mix(in srgb, var(--chalk) 82%, var(--field));
   color-scheme: light;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-bar: 4.5rem;
+  }
 }
 
 .dark {
@@ -76,10 +82,15 @@ body {
   initial-value: #369d59;
 }
 
+main {
+  padding-top: var(--nav-clear);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   html:not(.reduce-motion) {
     /* Auto, not smooth: smooth on the root animates every wheel tick. */
     scroll-behavior: auto;
+    scroll-snap-type: y mandatory;
     transition:
       --field 700ms ease-out,
       --field-bright 700ms ease-out;
@@ -106,13 +117,23 @@ body {
 html.reduce-motion .player-in,
 html.reduce-motion {
   scroll-behavior: auto;
+  scroll-snap-type: none;
   transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
+
   .player-in {
     animation: none;
   }
+}
+
+.section-snap {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
 }
 
 html:not(.dark) .theme-choice[data-theme-choice="light"],
@@ -145,18 +166,79 @@ html.reduce-motion .in-view {
 }
 
 .site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  right: 0;
+  left: 0;
   z-index: 40;
   box-sizing: border-box;
-  min-height: var(--nav-clear);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* The plate is the glass. A mask on this element kills backdrop-filter in WebKit. */
+.site-header-plate {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   padding-top: env(safe-area-inset-top, 0px);
-  background: var(--field);
-  border-bottom: 1px solid color-mix(in srgb, var(--chalk) 15%, transparent);
+  background-color: color-mix(in srgb, var(--field) 36%, transparent);
+  -webkit-backdrop-filter: blur(64px) saturate(1.35);
+  backdrop-filter: blur(64px) saturate(1.35);
 }
 
 .site-header-bar {
-  height: calc(var(--nav-bar) - 1px);
+  height: var(--nav-bar);
+}
+
+.nav-fade,
+.nav-haze {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.nav-fade {
+  top: 100%;
+  height: 1.75rem;
+  background-color: color-mix(in srgb, var(--field) 36%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.35);
+  backdrop-filter: blur(20px) saturate(1.35);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgb(0 0 0 / 55%) 28%,
+    rgb(0 0 0 / 18%) 58%,
+    rgb(0 0 0 / 4%) 84%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    rgb(0 0 0 / 55%) 28%,
+    rgb(0 0 0 / 18%) 58%,
+    rgb(0 0 0 / 4%) 84%,
+    transparent 100%
+  );
+}
+
+.nav-haze {
+  top: calc(100% + 1.75rem);
+  height: 2rem;
+  background: transparent;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0 / 22%), transparent);
+  mask-image: linear-gradient(to bottom, rgb(0 0 0 / 22%), transparent);
 }
 
 #content,
@@ -193,10 +275,20 @@ html.reduce-motion .in-view {
   .nest-release {
     height: 0;
   }
+
+  .section-snap,
+  .nest-card {
+    scroll-snap-align: none;
+  }
 }
 
 html.reduce-motion .nest-release {
   height: 0;
+}
+
+html.reduce-motion .section-snap,
+html.reduce-motion .nest-card {
+  scroll-snap-align: none;
 }
 
 /* Sticky only inside this nest. The nest ends with the last sheet,

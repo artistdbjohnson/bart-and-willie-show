@@ -8,6 +8,7 @@ import {
   loadYoutube,
   PLAYER_ENDED,
   PLAYER_PLAYING,
+  silenceCaptions,
   type YoutubePlayer,
 } from "@/lib/youtube-player";
 import type { ShortBeat } from "@/lib/youtube";
@@ -62,6 +63,12 @@ export function HeroCycle({
     let timer = 0;
     let poll = 0;
     let active: YoutubePlayer | null = null;
+    const captionTimers: number[] = [];
+    const quiet = (target: YoutubePlayer) => {
+      silenceCaptions(target);
+      captionTimers.push(window.setTimeout(() => silenceCaptions(target), 350));
+      captionTimers.push(window.setTimeout(() => silenceCaptions(target), 1400));
+    };
     const wait = (ms: number) =>
       new Promise<void>((resolve) => {
         timer = window.setTimeout(resolve, ms);
@@ -200,12 +207,16 @@ export function HeroCycle({
             {
               onReady: (event) => {
                 event.target.mute();
+                quiet(event.target);
                 event.target.playVideo();
                 watch();
               },
               onStateChange: (event) => {
                 if (settled) return;
-                if (event.data === PLAYER_PLAYING) notePlaying();
+                if (event.data === PLAYER_PLAYING) {
+                  notePlaying();
+                  quiet(event.target);
+                }
                 if (event.data === PLAYER_ENDED) backToStill();
               },
               onError: () => {
@@ -231,6 +242,7 @@ export function HeroCycle({
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
+      captionTimers.forEach((id) => window.clearTimeout(id));
       stopPoll();
       destroy();
     };
