@@ -298,9 +298,7 @@ html.reduce-motion .nest-card {
   height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
   min-width: 0;
   width: 100%;
-  background-color: transparent;
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
-  backdrop-filter: blur(12px) saturate(1.2);
+  background-color: var(--field);
   touch-action: pan-y;
 }
 
@@ -315,7 +313,7 @@ html.reduce-motion .nest-card {
   height: 100%;
   flex-direction: column;
   overflow: clip;
-  background-color: transparent;
+  background-color: var(--field);
 }
 
 .nest-body {
@@ -325,13 +323,13 @@ html.reduce-motion .nest-card {
   flex: 1;
   flex-direction: column;
   overflow: clip;
-  background: transparent;
+  background: var(--field);
 }
 
 .sheet-edge {
   height: var(--stack-peek);
   flex: none;
-  background: transparent;
+  background: var(--field);
 }
 
 .sheet-edge-signal {
@@ -503,8 +501,15 @@ html.reduce-motion .episode-sheet .sheet-extra {
 }
 
 .marquee-view {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow: hidden;
   touch-action: pan-y;
+}
+
+.marquee-view [data-tile] {
+  max-width: 100%;
 }
 
 .newsletter-art {

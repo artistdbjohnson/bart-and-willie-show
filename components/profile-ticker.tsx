@@ -37,7 +37,7 @@ export function ProfileTicker({
   const [open, setOpen] = useState<InstagramPost | null>(null);
 
   return (
-    <div className={fill ? "flex min-h-0 flex-1 flex-col" : undefined}>
+    <div className={fill ? "flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col" : undefined}>
       <Marquee label={region} previous={previous} next={next} pause={pause} play={play} fill={fill} pages>
         {posts.map((post) => (
           <Thumbnail
@@ -102,7 +102,7 @@ function Thumbnail({
           draggable={false}
           className={
             fill
-              ? "max-h-full max-w-full object-contain"
+              ? "h-auto w-auto max-h-full max-w-full object-contain"
               : "h-auto max-h-[min(40svh,22rem)] w-auto max-w-full object-contain"
           }
         />
