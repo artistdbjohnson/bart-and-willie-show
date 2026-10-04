@@ -51,19 +51,19 @@ export function YouTubeRail({
               label={t.channel.region}
               previous={t.channel.previous}
               next={t.channel.next}
-              controlsOnly={flow}
+              controlsOnly={compact}
             >
               {videos.map((video) => (
                 <a
                   key={video.id}
                   href={video.url}
                   className={
-                    flow
+                    compact
                       ? "group w-[100cqi] shrink-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[calc((100cqi-1rem)/2)] lg:w-[calc((100cqi-2rem)/3)]"
                       : "group w-[78%] shrink-0 snap-start focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[320px]"
                   }
                 >
-                  <span className="relative block aspect-video overflow-hidden bg-field-bright/25">
+                  <span className={compact ? "relative block h-28 overflow-hidden bg-field-bright/25 sm:h-32" : "relative block aspect-video overflow-hidden bg-field-bright/25"}>
                     <Image
                       src={video.thumbnail}
                       alt=""
@@ -100,7 +100,7 @@ export function YouTubeRail({
 
   if (nested) {
     return (
-      <article className="flex w-full min-w-0 flex-col bg-field">
+      <article className="flex h-full min-h-0 w-full min-w-0 flex-col bg-field">
         <div className="bg-field py-4">{body}</div>
       </article>
     );

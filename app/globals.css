@@ -183,30 +183,54 @@ html.reduce-motion .in-view {
   background: var(--field);
 }
 
-/* One rule rides with its card. Nothing here is sticky, so a later
-   section cannot sit under a pinned sheet. */
-.nest-card {
-  position: relative;
-  height: auto;
-  min-width: 0;
-  width: 100%;
-  margin-bottom: 1.75rem;
-  background: var(--field);
+/* In-flow runway so the last sheet can sit on the five-bar stop.
+   Padding does not count. When this ends, the bars leave with the nest. */
+.nest-release {
+  height: 4.5rem;
 }
 
-.nest-card:last-child {
-  margin-bottom: 0;
+@media (prefers-reduced-motion: reduce) {
+  .nest-release {
+    height: 0;
+  }
+}
+
+html.reduce-motion .nest-release {
+  height: 0;
+}
+
+/* Sticky only inside this nest. The nest ends with the last sheet,
+   so the bars leave with the section. */
+.nest-card {
+  position: sticky;
+  height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
+  min-width: 0;
+  width: 100%;
+  background: var(--field);
+  touch-action: pan-y;
+}
+
+@media (max-width: 639px) {
+  .nest-card-stop {
+    height: calc(100svh - var(--nav-clear) - (var(--stack-bars) * var(--stack-peek)));
+  }
 }
 
 .nest-face {
   display: flex;
-  height: auto;
+  height: 100%;
   flex-direction: column;
+  overflow: clip;
   background-color: var(--field);
 }
 
 .nest-body {
+  display: flex;
   min-width: 0;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: clip;
   background: var(--field);
 }
 
