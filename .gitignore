@@ -1,0 +1,7 @@
+node_modules
+.next
+out
+.vercel
+data/subscribers.json
+*.log
+.DS_Store
