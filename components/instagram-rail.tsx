@@ -22,10 +22,10 @@ export function InstagramRail({
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
             {t.instagram.kicker}
           </p>
-          <h2 className="mt-2 font-display text-[clamp(2.4rem,7vw,4.6rem)] leading-[0.86] tracking-tight">
+          <h2 className="mt-2 font-serif text-[clamp(1.6rem,3.4vw,2.4rem)] leading-tight">
             {t.instagram.title}
           </h2>
-          <p className="mt-3 max-w-xl font-serif text-base text-chalk/85">{t.instagram.lede}</p>
+          <p className="mt-2 max-w-xl font-serif text-base text-chalk/85">{t.instagram.lede}</p>
         </div>
       ) : (
         <SectionHeading kicker={t.instagram.kicker} title={t.instagram.title} lede={t.instagram.lede} />

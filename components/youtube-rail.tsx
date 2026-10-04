@@ -25,10 +25,10 @@ export function YouTubeRail({
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
             {t.channel.kicker}
           </p>
-          <h2 className="mt-2 font-display text-[clamp(2.4rem,7vw,4.6rem)] leading-[0.86] tracking-tight">
+          <h2 className="mt-2 font-serif text-[clamp(1.6rem,3.4vw,2.4rem)] leading-tight">
             {t.channel.title}
           </h2>
-          <p className="mt-3 max-w-xl font-serif text-base text-chalk/85">{t.channel.lede}</p>
+          <p className="mt-2 max-w-xl font-serif text-base text-chalk/85">{t.channel.lede}</p>
         </div>
       ) : (
         <SectionHeading kicker={t.channel.kicker} title={t.channel.title} lede={t.channel.lede} />
