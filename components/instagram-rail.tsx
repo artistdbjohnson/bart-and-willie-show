@@ -8,17 +8,30 @@ import type { Locale } from "@/lib/paths";
 export function InstagramRail({
   locale,
   feed,
+  nested = false,
 }: {
   locale: Locale;
   feed: InstagramFeed;
+  nested?: boolean;
 }) {
   const t = copy[locale];
-  return (
-    <section className="border-t border-chalk/15">
-      <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
+  const body = (
+    <>
+      {nested ? (
+        <div>
+          <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
+            {t.instagram.kicker}
+          </p>
+          <h2 className="mt-2 font-serif text-[clamp(1.6rem,3.4vw,2.4rem)] leading-tight">
+            {t.instagram.title}
+          </h2>
+          <p className="mt-2 max-w-xl font-serif text-base text-chalk/85">{t.instagram.lede}</p>
+        </div>
+      ) : (
         <SectionHeading kicker={t.instagram.kicker} title={t.instagram.title} lede={t.instagram.lede} />
-        <div className="mt-10">
-          {!feed.ok ? (
+      )}
+      <div className={nested ? "mt-6" : "mt-10"}>
+        {!feed.ok ? (
             <div className="border border-dashed border-chalk/35 px-6 py-10">
               <p className="max-w-xl font-serif text-lg">{t.instagram.empty}</p>
               <div className="mt-6">
@@ -72,8 +85,21 @@ export function InstagramRail({
               </div>
             </>
           )}
-        </div>
       </div>
+    </>
+  );
+
+  if (nested) {
+    return (
+      <article className="flex h-full min-h-0 w-full min-w-0 flex-col bg-field">
+        <div className="min-h-0 flex-1 overflow-auto py-4">{body}</div>
+      </article>
+    );
+  }
+
+  return (
+    <section className="border-t border-chalk/15">
+      <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">{body}</div>
     </section>
   );
 }

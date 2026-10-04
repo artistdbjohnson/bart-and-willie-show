@@ -16,6 +16,10 @@
 }
 
 :root {
+  --nav-bar: 4.5rem;
+  --nav-clear: calc(var(--nav-bar) + env(safe-area-inset-top, 0px));
+  --stack-head: 4.75rem;
+  --stack-peek: 12px;
   --field: #145c32;
   --field-bright: #369d59;
   --chalk: #f7f4ea;
@@ -137,6 +141,144 @@ html.reduce-motion .in-view {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  box-sizing: border-box;
+  min-height: var(--nav-clear);
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--field);
+  border-bottom: 1px solid color-mix(in srgb, var(--chalk) 15%, transparent);
+}
+
+.site-header-bar {
+  height: calc(var(--nav-bar) - 1px);
+}
+
+#content,
+#episodes {
+  scroll-margin-top: var(--nav-clear);
+}
+
+#episodes {
+  max-width: 100%;
+}
+
+.stack-head {
+  display: flex;
+  height: var(--stack-head);
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: var(--stack-peek);
+}
+
+.nest-card {
+  position: sticky;
+  display: flex;
+  height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
+  min-width: 0;
+  width: 100%;
+  flex-direction: column;
+  background: var(--field);
+}
+
+.sheet-edge {
+  height: var(--stack-peek);
+  flex: none;
+  background: var(--field);
+}
+
+.sheet-edge-signal {
+  display: block;
+  height: 4px;
+  background: var(--signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-nest {
+    display: grid;
+    gap: var(--stack-peek);
+  }
+
+  .nest-card {
+    position: static;
+    top: auto !important;
+    height: auto;
+    margin-bottom: 0 !important;
+  }
+
+  .episode-sheet .sheet-link {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    align-items: center;
+    gap: 0.75rem 0.9rem;
+    padding: 0.75rem 0;
+  }
+
+  .episode-sheet .sheet-media {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    min-height: 0 !important;
+    height: auto;
+    flex: none;
+    aspect-ratio: 16 / 9;
+  }
+
+  .episode-sheet .sheet-copy {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 0;
+  }
+
+  .episode-sheet .sheet-extra {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 0;
+  }
+}
+
+html.reduce-motion .card-nest {
+  display: grid;
+  gap: var(--stack-peek);
+}
+
+html.reduce-motion .nest-card {
+  position: static;
+  top: auto !important;
+  height: auto;
+  margin-bottom: 0 !important;
+}
+
+html.reduce-motion .episode-sheet .sheet-link {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  align-items: center;
+  gap: 0.75rem 0.9rem;
+  padding: 0.75rem 0;
+}
+
+html.reduce-motion .episode-sheet .sheet-media {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  min-height: 0 !important;
+  height: auto;
+  flex: none;
+  aspect-ratio: 16 / 9;
+}
+
+html.reduce-motion .episode-sheet .sheet-copy {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 0;
+}
+
+html.reduce-motion .episode-sheet .sheet-extra {
+  grid-column: 2;
+  grid-row: 2;
+  padding: 0;
 }
 
 .hero-copy {
