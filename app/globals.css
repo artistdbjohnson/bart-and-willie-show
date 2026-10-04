@@ -16,6 +16,10 @@
 }
 
 :root {
+  --nav-bar: 4.5rem;
+  --nav-clear: calc(var(--nav-bar) + env(safe-area-inset-top, 0px));
+  --stack-head: 4.75rem;
+  --stack-peek: 12px;
   --field: #145c32;
   --field-bright: #369d59;
   --chalk: #f7f4ea;
@@ -139,42 +143,71 @@ html.reduce-motion .in-view {
   pointer-events: none;
 }
 
-.card-nest-pin {
+.site-header {
   position: sticky;
   top: 0;
-  height: 100svh;
-  overflow: hidden;
+  z-index: 40;
+  box-sizing: border-box;
+  min-height: var(--nav-clear);
+  padding-top: env(safe-area-inset-top, 0px);
+  background: var(--field);
+  border-bottom: 1px solid color-mix(in srgb, var(--chalk) 15%, transparent);
+}
+
+.site-header-bar {
+  height: calc(var(--nav-bar) - 1px);
+}
+
+#content,
+#episodes {
+  scroll-margin-top: var(--nav-clear);
+}
+
+#episodes {
+  max-width: 100%;
+}
+
+.stack-head {
+  display: flex;
+  height: var(--stack-head);
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: var(--stack-peek);
 }
 
 .nest-card {
-  position: absolute;
-  inset: 0;
+  position: sticky;
+  display: flex;
+  height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
+  min-width: 0;
+  width: 100%;
+  flex-direction: column;
   background: var(--field);
-  transform: translate3d(0, 100%, 0);
 }
 
-.nest-card:first-child {
-  transform: none;
+.sheet-edge {
+  height: var(--stack-peek);
+  flex: none;
+  background: var(--field);
+}
+
+.sheet-edge-signal {
+  display: block;
+  height: 4px;
+  background: var(--signal);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .card-nest {
-    height: auto !important;
-  }
-
-  .card-nest-pin {
-    position: static;
-    height: auto;
-    overflow: visible;
     display: grid;
-    gap: 1.25rem;
+    gap: var(--stack-peek);
   }
 
-  .nest-card,
-  .nest-card:first-child {
+  .nest-card {
     position: static;
-    inset: auto;
-    transform: none !important;
+    top: auto !important;
+    height: auto;
+    margin-bottom: 0 !important;
   }
 
   .episode-sheet .sheet-link {
@@ -182,7 +215,7 @@ html.reduce-motion .in-view {
     grid-template-columns: 7.5rem 1fr;
     align-items: center;
     gap: 0.75rem 0.9rem;
-    padding: 1rem 1.25rem;
+    padding: 0.75rem 0;
   }
 
   .episode-sheet .sheet-media {
@@ -208,22 +241,15 @@ html.reduce-motion .in-view {
 }
 
 html.reduce-motion .card-nest {
-  height: auto !important;
-}
-
-html.reduce-motion .card-nest-pin {
-  position: static;
-  height: auto;
-  overflow: visible;
   display: grid;
-  gap: 1.25rem;
+  gap: var(--stack-peek);
 }
 
-html.reduce-motion .nest-card,
-html.reduce-motion .nest-card:first-child {
+html.reduce-motion .nest-card {
   position: static;
-  inset: auto;
-  transform: none !important;
+  top: auto !important;
+  height: auto;
+  margin-bottom: 0 !important;
 }
 
 html.reduce-motion .episode-sheet .sheet-link {
@@ -231,7 +257,7 @@ html.reduce-motion .episode-sheet .sheet-link {
   grid-template-columns: 7.5rem 1fr;
   align-items: center;
   gap: 0.75rem 0.9rem;
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 0;
 }
 
 html.reduce-motion .episode-sheet .sheet-media {

@@ -11,9 +11,11 @@ import { mentionsJets, type ChannelVideo } from "@/lib/youtube";
 export function JetsSection({
   locale,
   videos,
+  compactTop = false,
 }: {
   locale: Locale;
   videos: ChannelVideo[];
+  compactTop?: boolean;
 }) {
   const t = copy[locale];
   const story = jetsStory[locale];
@@ -21,7 +23,13 @@ export function JetsSection({
 
   return (
     <section className="border-t border-chalk/15">
-      <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
+      <div
+        className={
+          compactTop
+            ? "mx-auto max-w-6xl px-5 pt-6 pb-20 sm:px-8 md:pb-28"
+            : "mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28"
+        }
+      >
         <SectionHeading kicker={t.jets.kicker} title={t.jets.title} lede={t.jets.lede} />
         <p className="mt-6 max-w-2xl font-serif text-base text-chalk/85">{t.jets.chapter}</p>
         <div className="mt-14 grid gap-16 lg:grid-cols-2">

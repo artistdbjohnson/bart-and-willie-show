@@ -37,7 +37,11 @@ export function LatestNest({
   ];
 
   return (
-    <section aria-label={t.episodes.title} className="border-t border-chalk/15">
+    <section id="episodes" aria-label={t.episodes.title} className="border-t border-chalk/15 px-5 sm:px-8">
+      <div className="stack-head">
+        <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">{t.episodes.kicker}</p>
+        <h2 className="font-display text-[clamp(2rem,5vw,2.75rem)] leading-none">{t.episodes.title}</h2>
+      </div>
       <CardNest>{cards}</CardNest>
     </section>
   );
@@ -57,12 +61,11 @@ function EpisodeSheet({
 
   return (
     <article className="episode-sheet flex h-full min-h-0 flex-col bg-field">
-      <div className="h-1 shrink-0 bg-signal" />
       <a
         href={video.url}
         className="sheet-link group flex min-h-0 flex-1 flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-chalk"
       >
-        <span className="sheet-copy shrink-0 px-5 pt-4 pb-3 sm:px-8 sm:pt-5">
+        <span className="sheet-copy shrink-0 pt-3 pb-3">
           <span className="font-ui text-[0.68rem] uppercase tracking-[0.16em] text-quiet">
             {featured ? `${t.episodes.featured} · ` : null}
             {formatWhen(video.published, locale)}
@@ -81,7 +84,7 @@ function EpisodeSheet({
           />
         </span>
         {featured ? (
-          <span className="sheet-extra shrink-0 px-5 pt-3 pb-5 sm:px-8 sm:pb-6">
+          <span className="sheet-extra shrink-0 pt-3 pb-4">
             {blurb ? (
               <span className="line-clamp-2 block font-serif text-base leading-relaxed text-chalk/85">
                 {blurb}
@@ -106,8 +109,7 @@ function EmptySheet({ locale }: { locale: Locale }) {
   const t = copy[locale];
   return (
     <article className="flex h-full min-h-0 flex-col bg-field">
-      <div className="h-1 shrink-0 bg-signal" />
-      <div className="flex flex-1 flex-col justify-end px-5 py-8 sm:px-8">
+      <div className="flex flex-1 flex-col justify-end py-8">
         <p className="max-w-xl font-serif text-lg leading-relaxed">{t.episodes.empty}</p>
         <div className="mt-5">
           <Button asChild variant="outline">

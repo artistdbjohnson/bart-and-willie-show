@@ -80,9 +80,8 @@ export function YouTubeRail({
 
   if (nested) {
     return (
-      <article className="flex h-full min-h-0 flex-col bg-field">
-        <div className="h-1 shrink-0 bg-signal" />
-        <div className="min-h-0 flex-1 overflow-auto px-5 py-6 sm:px-8 sm:py-8">{body}</div>
+      <article className="flex h-full min-h-0 w-full min-w-0 flex-col bg-field">
+        <div className="min-h-0 flex-1 overflow-auto py-4">{body}</div>
       </article>
     );
   }

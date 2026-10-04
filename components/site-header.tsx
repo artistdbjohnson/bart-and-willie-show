@@ -31,14 +31,14 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   }, [locale]);
 
   return (
-    <header className="relative z-20 border-b border-chalk/15">
+    <header className="site-header">
       <a
         href="#content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:bg-signal focus:px-3 focus:py-2 focus:text-ink"
       >
         {t.skip}
       </a>
-      <div className="mx-auto flex h-[4.5rem] max-w-6xl items-center gap-4 px-5 sm:px-8">
+      <div className="site-header-bar mx-auto flex max-w-6xl items-center gap-4 px-5 sm:px-8">
         <Link
           href={localizePath("/", locale)}
           className="flex min-w-0 items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
@@ -59,10 +59,11 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         <nav className="ml-auto hidden items-center gap-6 md:flex" aria-label={t.nav.menu}>
           {links.map((link) => {
             const current = bare === link.href;
+            const inPage = bare === "/" && link.href === "/episodes";
             return (
               <Link
                 key={link.href}
-                href={localizePath(link.href, locale)}
+                href={inPage ? "#episodes" : localizePath(link.href, locale)}
                 aria-current={current ? "page" : undefined}
                 className={cn(
                   "font-ui text-[0.72rem] uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk",
@@ -96,11 +97,13 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <ul className="grid gap-1">
             {links.map((link) => {
               const current = bare === link.href;
+              const inPage = bare === "/" && link.href === "/episodes";
               return (
                 <li key={link.href}>
                   <Link
-                    href={localizePath(link.href, locale)}
+                    href={inPage ? "#episodes" : localizePath(link.href, locale)}
                     aria-current={current ? "page" : undefined}
+                    onClick={() => setOpen(false)}
                     className={cn(
                       "flex h-12 items-center font-ui text-sm uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chalk",
                       current ? "text-signal" : "text-chalk",

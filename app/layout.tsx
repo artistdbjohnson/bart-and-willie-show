@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Anton, Barlow_Condensed, Newsreader, Yellowtail } from "next/font/google";
 import "./globals.css";
@@ -39,6 +39,10 @@ function siteUrl() {
   return "http://localhost:3000";
 }
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: "The Bart & Willie Show",
@@ -68,7 +72,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       </head>
       <body>
         <noscript>
-          <style>{`.blur-fade,.in-view{opacity:1!important;filter:none!important;transform:none!important}.card-nest{height:auto!important}.card-nest-pin{position:static;height:auto;overflow:visible;display:grid;gap:1.25rem}.nest-card{position:static!important;inset:auto!important;transform:none!important}.episode-sheet .sheet-link{display:grid;grid-template-columns:7.5rem 1fr;align-items:center;gap:.75rem .9rem;padding:1rem 1.25rem}.episode-sheet .sheet-media{grid-column:1;grid-row:1/span 2;min-height:0!important;height:auto;flex:none;aspect-ratio:16/9}.episode-sheet .sheet-copy{grid-column:2;grid-row:1;padding:0}.episode-sheet .sheet-extra{grid-column:2;grid-row:2;padding:0}`}</style>
+          <style>{`.blur-fade,.in-view{opacity:1!important;filter:none!important;transform:none!important}`}</style>
         </noscript>
         {children}
       </body>
