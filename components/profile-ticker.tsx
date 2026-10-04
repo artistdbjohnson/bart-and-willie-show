@@ -205,7 +205,7 @@ export function ProfileTicker({
       </div>
       <div
         ref={view}
-        className="ticker-view -mx-5 overflow-hidden px-5 sm:mx-0 sm:px-0"
+        className="ticker-view"
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -271,7 +271,7 @@ function Thumbnail({
       type="button"
       role="listitem"
       data-post={post.id}
-      className="w-[78cqi] shrink-0 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+      className="w-[100cqi] shrink-0 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk sm:w-[calc((100cqi-0.75rem)/2)] lg:w-[calc((100cqi-1.5rem)/3)]"
       onClick={onOpen}
     >
       <span className="relative block h-32 overflow-hidden bg-field-bright/25 sm:h-36">

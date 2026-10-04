@@ -166,7 +166,6 @@ html.reduce-motion .in-view {
 
 #episodes {
   position: relative;
-  z-index: 3;
   max-width: 100%;
   background: var(--field);
 }
@@ -184,14 +183,19 @@ html.reduce-motion .in-view {
   background: var(--field);
 }
 
-/* Sheets stick only inside this nest. The nest ends with the last sheet,
-   so the yellow edges leave with the section instead of pinning the page. */
+/* One rule rides with its card. Nothing here is sticky, so a later
+   section cannot sit under a pinned sheet. */
 .nest-card {
-  position: sticky;
+  position: relative;
   height: auto;
   min-width: 0;
   width: 100%;
+  margin-bottom: 1.75rem;
   background: var(--field);
+}
+
+.nest-card:last-child {
+  margin-bottom: 0;
 }
 
 .nest-face {
@@ -312,27 +316,38 @@ html.reduce-motion .episode-sheet .sheet-extra {
   padding: 0;
 }
 
-.hero-copy {
-  transform: translateZ(0);
+.hero-fade.is-shown {
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 1100ms ease-out,
+    visibility 0s linear;
 }
 
-.hero-fade {
-  transition: opacity 1100ms ease-out;
-  will-change: opacity;
+.hero-fade.is-hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 1100ms ease-out,
+    visibility 0s linear 1100ms;
 }
 
-.ticker-view {
+.ticker-view,
+.page-rail {
   container-type: inline-size;
+  overflow-x: clip;
   touch-action: pan-y;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-fade {
+  .hero-fade.is-shown,
+  .hero-fade.is-hidden {
     transition: none;
   }
 }
 
-html.reduce-motion .hero-fade {
+html.reduce-motion .hero-fade.is-shown,
+html.reduce-motion .hero-fade.is-hidden {
   transition: none;
 }
 

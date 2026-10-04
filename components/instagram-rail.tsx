@@ -9,16 +9,19 @@ export function InstagramRail({
   locale,
   feed,
   nested = false,
+  flow = false,
 }: {
   locale: Locale;
   feed: InstagramFeed;
   nested?: boolean;
+  flow?: boolean;
 }) {
   const t = copy[locale];
+  const compact = nested || flow;
   const body = (
     <>
-      {nested ? (
-        <div className="sheet-lead">
+      {compact ? (
+        <div>
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
             {t.instagram.kicker}
           </p>
@@ -30,7 +33,7 @@ export function InstagramRail({
       ) : (
         <SectionHeading kicker={t.instagram.kicker} title={t.instagram.title} lede={t.instagram.lede} />
       )}
-      <div className={nested ? "mt-6" : "mt-10"}>
+      <div className={compact ? "mt-6" : "mt-10"}>
         {!feed.ok ? (
           <div className="border border-dashed border-chalk/35 px-6 py-10">
             <p className="max-w-xl font-serif text-lg">{t.instagram.empty}</p>
@@ -59,7 +62,7 @@ export function InstagramRail({
               postLabel={t.instagram.post}
               clipLabel={t.instagram.clip}
             />
-            <div className={nested ? "mt-8 hidden sm:block" : "mt-8"}>
+            <div className={nested && !flow ? "mt-8 hidden sm:block" : "mt-8"}>
               <Button asChild variant="outline">
                 <a href={INSTAGRAM_URL}>{t.instagram.profile}</a>
               </Button>
@@ -69,6 +72,14 @@ export function InstagramRail({
       </div>
     </>
   );
+
+  if (flow) {
+    return (
+      <section className="border-t border-chalk/15 bg-field" aria-label={t.instagram.title}>
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-20">{body}</div>
+      </section>
+    );
+  }
 
   if (nested) {
     return (
