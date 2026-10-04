@@ -15,9 +15,6 @@ export function CardNest({ children }: { children: ReactNode[] }) {
             zIndex: index + 1,
             top: `calc(var(--nav-clear) + ${(index + 1) * PEEK}px)`,
             marginBottom: index === count - 1 ? 0 : PEEK,
-            scrollSnapAlign: "start",
-            scrollSnapStop: "normal",
-            scrollMarginTop: `calc(var(--nav-clear) + ${(index + 1) * PEEK}px)`,
           }}
         >
           <div className="nest-face">

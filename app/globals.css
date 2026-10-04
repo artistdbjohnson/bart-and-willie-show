@@ -90,7 +90,9 @@ main {
   html:not(.reduce-motion) {
     /* Auto, not smooth: smooth on the root animates every wheel tick. */
     scroll-behavior: auto;
-    scroll-snap-type: y mandatory;
+    /* Proximity, not mandatory: a mandatory snap on the sticky sheets
+       pulls a short upward flick back onto the sheet. */
+    scroll-snap-type: y proximity;
     transition:
       --field 700ms ease-out,
       --field-bright 700ms ease-out;
@@ -298,7 +300,13 @@ html.reduce-motion .nest-card {
   height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
   min-width: 0;
   width: 100%;
-  background-color: var(--field);
+  border-radius: 0;
+  /* Field-green glass. The blur is what keeps the sheet below from reading
+     as type, so the yellow rule sits on the film instead of slicing a title.
+     No mask here: a mask on this element kills backdrop-filter in WebKit. */
+  background-color: color-mix(in srgb, var(--field) 46%, transparent);
+  -webkit-backdrop-filter: blur(28px) saturate(1.25);
+  backdrop-filter: blur(28px) saturate(1.25);
   touch-action: pan-y;
 }
 
@@ -313,7 +321,7 @@ html.reduce-motion .nest-card {
   height: 100%;
   flex-direction: column;
   overflow: clip;
-  background-color: var(--field);
+  background-color: transparent;
 }
 
 .nest-body {
@@ -323,13 +331,13 @@ html.reduce-motion .nest-card {
   flex: 1;
   flex-direction: column;
   overflow: clip;
-  background: var(--field);
+  background: transparent;
 }
 
 .sheet-edge {
   height: var(--stack-peek);
   flex: none;
-  background: var(--field);
+  background: transparent;
 }
 
 .sheet-edge-signal {

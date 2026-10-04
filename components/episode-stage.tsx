@@ -21,7 +21,7 @@ export function EpisodeStage({
 }) {
   const t = copy[locale];
   const openWatch = useWatch();
-  const episodes = useMemo(() => fullEpisodes(videos), [videos]);
+  const episodes = useMemo(() => fullEpisodes(videos).slice(0, 6), [videos]);
   const [activeId, setActiveId] = useState(episodes[0]?.id ?? "");
   const active = episodes.find((video) => video.id === activeId) ?? episodes[0];
 

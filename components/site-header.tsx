@@ -40,8 +40,12 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       </a>
       <div className="site-header-plate">
       <div className="site-header-bar mx-auto flex max-w-6xl items-center gap-4 px-5 sm:px-8">
-        <Link
-          href={localizePath("/", locale)}
+        <a
+          href={pathname || "/"}
+          onClick={(event) => {
+            event.preventDefault();
+            window.location.reload();
+          }}
           className="flex min-w-0 items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
         >
           <img
@@ -54,7 +58,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           <span className="hidden font-display text-xl leading-none tracking-tight sm:block">
             THE BART & WILLIE SHOW
           </span>
-        </Link>
+        </a>
 
         <nav className="ml-auto hidden items-center gap-6 md:flex" aria-label={t.nav.menu}>
           {links.map((link) => {

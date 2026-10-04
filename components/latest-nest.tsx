@@ -2,7 +2,6 @@ import Image from "next/image";
 import { CardNest } from "@/components/card-nest";
 import { InstagramRail } from "@/components/instagram-rail";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { YouTubeRail } from "@/components/youtube-rail";
 import { copy, formatWhen } from "@/lib/copy";
 import type { InstagramFeed } from "@/lib/instagram";
 import type { Locale } from "@/lib/paths";
@@ -22,7 +21,7 @@ export function LatestNest({
   instagram: InstagramFeed;
 }) {
   const t = copy[locale];
-  const episodes = fullEpisodes(videos);
+  const episodes = fullEpisodes(videos).slice(0, 6);
   const [lead, ...rest] = episodes;
   const hasLead = Boolean(feedOk && lead);
 
@@ -35,12 +34,10 @@ export function LatestNest({
     ...rest.map((video) => <EpisodeSheet key={video.id} locale={locale} video={video} />),
   ];
 
-  // Five sheets: the newest episodes, then the channel, then the profile.
-  // The nest ends here, so the phone can stop on those yellow edges and
-  // the next scroll lets the stack go.
+  // Newest full episodes, then the profile. The channel is a link on the
+  // hero and the episodes page, not a sheet in this stack.
   const cards = [
-    ...episodeSheets.slice(0, 3),
-    <YouTubeRail key="youtube" locale={locale} videos={videos} feedOk={feedOk} nested />,
+    ...episodeSheets,
     <InstagramRail key="instagram" locale={locale} feed={instagram} nested />,
   ];
 
