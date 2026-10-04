@@ -18,6 +18,8 @@ export function Marquee({
   next,
   pause,
   play,
+  fill = false,
+  pages = false,
   children,
 }: {
   label: string;
@@ -25,6 +27,8 @@ export function Marquee({
   next: string;
   pause: string;
   play: string;
+  fill?: boolean;
+  pages?: boolean;
   children: ReactNode;
 }) {
   const items = Children.toArray(children);
@@ -40,6 +44,9 @@ export function Marquee({
   const anim = useRef<{ from: number; to: number; start: number; dur: number } | null>(null);
   const drag = useRef<{ x: number; y: number; offset: number; horizontal: boolean; vertical: boolean } | null>(null);
   const wheelTimer = useRef(0);
+  const hold = useRef(0);
+  const pagesOn = useRef(pages);
+  pagesOn.current = pages;
   const [lockOn, setLockOn] = useState(false);
 
   function paint() {
@@ -89,8 +96,17 @@ export function Marquee({
         if (progress === 1) anim.current = null;
         paint();
       } else if (!reduced() && !paused.current && !locked.current && !drag.current && setWidth.current > 0) {
-        offset.current += (SPEED * dt) / 1000;
-        paint();
+        if (pagesOn.current) {
+          hold.current += dt;
+          if (hold.current >= 3200) {
+            hold.current = 0;
+            const step = stride.current || 280;
+            anim.current = { from: offset.current, to: offset.current + step, start: now, dur: 700 };
+          }
+        } else {
+          offset.current += (SPEED * dt) / 1000;
+          paint();
+        }
       }
       frame = window.requestAnimationFrame(tick);
     };
@@ -144,6 +160,7 @@ export function Marquee({
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       document.documentElement.classList.contains("reduce-motion");
     anim.current = null;
+    hold.current = 0;
     if (reduce) {
       offset.current = to;
       paint();
@@ -157,6 +174,7 @@ export function Marquee({
     paused.current = true;
     moved.current = false;
     anim.current = null;
+    hold.current = 0;
     drag.current = {
       x: event.clientX,
       y: event.clientY,
@@ -205,14 +223,14 @@ export function Marquee({
 
   const tiles = (copy: boolean) =>
     items.map((item, index) => (
-      <div key={`${copy ? "copy" : "set"}-${index}`} data-tile className="shrink-0">
+      <div key={`${copy ? "copy" : "set"}-${index}`} data-tile className={fill ? "h-full shrink-0" : "shrink-0"}>
         {item}
       </div>
     ));
 
   return (
-    <div>
-      <div className="mb-4 flex justify-end gap-2">
+    <div className={fill ? "flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col" : undefined}>
+      <div className="mb-3 flex shrink-0 justify-end gap-2">
         <Button
           type="button"
           variant="outline"
@@ -236,7 +254,7 @@ export function Marquee({
       </div>
       <div
         ref={view}
-        className="marquee-view"
+        className={fill ? "marquee-view min-h-0 flex-1" : "marquee-view"}
         tabIndex={0}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -253,11 +271,11 @@ export function Marquee({
           }
         }}
       >
-        <div ref={track} className="flex w-max gap-3" aria-label={label} role="list">
-          <div ref={setRef} className="flex gap-3">
+        <div ref={track} className={fill ? "flex h-full w-max gap-3" : "flex w-max gap-3"} aria-label={label} role="list">
+          <div ref={setRef} className={fill ? "flex h-full gap-3" : "flex gap-3"}>
             {tiles(false)}
           </div>
-          <div className="flex gap-3" aria-hidden="true">
+          <div className={fill ? "flex h-full gap-3" : "flex gap-3"} aria-hidden="true">
             {tiles(true)}
           </div>
         </div>

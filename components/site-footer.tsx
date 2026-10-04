@@ -22,7 +22,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <footer className="border-t border-chalk/15">
+    <footer className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
         <Lockup script={false} size="footer" />
         <p className="mt-8 max-w-sm font-serif text-lg text-chalk/80">{t.footer.schedule}</p>

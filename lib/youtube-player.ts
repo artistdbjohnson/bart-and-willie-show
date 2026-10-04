@@ -8,6 +8,9 @@ export type YoutubePlayer = {
   getCurrentTime: () => number;
   getDuration: () => number;
   getPlayerState: () => number;
+  loadModule: (name: string) => void;
+  unloadModule: (name: string) => void;
+  setOption: (module: string, option: string, value: unknown) => void;
   destroy: () => void;
 };
 
@@ -90,3 +93,17 @@ export function loadYoutube() {
 export const PLAYER_PLAYING = 1;
 export const PLAYER_ENDED = 0;
 export const PLAYER_PAUSED = 2;
+
+/** Force the caption track off. cc_load_policy 0 still follows the viewer's preference. */
+export function silenceCaptions(player: YoutubePlayer) {
+  try {
+    player.unloadModule("captions");
+  } catch {
+    /* the module is not up yet */
+  }
+  try {
+    player.setOption("captions", "track", {});
+  } catch {
+    /* captions are not available on this player yet */
+  }
+}

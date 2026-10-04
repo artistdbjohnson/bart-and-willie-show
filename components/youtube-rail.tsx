@@ -71,7 +71,7 @@ export function YouTubeRail({
                       fill
                       unoptimized
                       sizes="(min-width: 1024px) 24rem, 100vw"
-                      className="object-contain"
+                      className={video.kind === "short" ? "object-cover" : "object-contain"}
                     />
                   </span>
                   <span className="mt-3 flex items-center justify-between gap-3 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
