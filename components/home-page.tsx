@@ -22,7 +22,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         feedOk={channel.ok}
         instagram={instagram}
       />
-      <JetsSection locale={locale} videos={channel.videos} compactTop />
+      <JetsSection locale={locale} compactTop />
       <SubscribeForm locale={locale} />
     </PageShell>
   );

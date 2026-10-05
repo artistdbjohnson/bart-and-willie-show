@@ -7,6 +7,7 @@ import {
   attachPlayer,
   loadYoutube,
   PLAYER_ENDED,
+  PLAYER_PAUSED,
   PLAYER_PLAYING,
   silenceCaptions,
   type YoutubePlayer,
@@ -16,6 +17,7 @@ import type { ShortBeat } from "@/lib/youtube";
 const STILL_HOLD = 3000;
 const FADE_MS = 1100;
 const START_LIMIT = 12000;
+const STALL_MS = 4000;
 
 export function HeroCycle({
   still,
@@ -131,62 +133,123 @@ export function HeroCycle({
         hostParent.replaceChildren(host);
 
         let shown = false;
-        const outcome = await new Promise<"ended" | "error">((resolve) => {
+        const outcome = await new Promise<"ended" | "error" | "stall">((resolve) => {
           let settled = false;
+          let leaving = false;
           let peak = 0;
-          const finish = (value: "ended" | "error") => {
+          let lastTime = -1;
+          let lastMove = 0;
+          let expecting = false;
+          let resumes = 0;
+          let lastResume = 0;
+          let dips = 0;
+          const finish = (value: "ended" | "error" | "stall") => {
             if (settled) return;
             settled = true;
-            window.clearTimeout(stall);
+            window.clearTimeout(startTimer);
             stopPoll();
             resolve(value);
           };
-          const backToStill = () => {
+          // Hold the last frame under the still. stopVideo() blanks the iframe
+          // and the fade would come up over black.
+          const holdFrame = () => {
             try {
-              active?.stopVideo();
+              active?.pauseVideo();
             } catch {
               /* already stopped */
             }
+          };
+          const backToStill = () => {
+            if (settled || leaving) return;
+            leaving = true;
+            holdFrame();
             if (!cancelled) setPhase("hero");
-            finish("ended");
+            finish(shown ? "ended" : "stall");
           };
           const notePlaying = () => {
             if (settled) return;
-            window.clearTimeout(stall);
             shown = true;
             if (!cancelled) setPhase("short");
           };
-          // The still returns when the player ends. A loop that jumps back to
-          // the start is not a new Short and is not the end signal.
+          const noteProgress = (time: number) => {
+            if (time > lastTime + 0.2) {
+              lastTime = time;
+              lastMove = performance.now();
+            }
+          };
+          const arm = () => {
+            expecting = true;
+            lastMove = performance.now();
+          };
+          // Mobile Chrome often pauses a muted autoplay Short, or parks on the
+          // last frame as PAUSED instead of ENDED. A backward jump is a loop.
           const atEnd = (current: YoutubePlayer) => {
             const state = current.getPlayerState();
             if (state === PLAYER_PLAYING) notePlaying();
             if (state === PLAYER_ENDED) return true;
             const duration = current.getDuration();
             const time = current.getCurrentTime();
-            if (!Number.isFinite(duration) || !Number.isFinite(time)) return false;
-            if (duration < 2) return false;
+            if (!Number.isFinite(time)) return false;
             if (time > peak) peak = time;
-            // A loop seeks back to the start. That restart is not the end,
-            // and it must not keep playing in place of the still.
-            if (peak >= duration - 1 && time + 1.5 < peak) return true;
+            // One 0-sample from the API is a glitch. Two means the Short looped.
+            if (peak > 4 && time + 1.5 < peak && (state === PLAYER_PLAYING || state === PLAYER_ENDED)) {
+              dips += 1;
+              if (dips >= 2) return true;
+            } else if (time > peak - 0.5) {
+              dips = 0;
+            }
+            if (!Number.isFinite(duration) || duration < 2) return false;
             if (time < 1) return false;
-            return time >= duration - 0.25;
+            return time >= duration - 0.35;
+          };
+          const stalled = () => {
+            if (!expecting) return false;
+            if (document.hidden) {
+              lastMove = performance.now();
+              return false;
+            }
+            return performance.now() - lastMove >= STALL_MS;
+          };
+          const resume = (current: YoutubePlayer) => {
+            const now = performance.now();
+            if (resumes >= 2 || now - lastResume < 800) return;
+            resumes += 1;
+            lastResume = now;
+            lastMove = now;
+            try {
+              current.playVideo();
+            } catch {
+              /* the player already released the iframe */
+            }
+          };
+          const giveUp = (value: "error" | "stall") => {
+            if (settled || leaving) return;
+            leaving = true;
+            holdFrame();
+            if (!cancelled) setPhase("hero");
+            finish(shown ? value : "error");
           };
           const watch = () => {
             stopPoll();
             poll = window.setInterval(() => {
               const current = active;
-              if (!current || settled) return;
+              if (!current || settled || leaving) return;
               try {
-                if (atEnd(current)) backToStill();
+                if (atEnd(current)) {
+                  backToStill();
+                  return;
+                }
+                const time = current.getCurrentTime();
+                if (Number.isFinite(time)) noteProgress(time);
+                if (current.getPlayerState() === PLAYER_PAUSED && !document.hidden) resume(current);
               } catch {
                 /* the player already released the iframe */
               }
-            }, 100);
+              if (stalled()) giveUp("stall");
+            }, 250);
           };
-          const stall = window.setTimeout(() => {
-            if (!shown) finish("error");
+          const startTimer = window.setTimeout(() => {
+            if (!shown) giveUp("error");
           }, START_LIMIT);
           active = attachPlayer(
             host,
@@ -208,21 +271,28 @@ export function HeroCycle({
               onReady: (event) => {
                 event.target.mute();
                 quiet(event.target);
+                arm();
                 event.target.playVideo();
                 watch();
               },
               onStateChange: (event) => {
-                if (settled) return;
+                if (settled || leaving) return;
                 if (event.data === PLAYER_PLAYING) {
                   notePlaying();
                   quiet(event.target);
+                  try {
+                    noteProgress(event.target.getCurrentTime());
+                  } catch {
+                    /* time is not readable yet */
+                  }
                 }
-                if (event.data === PLAYER_ENDED) backToStill();
+                if (event.data === PLAYER_ENDED || (event.data === PLAYER_PAUSED && atEnd(event.target))) {
+                  backToStill();
+                  return;
+                }
+                if (event.data === PLAYER_PAUSED) resume(event.target);
               },
-              onError: () => {
-                if (shown && !cancelled) setPhase("hero");
-                finish("error");
-              },
+              onError: () => giveUp("error"),
             },
           );
           player.current = active;

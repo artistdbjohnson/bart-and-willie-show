@@ -67,13 +67,6 @@ export function parseFeed(xml: string): ChannelVideo[] {
     .filter((video): video is ChannelVideo => video !== null);
 }
 
-export function mentionsJets(video: ChannelVideo) {
-  if (/jets/i.test(video.title)) return true;
-  const chapters = video.description.split(/chapters:/i)[1] ?? "";
-  const chapterBlock = chapters.split(/#BartScott/i)[0];
-  return /jets/i.test(chapterBlock);
-}
-
 type TabEpisode = { id: string; title: string; when: string };
 
 function relativeToIso(label: string) {

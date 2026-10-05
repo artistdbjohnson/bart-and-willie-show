@@ -86,11 +86,6 @@ export const copy = {
       willieYears: "Jets, 2013–2015",
       bartTitle: "Bart Scott",
       willieTitle: "Willie Colon",
-      onTheShow: "On the show",
-      onTheShowLede:
-        "On this page when the title or a chapter says Jets. The channel’s closing hashtag does not count.",
-      none: "This window of the feed does not name the Jets in a title or a chapter.",
-      hosts: "Full host notes",
       chapter: "Oct 2, 2026. Chapter title: “Jets Vibe Check.”",
     },
     about: {
@@ -258,11 +253,6 @@ export const copy = {
       willieYears: "Jets, 2013–2015",
       bartTitle: "Bart Scott",
       willieTitle: "Willie Colon",
-      onTheShow: "No programa",
-      onTheShowLede:
-        "Entra nesta página quando o título ou um capítulo diz Jets. A hashtag do fim do vídeo não conta.",
-      none: "Esta janela da fonte não cita os Jets num título ou num capítulo.",
-      hosts: "Notas completas dos apresentadores",
       chapter: "2 de outubro de 2026. Título do capítulo: “Jets Vibe Check.”",
     },
     about: {
