@@ -508,6 +508,60 @@ html.reduce-motion .episode-sheet .sheet-extra {
   transition: opacity 1100ms ease-out;
 }
 
+/* Entrance only. Opacity is not left inline, so the quiet fade above
+   still owns the node once this animation ends. */
+@keyframes hero-ink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero-enter {
+  animation: hero-ink 0.95s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.hero-rule {
+  display: block;
+  width: 4.25rem;
+  height: 2px;
+  margin-top: 1.15rem;
+  transform-origin: left center;
+  background: var(--signal);
+  animation: hero-rule 0.8s 0.92s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.hero-lockup.is-quiet .hero-enter,
+.hero-lockup.is-quiet .hero-rule {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion) .hero-actions :is(a, button) {
+    transition:
+      background-color 500ms ease-out,
+      color 500ms ease-out,
+      border-color 500ms ease-out,
+      opacity 500ms ease-out,
+      transform 200ms ease-out;
+  }
+
+  html:not(.reduce-motion) .hero-actions :is(a, button):hover {
+    transform: translateY(-2px);
+  }
+}
+
 .marquee-view {
   width: 100%;
   max-width: 100%;
@@ -580,6 +634,12 @@ html.reduce-motion .episode-sheet .sheet-extra {
   .watch-panel {
     transition: none;
   }
+
+  .hero-enter,
+  .hero-rule {
+    animation: none;
+    transform: none !important;
+  }
 }
 
 html.reduce-motion .hero-fade.is-shown,
@@ -590,6 +650,12 @@ html.reduce-motion .hero-wash,
 html.reduce-motion .watch-backdrop,
 html.reduce-motion .watch-panel {
   transition: none;
+}
+
+html.reduce-motion .hero-enter,
+html.reduce-motion .hero-rule {
+  animation: none;
+  transform: none !important;
 }
 
 html.reduce-motion .hero-lockup.is-quiet .hero-quiet,

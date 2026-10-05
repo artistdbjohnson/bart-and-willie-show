@@ -1,5 +1,6 @@
 import { ChalkPlay } from "@/components/chalk-play";
 import { HeroCycle } from "@/components/hero-cycle";
+import { HeroEnter } from "@/components/hero-enter";
 import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
 import { HeroWatch } from "@/components/watch-dialog";
@@ -38,11 +39,18 @@ export function Hero({
             <p className="hero-quiet font-ui text-[0.72rem] uppercase tracking-[0.22em] text-chalk/80">
               {t.hero.kicker}
             </p>
-            <Lockup className="hero-quiet mt-5" />
-            <p className="hero-quiet mt-6 max-w-xl font-serif text-xl leading-snug text-chalk md:text-2xl">
-              {t.hero.lede}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Lockup enter className="hero-quiet mt-5" />
+            <div className="hero-quiet mt-6 max-w-xl">
+              {t.hero.intro.map((sentence, index) => (
+                <HeroEnter key={sentence} delay={0.52 + index * 0.16}>
+                  <p className={index === 0 ? "font-serif text-base leading-snug text-chalk md:text-lg" : "mt-3 font-serif text-base leading-snug text-chalk md:text-lg"}>
+                    {sentence}
+                  </p>
+                </HeroEnter>
+              ))}
+              <span className="hero-rule" aria-hidden="true" />
+            </div>
+            <div className="hero-actions mt-8 flex flex-wrap items-center gap-3">
               {video ? (
                 <HeroWatch videoId={video.id} title={video.title} poster={video.thumbnail}>
                   <PlayMark />
@@ -65,6 +73,19 @@ export function Hero({
             <p className="hero-quiet mt-4 max-w-md font-serif text-sm text-chalk/80">
               {video ? t.hero.opening : t.hero.unavailable}
             </p>
+            <nav className="hero-quiet mt-5" aria-label={t.hero.follow}>
+              <p className="font-ui text-[0.68rem] uppercase tracking-[0.18em] text-chalk/60">{t.hero.follow}</p>
+              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
+                {t.hero.follows.map((item) => (
+                  <li key={item.label}>
+                    <a href={item.href} className="font-ui text-[0.78rem] text-chalk/85 transition-colors duration-200 hover:text-signal">
+                      <span className="uppercase tracking-[0.14em] text-signal">{item.label}</span>{" "}
+                      <span>{item.handle}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </div>
       </HeroCycle>

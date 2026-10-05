@@ -17,7 +17,18 @@ export const copy = {
     theme: { day: "Day", night: "Night", label: "Field" },
     hero: {
       kicker: "New episodes on Mondays and Fridays",
-      lede: "Bart Scott. Willie Colon. Former Jets. On twice a week.",
+      lede: "Welcome to The Bart & Willie Show, where longtime friends and former NFL players Bart Scott and Willie Colon break down the league’s most important talking points Mondays and Fridays. Subscribe so you never miss a drop!",
+      intro: [
+        "Welcome to The Bart & Willie Show, where longtime friends and former NFL players Bart Scott and Willie Colon break down the league’s most important talking points Mondays and Fridays.",
+        "Subscribe so you never miss a drop!",
+      ],
+      follow: "Follow us",
+      follows: [
+        { label: "YT", handle: "@bartandwillieshow", href: "https://www.youtube.com/@bartandwillieshow" },
+        { label: "X", handle: "@bartandwillie", href: "https://x.com/bartandwillie" },
+        { label: "IG", handle: "@bartandwillieshow", href: "https://www.instagram.com/bartandwillieshow" },
+        { label: "TT", handle: "@bartandwillieshow", href: "https://www.tiktok.com/@bartandwillieshow" },
+      ],
       opening: "Latest title card. Play opens YouTube.",
       mute: "Mute",
       unmute: "Unmute",
@@ -178,7 +189,18 @@ export const copy = {
     theme: { day: "Dia", night: "Noite", label: "Campo" },
     hero: {
       kicker: "Novos episódios às segundas e sextas",
-      lede: "Bart Scott. Willie Colon. Ex-Jets. Duas vezes por semana.",
+      lede: "Bem-vindos ao The Bart & Willie Show, onde os amigos de longa data e ex-jogadores da NFL Bart Scott e Willie Colon destrincham os assuntos mais importantes da liga, às segundas e sextas. Inscreva-se para não perder nenhum drop!",
+      intro: [
+        "Bem-vindos ao The Bart & Willie Show, onde os amigos de longa data e ex-jogadores da NFL Bart Scott e Willie Colon destrincham os assuntos mais importantes da liga, às segundas e sextas.",
+        "Inscreva-se para não perder nenhum drop!",
+      ],
+      follow: "Siga",
+      follows: [
+        { label: "YT", handle: "@bartandwillieshow", href: "https://www.youtube.com/@bartandwillieshow" },
+        { label: "X", handle: "@bartandwillie", href: "https://x.com/bartandwillie" },
+        { label: "IG", handle: "@bartandwillieshow", href: "https://www.instagram.com/bartandwillieshow" },
+        { label: "TT", handle: "@bartandwillieshow", href: "https://www.tiktok.com/@bartandwillieshow" },
+      ],
       opening: "Cartaz do episódio mais recente. O play abre no YouTube.",
       mute: "Mudo",
       unmute: "Som",
