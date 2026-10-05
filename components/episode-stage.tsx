@@ -83,12 +83,22 @@ export function EpisodeStage({
                 const selected = video.id === active.id;
                 return (
                   <li key={video.id}>
-                    <button
-                      type="button"
-                      onClick={() => setActiveId(video.id)}
-                      aria-pressed={selected}
+                    <a
+                      href={`https://www.youtube.com/watch?v=${video.id}`}
+                      aria-current={selected ? "true" : undefined}
+                      onClick={(event) => {
+                        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+                        event.preventDefault();
+                        setActiveId(video.id);
+                        openWatch({
+                          id: video.id,
+                          title: video.title,
+                          kind: "video",
+                          poster: video.thumbnail,
+                        });
+                      }}
                       className={cn(
-                        "group block w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk",
+                        "group block w-full text-left no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk",
                         selected && "outline outline-1 outline-signal outline-offset-8",
                       )}
                     >
@@ -106,7 +116,7 @@ export function EpisodeStage({
                         {formatWhen(video.published, locale)}
                       </span>
                       <span className="mt-2 block font-serif text-xl leading-snug">{video.title}</span>
-                    </button>
+                    </a>
                   </li>
                 );
               })}

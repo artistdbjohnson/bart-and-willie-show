@@ -21,7 +21,7 @@ export function InstagramRail({
   const body = (
     <>
       {compact ? (
-        <div className={nested ? "shrink-0" : undefined}>
+        <div className={nested ? "shrink-0 pr-14 sm:pr-0" : undefined}>
           <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
             {t.instagram.kicker}
           </p>
@@ -33,7 +33,7 @@ export function InstagramRail({
       ) : (
         <SectionHeading kicker={t.instagram.kicker} title={t.instagram.title} lede={t.instagram.lede} />
       )}
-      <div className={nested ? "mt-3 flex min-h-0 flex-1 flex-col sm:mt-4" : compact ? "mt-6" : "mt-10"}>
+      <div className={nested ? "mt-2 flex min-h-0 flex-1 flex-col" : compact ? "mt-6" : "mt-10"}>
         {!feed.ok ? (
           <div className="border border-dashed border-chalk/35 px-6 py-10">
             <p className="max-w-xl font-serif text-lg">{t.instagram.empty}</p>
@@ -85,7 +85,7 @@ export function InstagramRail({
   if (nested) {
     return (
       <article className="flex h-full min-h-0 w-full max-w-full min-w-0 flex-col overflow-x-clip">
-        <div className="flex h-full min-h-0 flex-col pt-1 pb-3 sm:pt-3">{body}</div>
+        <div className="flex h-full min-h-0 flex-col pt-3 pb-3">{body}</div>
       </article>
     );
   }

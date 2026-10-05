@@ -70,7 +70,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
                 href={inPage ? "#episodes" : localizePath(link.href, locale)}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "font-ui text-[0.72rem] uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk",
+                  "inline-flex h-11 items-center font-ui text-[0.72rem] uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk",
                   current ? "text-signal" : "text-quiet hover:text-chalk",
                 )}
               >
@@ -87,7 +87,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             type="button"
             variant="outline"
             size="sm"
-            className="md:hidden"
+            className="h-11 min-w-11 md:hidden"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
           >
@@ -132,7 +132,7 @@ function LanguageToggle({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const t = copy[locale];
   return (
-    <div className="flex h-10 items-center border border-chalk/30" aria-label={t.lang.label}>
+    <div className="flex h-11 items-center border border-chalk/30" aria-label={t.lang.label}>
       {(["en", "pt"] as const).map((item) => {
         const current = item === locale;
         return (
@@ -142,7 +142,7 @@ function LanguageToggle({ locale }: { locale: Locale }) {
             hrefLang={item}
             aria-current={current ? "true" : undefined}
             className={cn(
-              "flex h-10 items-center px-2.5 font-ui text-[0.68rem] tracking-[0.16em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chalk",
+              "flex h-11 min-w-11 items-center px-2.5 font-ui text-[0.68rem] tracking-[0.16em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chalk",
               current ? "bg-signal text-ink" : "text-quiet hover:text-chalk",
             )}
           >
@@ -173,7 +173,7 @@ function ThemeToggle({ locale }: { locale: Locale }) {
   }
 
   return (
-    <div className="flex h-10 items-center border border-chalk/30" aria-label={t.theme.label}>
+    <div className="flex h-11 items-center border border-chalk/30" aria-label={t.theme.label}>
       {(
         [
           ["light", t.theme.day],
@@ -189,7 +189,7 @@ function ThemeToggle({ locale }: { locale: Locale }) {
             onClick={() => choose(value)}
             data-theme-choice={value}
             className={cn(
-              "theme-choice h-10 px-2.5 font-ui text-[0.68rem] uppercase tracking-[0.16em] transition-colors duration-500 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chalk",
+              "theme-choice h-11 min-w-11 px-2.5 font-ui text-[0.68rem] uppercase tracking-[0.16em] transition-colors duration-500 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chalk",
               current ? "" : "text-quiet hover:text-chalk",
             )}
           >

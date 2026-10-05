@@ -50,16 +50,17 @@ export function WatchTarget({
 }: WatchItem & { className?: string; children: ReactNode }) {
   const open = useWatch();
   return (
-    <button
-      type="button"
-      className={cn(
-        "cursor-pointer appearance-none border-0 bg-transparent p-0 text-left text-inherit",
-        className,
-      )}
-      onClick={() => open({ id, title, kind, poster })}
+    <a
+      href={`https://www.youtube.com/watch?v=${id}`}
+      className={cn("cursor-pointer bg-transparent p-0 text-left text-inherit no-underline", className)}
+      onClick={(event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        event.preventDefault();
+        open({ id, title, kind, poster });
+      }}
     >
       {children}
-    </button>
+    </a>
   );
 }
 

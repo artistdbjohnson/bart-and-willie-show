@@ -59,6 +59,8 @@ export function attachPlayer(
   iframe.referrerPolicy = "strict-origin-when-cross-origin";
   iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
   iframe.setAttribute("allowfullscreen", "true");
+  iframe.setAttribute("playsinline", "1");
+  iframe.setAttribute("webkit-playsinline", "1");
   iframe.width = String(width);
   iframe.height = String(height);
   const params = new URLSearchParams({ enablejsapi: "1" });

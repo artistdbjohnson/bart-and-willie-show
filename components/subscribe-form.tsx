@@ -125,15 +125,15 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
 
   return (
     <section className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15">
-      <div className="mx-auto grid max-w-6xl items-stretch gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-12 lg:gap-12">
-        <div className="newsletter-art @container relative flex aspect-[4/5] items-end overflow-hidden sm:aspect-[5/4] lg:col-span-6">
+      <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
+        <div className="newsletter-art @container relative flex w-full max-w-[26rem] min-w-0 aspect-[4/5] items-end overflow-hidden sm:aspect-[5/4]">
           <ChalkPlay className="pointer-events-none absolute top-6 right-2 h-40 w-auto text-chalk sm:h-52" />
-          <div className="relative z-[1] w-full p-6 pb-8 sm:p-8">
+          <div className="relative z-[1] w-full max-w-full overflow-hidden p-6 pb-8 sm:p-8">
             <Lockup size="footer" />
           </div>
           <span className="absolute inset-x-0 bottom-0 h-1 bg-signal" aria-hidden="true" />
         </div>
-        <div className="lg:col-span-5 lg:col-start-8">
+        <div className="min-w-0">
           <div className="@container max-w-3xl">
             <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">{t.kicker}</p>
             <h2 className="mt-3 font-display text-[clamp(1.75rem,8.8cqi,3.75rem)] leading-[0.84] tracking-tight">
