@@ -107,11 +107,11 @@ function Thumbnail({
           }
         />
       </span>
-      <span className="mt-3 shrink-0 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
+      <span className="mt-2 shrink-0 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
         {post.kind === "clip" ? clipLabel : postLabel}
       </span>
       {post.caption ? (
-        <span className="mt-2 shrink-0 font-serif text-base leading-snug break-words">{post.caption}</span>
+        <span className="mt-2 shrink-0 pr-14 font-serif text-base leading-snug break-words sm:pr-0">{post.caption}</span>
       ) : null}
     </button>
   );

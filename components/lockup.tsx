@@ -36,9 +36,11 @@ export function Lockup({
       </LockupLine>
       {script ? (
         enter ? (
-          <HeroEnter delay={0.36} className={scriptClass}>
-            Playmaker
-          </HeroEnter>
+          <div className="overflow-hidden">
+            <HeroEnter delay={0.34} className={scriptClass}>
+              Playmaker
+            </HeroEnter>
+          </div>
         ) : (
           <p className={scriptClass}>Playmaker</p>
         )
@@ -60,8 +62,8 @@ function LockupLine({
 }) {
   if (!enter) return <div className={className}>{children}</div>;
   return (
-    <HeroEnter delay={delay} className={className}>
-      {children}
-    </HeroEnter>
+    <div className={cn("overflow-hidden", className)}>
+      <HeroEnter delay={delay}>{children}</HeroEnter>
+    </div>
   );
 }

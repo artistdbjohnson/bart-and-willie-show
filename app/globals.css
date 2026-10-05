@@ -267,25 +267,11 @@ html.reduce-motion .in-view {
   background: transparent;
 }
 
-/* In-flow runway so the last sheet can sit on the five-bar stop.
-   Padding does not count. When this ends, the bars leave with the nest. */
-.nest-release {
-  height: 4.5rem;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .nest-release {
-    height: 0;
-  }
-
   .section-snap,
   .nest-card {
     scroll-snap-align: none;
   }
-}
-
-html.reduce-motion .nest-release {
-  height: 0;
 }
 
 html.reduce-motion .section-snap,
@@ -293,10 +279,13 @@ html.reduce-motion .nest-card {
   scroll-snap-align: none;
 }
 
-/* Sticky only inside this nest. The nest ends with the last sheet,
-   so the bars leave with the section. */
+/* Episode sheets stick inside .nest-stack only, all at the same top,
+   so the next sheet covers the last and one yellow rule shows.
+   The stack ends before the profile sheet, so those cards release
+   instead of pinning the gallery. */
 .nest-card {
   position: sticky;
+  top: calc(var(--nav-clear) + var(--stack-peek));
   height: calc(100svh - var(--nav-clear) - var(--stack-head) - (2 * var(--stack-peek)) - 1px);
   min-width: 0;
   width: 100%;
@@ -310,10 +299,15 @@ html.reduce-motion .nest-card {
   touch-action: pan-y;
 }
 
-@media (max-width: 639px) {
-  .nest-card-stop {
-    height: calc(100svh - var(--nav-clear) - (var(--stack-bars) * var(--stack-peek)));
-  }
+.nest-card.nest-card-stop {
+  position: static;
+  top: auto;
+  height: auto;
+}
+
+.nest-card.nest-card-stop .nest-face {
+  height: auto;
+  overflow: visible;
 }
 
 .nest-face {
@@ -440,6 +434,15 @@ html.reduce-motion .episode-sheet .sheet-extra {
   padding: 0;
 }
 
+@media (max-width: 639px) {
+  .episode-sheet .sheet-copy,
+  .episode-sheet .sheet-extra,
+  html.reduce-motion .episode-sheet .sheet-copy,
+  html.reduce-motion .episode-sheet .sheet-extra {
+    padding-right: 3.5rem;
+  }
+}
+
 .hero-fade.is-shown,
 .hero-fade.is-armed {
   visibility: visible;
@@ -508,14 +511,25 @@ html.reduce-motion .episode-sheet .sheet-extra {
   transition: opacity 1100ms ease-out;
 }
 
-/* Entrance only. Opacity is not left inline, so the quiet fade above
-   still owns the node once this animation ends. */
+/* Opacity lives here, not inline, so a Short can still fade type.
+   The base hidden state covers the delay. No backwards fill. */
 @keyframes hero-ink {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes hero-sentence {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -529,7 +543,20 @@ html.reduce-motion .episode-sheet .sheet-extra {
 }
 
 .hero-enter {
-  animation: hero-ink 0.95s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  opacity: 0;
+  transform: translateY(110%);
+  animation: hero-ink 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-sentence {
+  transform: translateY(8px);
+  animation-name: hero-sentence;
+}
+
+.hero-late {
+  animation-duration: 0.5s;
+  animation-delay: 0.9s;
+  transform: none;
 }
 
 .hero-rule {
@@ -538,12 +565,14 @@ html.reduce-motion .episode-sheet .sheet-extra {
   height: 2px;
   margin-top: 1.15rem;
   transform-origin: left center;
+  transform: scaleX(0);
   background: var(--signal);
-  animation: hero-rule 0.8s 0.92s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: hero-rule 0.55s 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.hero-lockup.is-quiet .hero-enter,
-.hero-lockup.is-quiet .hero-rule {
+/* Follow shares the opacity entrance and the quiet fade.
+   Actions carry .hero-hold, so a Short does not zero the buttons. */
+.hero-lockup.is-quiet .hero-quiet.hero-enter:not(.hero-hold) {
   animation: none;
 }
 
@@ -638,6 +667,7 @@ html.reduce-motion .episode-sheet .sheet-extra {
   .hero-enter,
   .hero-rule {
     animation: none;
+    opacity: 1;
     transform: none !important;
   }
 }
@@ -655,6 +685,7 @@ html.reduce-motion .watch-panel {
 html.reduce-motion .hero-enter,
 html.reduce-motion .hero-rule {
   animation: none;
+  opacity: 1;
   transform: none !important;
 }
 
@@ -664,6 +695,9 @@ html.reduce-motion .hero-wash.is-quiet {
 }
 
 .footer-link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
   font-family: var(--font-serif);
   font-size: 1.125rem;
   line-height: 1.4;

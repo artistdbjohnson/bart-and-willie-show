@@ -76,7 +76,7 @@ function EpisodeSheet({
         poster={video.thumbnail}
         className="sheet-link group flex min-h-0 flex-1 flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-chalk"
       >
-        <span className="sheet-lead sheet-copy shrink-0 pt-4 pb-3">
+        <span className="sheet-lead sheet-copy shrink-0 pt-4 pr-14 pb-3 sm:pr-0">
           <span className="font-ui text-[0.68rem] uppercase tracking-[0.16em] text-quiet">
             {featured ? `${t.episodes.featured} · ` : null}
             {formatWhen(video.published, locale)}
@@ -92,11 +92,11 @@ function EpisodeSheet({
             fill
             unoptimized
             sizes="(min-width: 1024px) 72rem, 100vw"
-            className="object-contain"
+            className="object-cover"
           />
         </span>
         {featured || oct2 ? (
-          <span className="sheet-extra shrink-0 pt-3 pb-4">
+          <span className="sheet-extra shrink-0 pt-3 pr-14 pb-4 sm:pr-0">
             {blurb ? (
               <span className="block font-serif text-base leading-relaxed text-chalk/85">
                 {blurb}

@@ -230,7 +230,7 @@ export function Marquee({
 
   return (
     <div className={fill ? "flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col" : undefined}>
-      <div className="mb-3 flex shrink-0 justify-end gap-2">
+      <div className="mb-4 flex shrink-0 justify-end gap-2">
         <Button
           type="button"
           variant="outline"

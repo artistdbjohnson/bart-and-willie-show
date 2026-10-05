@@ -37,7 +37,7 @@ export function HeroCycle({
   const player = useRef<YoutubePlayer | null>(null);
   const [phase, setPhase] = useState<"hero" | "short">("hero");
   const [muted, setMuted] = useState(true);
-  const [box, setBox] = useState({ width: 0, height: 0 });
+  const [box, setBox] = useState({ width: 0, height: 0, wide: false });
 
   useEffect(() => {
     const node = root.current;
@@ -47,7 +47,7 @@ export function HeroCycle({
       const height = node.clientHeight;
       if (!width || !height) return;
       const scale = Math.max(width / 9, height / 16);
-      setBox({ width: 9 * scale, height: 16 * scale });
+      setBox({ width: 9 * scale, height: 16 * scale, wide: width >= 1024 });
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -122,7 +122,7 @@ export function HeroCycle({
             const height = node.clientHeight;
             if (width && height) {
               const scale = Math.max(width / 9, height / 16);
-              setBox({ width: 9 * scale, height: 16 * scale });
+              setBox({ width: 9 * scale, height: 16 * scale, wide: width >= 1024 });
             }
           }
           await wait(40);
@@ -325,11 +325,12 @@ export function HeroCycle({
       <div ref={root} className="absolute inset-0 overflow-hidden bg-field">
         <div className="absolute inset-0 overflow-hidden" aria-hidden={!playing}>
           <div
-            className="hero-player absolute left-1/2 top-1/2"
+            className="hero-player absolute left-1/2"
             style={{
               width: box.width || "100%",
               height: box.height || "100%",
-              transform: "translate(-50%, -50%)",
+              top: box.wide ? 0 : "50%",
+              transform: box.wide ? "translateX(-50%)" : "translate(-50%, -50%)",
             }}
           >
             <div ref={mount} className="h-full w-full" />

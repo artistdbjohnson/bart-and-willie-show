@@ -81,7 +81,7 @@ export function SourceLine({ locale }: { locale: Locale }) {
           {index > 0 ? <span className="mx-2 text-chalk/30">/</span> : null}
           <a
             href={source.href}
-            className="underline decoration-chalk/30 underline-offset-4 hover:text-chalk focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+            className="inline-block py-2 underline decoration-chalk/30 underline-offset-4 hover:text-chalk focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
           >
             {source.label}
           </a>

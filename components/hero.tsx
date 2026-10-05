@@ -1,6 +1,5 @@
 import { ChalkPlay } from "@/components/chalk-play";
 import { HeroCycle } from "@/components/hero-cycle";
-import { HeroEnter } from "@/components/hero-enter";
 import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
 import { HeroWatch } from "@/components/watch-dialog";
@@ -42,15 +41,17 @@ export function Hero({
             <Lockup enter className="hero-quiet mt-5" />
             <div className="hero-quiet mt-6 max-w-xl">
               {t.hero.intro.map((sentence, index) => (
-                <HeroEnter key={sentence} delay={0.52 + index * 0.16}>
-                  <p className={index === 0 ? "font-serif text-base leading-snug text-chalk md:text-lg" : "mt-3 font-serif text-base leading-snug text-chalk md:text-lg"}>
-                    {sentence}
-                  </p>
-                </HeroEnter>
+                <p
+                  key={sentence}
+                  className={index === 0 ? "hero-enter hero-sentence font-serif text-lg leading-snug text-chalk md:text-xl" : "hero-enter hero-sentence mt-3 font-serif text-lg leading-snug text-chalk md:text-xl"}
+                  style={{ animationDelay: `${0.48 + index * 0.16}s` }}
+                >
+                  {sentence}
+                </p>
               ))}
               <span className="hero-rule" aria-hidden="true" />
             </div>
-            <div className="hero-actions mt-8 flex flex-wrap items-center gap-3">
+            <div className="hero-actions hero-enter hero-hold hero-late mt-8 flex flex-wrap items-center gap-3">
               {video ? (
                 <HeroWatch videoId={video.id} title={video.title} poster={video.thumbnail}>
                   <PlayMark />
@@ -65,7 +66,7 @@ export function Hero({
                 </Button>
               )}
               {video ? (
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="border-chalk/55 bg-ink text-chalk hover:border-chalk hover:bg-ink hover:text-signal">
                   <a href={CHANNEL_URL}>{t.hero.channel}</a>
                 </Button>
               ) : null}
@@ -73,8 +74,8 @@ export function Hero({
             <p className="hero-quiet mt-4 max-w-md font-serif text-sm text-chalk/80">
               {video ? t.hero.opening : t.hero.unavailable}
             </p>
-            <nav className="hero-quiet mt-5" aria-label={t.hero.follow}>
-              <p className="font-ui text-[0.68rem] uppercase tracking-[0.18em] text-chalk/60">{t.hero.follow}</p>
+            <nav className="hero-quiet hero-enter hero-late mt-5" aria-label={t.hero.follow}>
+              <p className="font-ui text-[0.68rem] uppercase tracking-[0.18em] text-chalk/80">{t.hero.follow}</p>
               <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
                 {t.hero.follows.map((item) => (
                   <li key={item.label}>
