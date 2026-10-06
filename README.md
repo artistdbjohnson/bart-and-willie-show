@@ -8,6 +8,6 @@ npm run dev
 npm run build
 ```
 
-Design notes are in `docs/design-meeting.md`.
+Design notes are in `docs/design-meeting.md`. Motion notes are in `docs/motion-meeting.md`.
 
 built by dglxss

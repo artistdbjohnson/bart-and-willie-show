@@ -570,6 +570,23 @@ html.reduce-motion .episode-sheet .sheet-extra {
   animation: hero-rule 0.55s 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+/* The 40 is already in the margin. It spots itself once, late, on the
+   same curve as the lockup. Transform only, so a Short can still fade it. */
+@keyframes yard-spot {
+  from {
+    transform: translateY(12px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion):not(.intro-seen) .yard-spot {
+    animation: yard-spot 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both;
+  }
+}
+
 /* Follow shares the opacity entrance and the quiet fade.
    Actions carry .hero-hold, so a Short does not zero the buttons. */
 .hero-lockup.is-quiet .hero-quiet.hero-enter:not(.hero-hold) {
@@ -665,7 +682,8 @@ html.reduce-motion .episode-sheet .sheet-extra {
   }
 
   .hero-enter,
-  .hero-rule {
+  .hero-rule,
+  .yard-spot {
     animation: none;
     opacity: 1;
     transform: none !important;
@@ -683,10 +701,18 @@ html.reduce-motion .watch-panel {
 }
 
 html.reduce-motion .hero-enter,
-html.reduce-motion .hero-rule {
+html.reduce-motion .hero-rule,
+html.reduce-motion .yard-spot,
+html.intro-seen .hero-enter,
+html.intro-seen .hero-rule,
+html.intro-seen .yard-spot {
   animation: none;
   opacity: 1;
   transform: none !important;
+}
+
+html.intro-seen .hero-lockup.is-quiet .hero-quiet {
+  opacity: 0;
 }
 
 html.reduce-motion .hero-lockup.is-quiet .hero-quiet,

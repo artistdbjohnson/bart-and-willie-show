@@ -75,7 +75,9 @@ export const metadata: Metadata = {
 const themeScript = `
 try {
   if (localStorage.getItem('baw-theme') === 'dark') document.documentElement.classList.add('dark');
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('reduce-motion');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) document.documentElement.classList.add('reduce-motion');
+  if (!reduce && sessionStorage.getItem('baw-intro') === '1') document.documentElement.classList.add('intro-seen');
 } catch (e) {}
 `;
 
