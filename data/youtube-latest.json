@@ -1,6 +1,6 @@
 {
-  "capturedAt": "2026-10-06T01:40:00.000Z",
-  "note": "Last good full episodes. Channel RSS and the uploads playlist RSS both returned HTTP 404 on this date. No Data API key was configured.",
+  "capturedAt": "2026-10-06T05:50:00.000Z",
+  "note": "Last good full episodes and Shorts from the public channel tabs. Channel RSS and the uploads playlist RSS both returned HTTP 404. No Data API key is used.",
   "episodes": [
     {
       "id": "XqJmpZv5YkA",
@@ -9,17 +9,17 @@
       "published": "2026-10-05T18:00:00.000Z",
       "thumbnail": "https://i.ytimg.com/vi/XqJmpZv5YkA/maxresdefault.jpg",
       "description": "",
-      "views": 841,
+      "views": 1400,
       "kind": "video"
     },
     {
       "id": "uKSv6ZVq4xc",
-      "title": "Can Browns FINALLY Trust Watson? 🤔 Willie's Honest Take on Jets + Week 4 Betting Locks 🔒",
+      "title": "Willie’s Honest Take on Jets 👀 Watson, Browns Officially on a ROLL + Tom Brady’s Tell All",
       "url": "https://www.youtube.com/watch?v=uKSv6ZVq4xc",
       "published": "2026-10-02T16:00:00.000Z",
       "thumbnail": "https://i.ytimg.com/vi/uKSv6ZVq4xc/maxresdefault.jpg",
       "description": "",
-      "views": 5612,
+      "views": 5600,
       "kind": "video"
     },
     {
@@ -29,7 +29,7 @@
       "published": "2026-09-28T16:00:00.000Z",
       "thumbnail": "https://i.ytimg.com/vi/rszJsJ72NSw/maxresdefault.jpg",
       "description": "",
-      "views": 3131,
+      "views": 3100,
       "kind": "video"
     },
     {
@@ -39,7 +39,7 @@
       "published": "2026-09-25T16:00:00.000Z",
       "thumbnail": "https://i.ytimg.com/vi/WnJn7etlDDg/maxresdefault.jpg",
       "description": "",
-      "views": 5981,
+      "views": 5900,
       "kind": "video"
     },
     {
@@ -49,7 +49,7 @@
       "published": "2026-09-21T16:00:00.000Z",
       "thumbnail": "https://i.ytimg.com/vi/-gA3cqzrGJ0/maxresdefault.jpg",
       "description": "",
-      "views": 5199,
+      "views": 5200,
       "kind": "video"
     },
     {
@@ -59,8 +59,90 @@
       "published": "2026-09-18T16:00:00.000Z",
       "thumbnail": "https://i.ytimg.com/vi/okMHuzs3JZI/maxresdefault.jpg",
       "description": "",
-      "views": 3657,
+      "views": 3600,
       "kind": "video"
+    }
+  ],
+  "shorts": [
+    {
+      "id": "cvcxk8W9pWU",
+      "title": "MNF… Can the Saints take a step forward in the NFC South?",
+      "url": "https://www.youtube.com/shorts/cvcxk8W9pWU",
+      "published": "2026-10-05T23:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/cvcxk8W9pWU/hqdefault.jpg",
+      "description": "",
+      "views": 132,
+      "kind": "short"
+    },
+    {
+      "id": "qzKuya4a_3A",
+      "title": "Bart on Kenneth Walker III:",
+      "url": "https://www.youtube.com/shorts/qzKuya4a_3A",
+      "published": "2026-10-05T22:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/qzKuya4a_3A/hqdefault.jpg",
+      "description": "",
+      "views": 693,
+      "kind": "short"
+    },
+    {
+      "id": "9EKFeN25vSc",
+      "title": "Check Bart’s receipts…He’s been saying Deshaun was going to have a bounce back year 🤝",
+      "url": "https://www.youtube.com/shorts/9EKFeN25vSc",
+      "published": "2026-10-05T21:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/9EKFeN25vSc/hqdefault.jpg",
+      "description": "",
+      "views": 1100,
+      "kind": "short"
+    },
+    {
+      "id": "eMtx4ClxpBc",
+      "title": "Willie on the Pittsburgh Steelers #steelers #browns #tnf",
+      "url": "https://www.youtube.com/shorts/eMtx4ClxpBc",
+      "published": "2026-10-05T20:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/eMtx4ClxpBc/hqdefault.jpg",
+      "description": "",
+      "views": 1000,
+      "kind": "short"
+    },
+    {
+      "id": "U_3lXxAABK4",
+      "title": "Willie on CJ Stroud’s next contract 👀 #houstontexans #cjstroud #nfl",
+      "url": "https://www.youtube.com/shorts/U_3lXxAABK4",
+      "published": "2026-10-05T19:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/U_3lXxAABK4/hqdefault.jpg",
+      "description": "",
+      "views": 1100,
+      "kind": "short"
+    },
+    {
+      "id": "scNYFchuRxU",
+      "title": "The Chargers have a personnel problem 👀 #footballtalk  #chargers",
+      "url": "https://www.youtube.com/shorts/scNYFchuRxU",
+      "published": "2026-10-05T18:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/scNYFchuRxU/hqdefault.jpg",
+      "description": "",
+      "views": 1200,
+      "kind": "short"
+    },
+    {
+      "id": "Wjg4hF3xB2k",
+      "title": "Bart on Drake Maye this season: #drakemaye #patriots",
+      "url": "https://www.youtube.com/shorts/Wjg4hF3xB2k",
+      "published": "2026-10-05T17:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/Wjg4hF3xB2k/hqdefault.jpg",
+      "description": "",
+      "views": 261,
+      "kind": "short"
+    },
+    {
+      "id": "EumzjjIbreA",
+      "title": "Where are you putting Derrick Henry among the all-time greats? #derrickhenry #ravens",
+      "url": "https://www.youtube.com/shorts/EumzjjIbreA",
+      "published": "2026-10-05T16:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/EumzjjIbreA/hqdefault.jpg",
+      "description": "",
+      "views": 1200,
+      "kind": "short"
     }
   ]
 }

@@ -328,6 +328,7 @@ export function HeroCycle({
   return (
     <>
       <div ref={root} className="absolute inset-0 overflow-hidden bg-field">
+        {shorts.length > 0 ? (
         <div className="absolute inset-0 overflow-hidden" aria-hidden={!playing}>
           <div
             className="hero-player absolute left-1/2"
@@ -341,6 +342,7 @@ export function HeroCycle({
             <div ref={mount} className="h-full w-full" />
           </div>
         </div>
+        ) : null}
         <div className={`hero-fade absolute inset-0 z-[2] ${playing ? "is-hidden" : "is-shown"}`}>
           <Image
             src={photo || HERO_STILL}

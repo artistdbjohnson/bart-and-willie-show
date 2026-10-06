@@ -16,6 +16,7 @@ export {
   CHANNEL_VIDEOS_URL,
   HERO_STILL,
   fullEpisodes,
+  heroShortIds,
   parseFeed,
   shortsFrom,
   snapshotEpisodes,
@@ -37,7 +38,7 @@ const readLive = unstable_cache(
     if (result.degraded) throw new Error(result.error || "youtube live sources failed");
     return result;
   },
-  ["youtube-channel-v1"],
+  ["youtube-channel-v2"],
   { revalidate: 900, tags: ["youtube-channel"] },
 );
 

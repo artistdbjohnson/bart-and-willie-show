@@ -1,19 +1,22 @@
 import { Hero } from "@/components/hero";
+import { HeroShortMark } from "@/components/hero-short-mark";
 import { JetsSection } from "@/components/jets-section";
 import { LatestNest } from "@/components/latest-nest";
 import { PageShell } from "@/components/page-shell";
 import { SubscribeForm } from "@/components/subscribe-form";
 import { getInstagram } from "@/lib/instagram";
 import type { Locale } from "@/lib/paths";
-import { fullEpisodes, getChannel, HERO_STILL, shortsFrom } from "@/lib/youtube";
+import { fullEpisodes, getChannel, heroShortIds, HERO_STILL } from "@/lib/youtube";
 
 export async function HomePage({ locale }: { locale: Locale }) {
   const [channel, instagram] = await Promise.all([getChannel(), getInstagram()]);
   const lead = fullEpisodes(channel.videos)[0] ?? null;
-  const shorts = shortsFrom(channel.videos).slice(0, 6).map((short) => ({ id: short.id }));
+  const shortIds = heroShortIds(channel.videos);
+  const shorts = shortIds.map((id) => ({ id }));
 
   return (
     <PageShell locale={locale}>
+      <HeroShortMark ids={shortIds} />
       <Hero
         locale={locale}
         video={lead}
