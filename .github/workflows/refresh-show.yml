@@ -1,0 +1,20 @@
+name: Refresh show
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revalidate show pages
+        env:
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+        run: |
+          if [ -n "$REVALIDATE_SECRET" ]; then
+            curl -fsS -H "Authorization: Bearer ${REVALIDATE_SECRET}" "https://bart-and-willie-show.vercel.app/api/revalidate-show"
+          else
+            curl -fsS "https://bart-and-willie-show.vercel.app/api/revalidate-show"
+          fi
