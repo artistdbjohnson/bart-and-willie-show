@@ -18,15 +18,18 @@ const STILL_HOLD = 3000;
 const FADE_MS = 1100;
 const START_LIMIT = 12000;
 const STALL_MS = 4000;
+const RETRY_PAUSE = 8000;
 
 export function HeroCycle({
   still,
+  stillAlt,
   shorts,
   mute,
   unmute,
   children,
 }: {
   still: string | null;
+  stillAlt: string;
   shorts: ShortBeat[];
   mute: string;
   unmute: string;
@@ -115,7 +118,11 @@ export function HeroCycle({
           guard += 1;
           next = shorts[cursor % shorts.length];
         }
-        if (failed.has(next.id)) return;
+        if (failed.has(next.id)) {
+          failed.clear();
+          await wait(RETRY_PAUSE);
+          continue;
+        }
         cursor += 1;
 
         const hostParent = mount.current;
@@ -208,7 +215,7 @@ export function HeroCycle({
             return time >= duration - 0.35;
           };
           const stalled = () => {
-            if (!expecting) return false;
+            if (!shown || !expecting) return false;
             if (document.hidden) {
               lastMove = performance.now();
               return false;
@@ -232,7 +239,7 @@ export function HeroCycle({
             leaving = true;
             holdFrame();
             if (!cancelled) setPhase("hero");
-            finish(shown ? value : "error");
+            finish(value);
           };
           const watch = () => {
             stopPoll();
@@ -254,7 +261,7 @@ export function HeroCycle({
             }, 250);
           };
           const startTimer = window.setTimeout(() => {
-            if (!shown) giveUp("error");
+            if (!shown) giveUp("stall");
           }, START_LIMIT);
           active = attachPlayer(
             host,
@@ -297,7 +304,11 @@ export function HeroCycle({
                 }
                 if (event.data === PLAYER_PAUSED) resume(event.target);
               },
-              onError: () => giveUp("error"),
+              onError: (event) => {
+                const code = event?.data;
+                if (code === 2 || code === 100 || code === 101 || code === 150 || code === 153) giveUp("error");
+                else giveUp("stall");
+              },
             },
           );
           player.current = active;
@@ -346,12 +357,12 @@ export function HeroCycle({
         <div className={`hero-fade absolute inset-0 z-[2] ${playing ? "is-hidden" : "is-shown"}`}>
           <Image
             src={photo || HERO_STILL}
-            alt=""
+            alt={stillAlt}
             fill
             priority
             unoptimized={Boolean(photo) && photo !== HERO_STILL}
             sizes="100vw"
-            className="object-cover"
+            className="object-cover object-[25%_center]"
             onError={() => {
               if (photo !== HERO_STILL) setPhoto(HERO_STILL);
             }}
