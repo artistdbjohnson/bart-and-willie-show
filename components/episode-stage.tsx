@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useMemo, useState } from "react";
+import { FrameImage } from "@/components/frame-image";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
 import { copy, formatWhen } from "@/lib/copy";
@@ -103,11 +103,8 @@ export function EpisodeStage({
                       )}
                     >
                       <span className="relative block aspect-video overflow-hidden bg-field-bright/30">
-                        <Image
-                          src={video.thumbnail}
-                          alt=""
-                          fill
-                          unoptimized
+                        <FrameImage
+                          id={video.id}
                           sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
                           className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-out motion-safe:group-hover:scale-[1.04]"
                         />
