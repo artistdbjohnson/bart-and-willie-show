@@ -10,7 +10,10 @@ export function ChalkPlay({ className }: { className?: string }) {
     const root = ref.current;
     if (!root) return;
     const paths = root.querySelectorAll("[data-chalk]");
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      document.documentElement.classList.contains("reduce-motion") ||
+      document.documentElement.classList.contains("intro-seen");
     if (reduce) return;
 
     const drawable = svg.createDrawable(paths);
