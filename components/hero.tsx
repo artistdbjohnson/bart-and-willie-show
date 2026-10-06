@@ -31,7 +31,7 @@ export function Hero({
 
   return (
     <section data-hero className="section-snap relative -mt-[var(--nav-clear)] min-h-[100svh] overflow-hidden">
-      <HeroCycle still={splash} shorts={shorts} mute={t.hero.mute} unmute={t.hero.unmute}>
+      <HeroCycle still={splash} stillAlt={t.hero.stillAlt} shorts={shorts} mute={t.hero.mute} unmute={t.hero.unmute}>
         <p
           aria-hidden
           className="hero-quiet pointer-events-none absolute top-8 -left-4 font-display text-[clamp(6.5rem,28vw,10rem)] leading-none text-chalk/[0.07]"

@@ -41,6 +41,8 @@ declare global {
 
 let loading: Promise<YoutubeNamespace> | null = null;
 
+const EMBED_ALLOW = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+
 export function attachPlayer(
   parent: HTMLElement,
   videoId: string,
@@ -54,21 +56,37 @@ export function attachPlayer(
   if (!window.YT?.Player) throw new Error("YouTube player is not ready");
   const width = Math.max(2, Math.round(parent.clientWidth));
   const height = Math.max(2, Math.round(parent.clientHeight));
-  const iframe = document.createElement("iframe");
-  iframe.className = "h-full w-full";
-  iframe.referrerPolicy = "strict-origin-when-cross-origin";
-  iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-  iframe.setAttribute("allowfullscreen", "true");
-  iframe.setAttribute("playsinline", "1");
-  iframe.setAttribute("webkit-playsinline", "1");
-  iframe.width = String(width);
-  iframe.height = String(height);
-  const params = new URLSearchParams({ enablejsapi: "1" });
-  for (const [key, value] of Object.entries(vars)) params.set(key, String(value));
-  params.set("origin", window.location.origin);
-  iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?${params.toString()}`;
-  parent.replaceChildren(iframe);
-  return new window.YT.Player(iframe, { width, height, events });
+  const mount = document.createElement("div");
+  mount.className = "h-full w-full";
+  parent.replaceChildren(mount);
+  // The API inserts the iframe. Set the referrer policy inside createElement,
+  // before it assigns src, or YouTube answers 153/150 and the Short never starts.
+  const create = document.createElement.bind(document);
+  document.createElement = ((tag: string, options?: ElementCreationOptions) => {
+    const element = create(tag, options);
+    if (String(tag).toLowerCase() === "iframe" && element instanceof HTMLIFrameElement) {
+      element.referrerPolicy = "strict-origin-when-cross-origin";
+      element.allow = EMBED_ALLOW;
+      element.setAttribute("playsinline", "1");
+      element.setAttribute("webkit-playsinline", "1");
+    }
+    return element;
+  }) as typeof document.createElement;
+  try {
+    return new window.YT.Player(mount, {
+      videoId,
+      width,
+      height,
+      host: "https://www.youtube-nocookie.com",
+      playerVars: {
+        ...vars,
+        origin: window.location.origin,
+      },
+      events,
+    });
+  } finally {
+    document.createElement = create;
+  }
 }
 
 export function loadYoutube() {
