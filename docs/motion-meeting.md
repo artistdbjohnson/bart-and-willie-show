@@ -57,6 +57,6 @@ Timing, so it does not open with the lockup:
 - It is done around 2.7s, with air before the still gives way to a short.
 - The travel is transform only. Opacity stays on `.hero-quiet`, so a short can still fade the numeral with the rest of the type.
 
-Once in the tab: `sessionStorage` key `baw-intro`. The flag is written on the frame after the intro starts, so this view still plays. The next full load adds `intro-seen` on `html` before paint. A return to the homepage in the same tab does the same before paint. `intro-seen` settles the lockup rise, the sentences, the rule, the chalk draw, and the forty. It does not stop the title-frame cycle. Reduced motion never sets the flag and never plays the travel. The numeral is where it rests. The intro is already settled.
+Once in the tab: `sessionStorage` key `baw-intro`. The flag is written when the intro starts, so this view still plays. The next full load adds `intro-seen` on `html` before paint. A return to the homepage in the same tab does the same before paint. `intro-seen` settles the lockup rise, the sentences, the rule, the chalk draw, and the forty. It does not stop the title-frame cycle. Reduced motion never sets the flag and never plays the travel. The numeral is where it rests. The intro is already settled.
 
 Day and night are untouched. The mark, the type, the colors, and the chrome are untouched.

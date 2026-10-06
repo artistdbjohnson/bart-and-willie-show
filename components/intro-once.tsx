@@ -4,10 +4,14 @@ import { useLayoutEffect } from "react";
 
 const INTRO_KEY = "baw-intro";
 
+/* A strict-mode remount lands in the same turn. A real return does not. */
+const REMOUNT_MS = 80;
+let playedAt = 0;
+
 /**
- * The homepage intro plays once per tab. The flag is written on the
- * frame after this view starts, so the open still runs. A later load
- * reads the flag before paint. Reduced motion never takes a turn.
+ * Full loads are settled by the head script. This covers a return to the
+ * homepage without a new document, such as the language toggle. The fresh
+ * mark means this document is the view that is allowed to play.
  */
 export function IntroOnce() {
   useLayoutEffect(() => {
@@ -17,25 +21,31 @@ export function IntroOnce() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce || root.classList.contains("intro-seen")) return;
 
-    let frame = 0;
+    if (root.dataset.introFresh === "1") {
+      delete root.dataset.introFresh;
+      playedAt = performance.now();
+      return;
+    }
+
+    let stored = false;
     try {
-      if (sessionStorage.getItem(INTRO_KEY) === "1") {
-        root.classList.add("intro-seen");
-        return;
-      }
+      stored = sessionStorage.getItem(INTRO_KEY) === "1";
     } catch {
       return;
     }
 
-    frame = window.requestAnimationFrame(() => {
-      try {
-        sessionStorage.setItem(INTRO_KEY, "1");
-      } catch {
-        /* storage blocked: the next load may play the intro again */
-      }
-    });
+    if (stored) {
+      if (playedAt && performance.now() - playedAt < REMOUNT_MS) return;
+      root.classList.add("intro-seen");
+      return;
+    }
 
-    return () => window.cancelAnimationFrame(frame);
+    try {
+      sessionStorage.setItem(INTRO_KEY, "1");
+    } catch {
+      /* storage blocked: the next load may play the intro again */
+    }
+    playedAt = performance.now();
   }, []);
 
   return null;

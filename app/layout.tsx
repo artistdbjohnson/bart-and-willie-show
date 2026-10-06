@@ -77,7 +77,15 @@ try {
   if (localStorage.getItem('baw-theme') === 'dark') document.documentElement.classList.add('dark');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) document.documentElement.classList.add('reduce-motion');
-  if (!reduce && sessionStorage.getItem('baw-intro') === '1') document.documentElement.classList.add('intro-seen');
+  var path = location.pathname.replace(/\\/$/, '') || '/';
+  var home = path === '/' || path === '/pt';
+  if (!reduce && home) {
+    if (sessionStorage.getItem('baw-intro') === '1') document.documentElement.classList.add('intro-seen');
+    else {
+      sessionStorage.setItem('baw-intro', '1');
+      document.documentElement.dataset.introFresh = '1';
+    }
+  }
 } catch (e) {}
 `;
 
