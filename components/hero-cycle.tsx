@@ -12,7 +12,7 @@ import {
   silenceCaptions,
   type YoutubePlayer,
 } from "@/lib/youtube-player";
-import type { ShortBeat } from "@/lib/youtube";
+import { HERO_STILL, type ShortBeat } from "@/lib/youtube";
 
 const STILL_HOLD = 3000;
 const FADE_MS = 1100;
@@ -38,6 +38,11 @@ export function HeroCycle({
   const [phase, setPhase] = useState<"hero" | "short">("hero");
   const [muted, setMuted] = useState(true);
   const [box, setBox] = useState({ width: 0, height: 0, wide: false });
+  const [photo, setPhoto] = useState(still || HERO_STILL);
+
+  useEffect(() => {
+    setPhoto(still || HERO_STILL);
+  }, [still]);
 
   useEffect(() => {
     const node = root.current;
@@ -337,17 +342,18 @@ export function HeroCycle({
           </div>
         </div>
         <div className={`hero-fade absolute inset-0 z-[2] ${playing ? "is-hidden" : "is-shown"}`}>
-          {still ? (
-            <Image
-              src={still}
-              alt=""
-              fill
-              priority
-              unoptimized
-              sizes="100vw"
-              className="object-cover"
-            />
-          ) : null}
+          <Image
+            src={photo || HERO_STILL}
+            alt=""
+            fill
+            priority
+            unoptimized={Boolean(photo) && photo !== HERO_STILL}
+            sizes="100vw"
+            className="object-cover"
+            onError={() => {
+              if (photo !== HERO_STILL) setPhoto(HERO_STILL);
+            }}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-field via-field/75 to-field/35" />
         </div>
       </div>

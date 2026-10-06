@@ -1,11 +1,12 @@
 import { ChalkPlay } from "@/components/chalk-play";
+import { FeedNotice } from "@/components/feed-notice";
 import { HeroCycle } from "@/components/hero-cycle";
 import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
 import { HeroWatch } from "@/components/watch-dialog";
 import { copy } from "@/lib/copy";
 import type { Locale } from "@/lib/paths";
-import { CHANNEL_URL, type ShortBeat } from "@/lib/youtube";
+import { CHANNEL_URL, CHANNEL_VIDEOS_URL, HERO_STILL, type ShortBeat } from "@/lib/youtube";
 
 type HeroVideo = { id: string; title: string; url: string; thumbnail: string };
 
@@ -14,18 +15,23 @@ export function Hero({
   video,
   still,
   shorts,
+  degraded = false,
+  reason,
 }: {
   locale: Locale;
   video: HeroVideo | null;
-  still: string | null;
+  still?: string | null;
   shorts: ShortBeat[];
+  degraded?: boolean;
+  reason?: string;
 }) {
   const t = copy[locale];
-  const watch = video?.url ?? CHANNEL_URL;
+  const splash = still || HERO_STILL;
+  const watch = video?.url ?? CHANNEL_VIDEOS_URL;
 
   return (
     <section data-hero className="section-snap relative -mt-[var(--nav-clear)] min-h-[100svh] overflow-hidden">
-      <HeroCycle still={still} shorts={shorts} mute={t.hero.mute} unmute={t.hero.unmute}>
+      <HeroCycle still={splash} shorts={shorts} mute={t.hero.mute} unmute={t.hero.unmute}>
         <p
           aria-hidden
           className="hero-quiet pointer-events-none absolute top-8 -left-4 font-display text-[clamp(6.5rem,28vw,10rem)] leading-none text-chalk/[0.07]"
@@ -53,7 +59,7 @@ export function Hero({
             </div>
             <div className="hero-actions hero-enter hero-hold hero-late mt-8 flex flex-wrap items-center gap-3">
               {video ? (
-                <HeroWatch videoId={video.id} title={video.title} poster={video.thumbnail}>
+                <HeroWatch videoId={video.id} title={video.title} poster={video.thumbnail || splash}>
                   <PlayMark />
                   {t.hero.watch}
                 </HeroWatch>
@@ -61,7 +67,7 @@ export function Hero({
                 <Button asChild>
                   <a href={watch}>
                     <PlayMark />
-                    {t.hero.channel}
+                    {t.hero.watch}
                   </a>
                 </Button>
               )}
@@ -71,9 +77,10 @@ export function Hero({
                 </Button>
               ) : null}
             </div>
-            <p className="hero-quiet mt-4 max-w-md font-serif text-sm text-chalk/80">
-              {video ? t.hero.opening : t.hero.unavailable}
-            </p>
+            <FeedNotice degraded={degraded} reason={reason} />
+            {video ? (
+              <p className="hero-quiet mt-4 max-w-md font-serif text-sm text-chalk/80">{t.hero.opening}</p>
+            ) : null}
             <nav className="hero-quiet hero-enter hero-late mt-5" aria-label={t.hero.follow}>
               <p className="font-ui text-[0.68rem] uppercase tracking-[0.18em] text-chalk/80">{t.hero.follow}</p>
               <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">

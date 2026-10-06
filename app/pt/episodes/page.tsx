@@ -6,6 +6,7 @@ import { metadataFor } from "@/lib/seo";
 import { CHANNEL_URL, getChannel } from "@/lib/youtube";
 
 export const metadata = metadataFor("pt", "episodes");
+export const revalidate = 60;
 
 export default async function EpisodesPage() {
   const channel = await getChannel();

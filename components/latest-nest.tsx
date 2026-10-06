@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { CardNest } from "@/components/card-nest";
+import { FrameImage } from "@/components/frame-image";
 import { InstagramRail } from "@/components/instagram-rail";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { copy, formatWhen } from "@/lib/copy";
@@ -23,7 +23,7 @@ export function LatestNest({
   const t = copy[locale];
   const episodes = fullEpisodes(videos).slice(0, 6);
   const [lead, ...rest] = episodes;
-  const hasLead = Boolean(feedOk && lead);
+  const hasLead = Boolean(lead);
 
   const episodeSheets = [
     hasLead && lead ? (
@@ -86,14 +86,7 @@ function EpisodeSheet({
           </span>
         </span>
         <span className="sheet-media relative mt-3 block aspect-video overflow-hidden bg-ink">
-          <Image
-            src={video.thumbnail}
-            alt=""
-            fill
-            unoptimized
-            sizes="(min-width: 1024px) 72rem, 100vw"
-            className="object-cover"
-          />
+          <FrameImage id={video.id} sizes="(min-width: 1024px) 72rem, 100vw" className="object-cover" />
         </span>
         {featured || oct2 ? (
           <span className="sheet-extra shrink-0 pt-3 pr-14 pb-4 sm:pr-0">
