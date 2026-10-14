@@ -73,6 +73,21 @@ export function SiteFooter({ locale }: { locale: Locale }) {
             ))}
           </FooterColumn>
         </div>
+        <div className="playmaker-band mt-16 flex flex-col items-center border-t border-chalk/15 pt-12 text-center md:pt-16">
+          <p className="font-ui text-[0.68rem] uppercase tracking-[0.22em] text-chalk/60">A Playmaker production</p>
+          <a
+            href="https://www.youtube.com/@playmakerhq"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Playmaker on YouTube"
+            className="playmaker-link mt-6"
+          >
+            <picture>
+              <source srcSet="/brand/playmaker.webp" type="image/webp" />
+              <img src="/brand/playmaker.png" alt="" width={960} height={373} loading="lazy" decoding="async" className="h-auto w-[240px] sm:w-[320px] lg:w-[360px]" />
+            </picture>
+          </a>
+        </div>
         <p className="mt-16 font-ui text-[0.68rem] uppercase tracking-[0.22em] text-quiet">
           {t.footer.credit}
         </p>

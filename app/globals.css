@@ -912,3 +912,7 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
 .nav-grid > .nav-player { border: 0 !important; background: none !important; box-shadow: none !important; }
 .nav-menu-btn { position: relative; height: 38px !important; min-width: 0; padding: 0 14px !important; font-size: 11px !important; letter-spacing: .16em; border-width: 1px; border-radius: 0; }
 .nav-menu-btn::after { content: ""; position: absolute; inset: -3px -1px; }
+.playmaker-link { display: inline-block; opacity: .92; transition: opacity 180ms ease-out, transform 180ms ease-out; }
+.playmaker-link:hover { opacity: 1; transform: translateY(-2px); }
+.playmaker-link:focus-visible { outline: 2px solid var(--signal); outline-offset: 8px; }
+@media (prefers-reduced-motion: reduce) { .playmaker-link, .playmaker-link:hover { transition: none; transform: none; } }
