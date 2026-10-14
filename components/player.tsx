@@ -171,27 +171,38 @@ export function NavPlayer({ className = "" }: { className?: string }) {
 
 function Marquee({ text }: { text: string }) {
   const box = useRef<HTMLDivElement>(null);
-  const inner = useRef<HTMLSpanElement>(null);
-  const [shift, setShift] = useState(0);
+  const unit = useRef<HTMLSpanElement>(null);
+  const [loop, setLoop] = useState<{ on: boolean; dur: number }>({ on: false, dur: 20 });
   useEffect(() => {
+    let last = -1;
     const measure = () => {
-      if (!box.current || !inner.current) return;
-      setShift(Math.max(0, inner.current.scrollWidth - box.current.clientWidth));
+      if (!box.current || !unit.current) return;
+      const w = unit.current.offsetWidth; // text only
+      const boxW = box.current.clientWidth;
+      const key = w * 10000 + boxW;
+      if (key === last) return;
+      last = key;
+      setLoop({ on: w > boxW + 1, dur: (w + GAP) / 30 });
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (box.current) ro.observe(box.current);
     return () => ro.disconnect();
   }, [text]);
-  const moving = shift > 2;
   return (
-    <div ref={box} className={`np-title ${moving ? "is-moving" : ""}`} title={text}>
-      <span
-        ref={inner}
-        style={moving ? ({ ["--shift" as string]: `-${shift}px`, ["--dur" as string]: `${Math.max(8, shift / 22 + 4)}s` } as React.CSSProperties) : undefined}
-      >
-        {text}
+    <div ref={box} className={`np-title ${loop.on ? "is-moving" : ""}`} title={text}>
+      <span className="np-track-text" style={loop.on ? ({ ["--dur" as string]: `${loop.dur}s` } as React.CSSProperties) : undefined}>
+        <span className="np-unit">
+          <span ref={unit}>{text}</span>
+        </span>
+        {loop.on ? (
+          <span className="np-unit" aria-hidden="true">
+            {text}
+          </span>
+        ) : null}
       </span>
     </div>
   );
 }
+
+const GAP = 48;
