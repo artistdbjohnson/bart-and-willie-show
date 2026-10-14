@@ -38,22 +38,24 @@ type Block =
 export const jetsStory: Record<Locale, { bart: Block[]; willie: Block[] }> = {
   en: {
     bart: [
-      { type: "p", text: "February 27, 2009. Bart Scott signed with the Jets on a six-year deal and played linebacker through 2012. The contract put him back with Rex Ryan, his defensive coach in Baltimore." },
+      { type: "p", text: "In late February 2009, Bart Scott followed his coach to New York. Rex Ryan had run his defense in Baltimore, and on February 27 Scott signed a six-year deal to play linebacker for him again, this time with the Jets." },
       {
         type: "quote",
         text: "That was my sole decision to sign with the Jets. No way I would have come to the Jets if Rex wasn't here. I would have stayed in Baltimore.",
         by: "Bart Scott, Jets profile, October 23, 2025",
       },
-      { type: "p", text: "That same profile: four straight 100-tackle seasons before he arrived, then a fifth. The 2009 Jets defense finished first in the NFL in total defense, a first for the franchise. In his first two seasons the club won 20 of 32 regular-season games and reached the AFC Championship Game in 2009 and again in 2010. Four seasons as a Jet. Released February 19, 2013. The profile says he left the game in 2013 after a total reconstruction of a big toe." },
+      { type: "p", text: "He arrived with four straight 100-tackle seasons behind him and made it five in green. That first year the Jets finished first in the NFL in total defense, something the franchise had never done before. Over his first two seasons the club won 20 of 32 regular-season games and reached the AFC Championship Game in 2009 and again in 2010." },
+      { type: "p", text: "He played four seasons as a Jet, through 2012. The club released him on February 19, 2013, and later that year, after a total reconstruction of a big toe, he left the game." },
     ],
     willie: [
-      { type: "p", text: "March 15, 2013. Willie Colon signed a one-year Jets deal after seven seasons in Pittsburgh and a Super Bowl XLIII ring. On March 19, 2014, the Jets brought him back for one year at $2 million. He played 2013, 2014, and 2015. Hofstra Athletics says he started 38 games in those three seasons and retired in 2016." },
+      { type: "p", text: "Willie Colon came home in March 2013. He had spent seven seasons in Pittsburgh and won a Super Bowl XLIII ring there, and when the call came from Rex Ryan he did not stay on the market long. On March 15 he signed a one-year deal with the Jets." },
       {
         type: "quote",
         text: "I was really a free agent for like 20 minutes. I got a call from Rex and he was like, ‘Hey, man, we know you're a New Yorker. It's time to come home.’",
         by: "Willie Colon, on the call from Rex Ryan, Jets profile, June 13, 2024",
       },
-      { type: "p", text: "The Jets profile: a 2013 start of three wins in five games, a Week 6 home game against Pittsburgh, and Ryan out after a 4–12 season in 2014. In 2015, his third year in New York, a knee injury in Week 8 against Oakland put him on injured reserve 10 days later." },
+      { type: "p", text: "His first fall in New York opened with three wins in five games, and in Week 6 the Jets met the Steelers at home, the team he had just left. On March 19, 2014, the Jets brought him back for another year at $2 million. That season ended at 4–12, and Ryan was out as coach." },
+      { type: "p", text: "Colon returned for a third year in 2015. In Week 8 against Oakland he hurt his knee, and 10 days later the Jets placed him on injured reserve. Hofstra Athletics counts 38 starts across his three seasons in New York. He retired in 2016." },
     ],
   },
   pt: {
