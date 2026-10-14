@@ -82,12 +82,11 @@ export const copy = {
     jets: {
       kicker: "Hosts · Former New York Jets",
       title: "The Jets years",
-      lede: "Both of them played here. The show still says the name. What follows is the club’s profiles and the public record. Nothing added.",
+      lede: "Bart Scott and Willie Colon both wore green in New York, and their time there runs back to back: Colon signed with the Jets less than a month after Scott was released. These are their Jets years, told from the club’s own profiles and the public record.",
       bartYears: "Jets, 2009–2012",
       willieYears: "Jets, 2013–2015",
       bartTitle: "Bart Scott",
       willieTitle: "Willie Colon",
-      chapter: "Oct 2, 2026. Chapter title: “Jets Vibe Check.”",
     },
     about: {
       kicker: "Hosts",
@@ -258,7 +257,6 @@ export const copy = {
       willieYears: "Jets, 2013–2015",
       bartTitle: "Bart Scott",
       willieTitle: "Willie Colon",
-      chapter: "2 de outubro de 2026. Título do capítulo: “Jets Vibe Check.”",
     },
     about: {
       kicker: "Apresentadores",

@@ -25,7 +25,6 @@ export function JetsSection({
         }
       >
         <SectionHeading kicker={t.jets.kicker} title={t.jets.title} lede={t.jets.lede} />
-        <p className="mt-6 max-w-2xl font-serif text-base text-chalk/85">{t.jets.chapter}</p>
         <div className="mt-14 grid gap-16 lg:grid-cols-2">
           <HostColumn
             years={t.jets.bartYears}
