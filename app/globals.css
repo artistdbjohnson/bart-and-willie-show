@@ -749,4 +749,4 @@ html.reduce-motion .hero-wash.is-quiet {
 body:has(.signup-form:focus-within) .to-top { opacity: 0; pointer-events: none; }
 .signup-form input:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 .signup-form input[aria-invalid="true"] { border-color: var(--signal); }
-.hero-actions > * { min-width: 13.5rem; justify-content: center; }
+.hero-actions > * { width: 100%; justify-content: center; }

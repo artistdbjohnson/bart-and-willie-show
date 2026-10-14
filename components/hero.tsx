@@ -64,7 +64,7 @@ export function Hero({
               ))}
               <span className="hero-rule" aria-hidden="true" />
             </div>
-            <div className="hero-actions hero-enter hero-hold hero-late mt-8 flex flex-wrap items-center gap-3">
+            <div className="hero-actions hero-enter hero-hold hero-late mt-8 grid w-full max-w-sm grid-cols-1 gap-3 sm:inline-grid sm:w-auto sm:max-w-none sm:auto-cols-fr sm:grid-flow-col sm:grid-cols-none">
               {video ? (
                 <HeroWatch videoId={video.id} title={video.title} poster={video.thumbnail || splash}>
                   <PlayMark />
