@@ -61,7 +61,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         {t.skip}
       </a>
       <div className="site-header-plate">
-      <div className="site-header-bar mx-auto flex max-w-6xl items-center gap-4 px-5 sm:px-8">
+      <div className="site-header-bar nav-grid mx-auto max-w-6xl px-5 sm:px-8">
         <a
           href={pathname || "/"}
           onClick={(event) => {
@@ -84,7 +84,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
 
         <NavPlayer />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end">
           <Button
             type="button"
             variant="outline"

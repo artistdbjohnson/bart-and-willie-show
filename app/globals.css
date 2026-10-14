@@ -893,3 +893,19 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
 .ep-bars i:nth-child(3) { animation-delay: -0.6s; }
 @keyframes ep-bar { from { transform: scaleY(0.3); } to { transform: scaleY(1); } }
 @media (prefers-reduced-motion: reduce) { .ep-panel, .ep-bars i { animation: none; } }
+
+/* Nav grid: logo | player | menu. Equal side tracks keep the player optically centered. */
+.nav-grid { display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 600px) minmax(max-content, 1fr); align-items: center; column-gap: 16px; }
+.nav-grid > .nav-player { margin: 0; width: 100%; min-width: 0; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0; }
+.nav-grid > .nav-player .np-skip { margin: 0 -8px; }
+.nav-grid .np-body { flex: 1 1 auto; min-width: 0; padding: 0; height: 44px; align-content: center; display: grid; grid-template-rows: 22px 14px; }
+.nav-grid .np-track { gap: 10px; min-width: 0; }
+.nav-grid .np-title { min-width: 0; }
+.nav-grid .np-list, .nav-grid .np-play { width: 44px; height: 44px; flex: none; align-self: center; }
+.nav-grid .np-list + .np-rate { margin-left: -12px; }
+@media (max-width: 639px) {
+  .nav-grid { column-gap: 12px; }
+  .nav-grid > .nav-player { gap: 8px; }
+  .nav-grid .np-play { margin-left: -10px; }
+  .nav-grid .np-list { margin-right: -10px; }
+}
