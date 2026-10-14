@@ -923,3 +923,20 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
 .playmaker-icon:focus-visible { outline: 2px solid var(--signal); outline-offset: -6px; }
 /* Footer bottom edge == back-to-top bottom edge (fixed at max(16px, safe-area)). */
 .footer-inner { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+/* Back-to-top: same liquid glass as the nav plate and glass buttons. */
+.to-top {
+  border: 1px solid color-mix(in srgb, var(--chalk) 28%, transparent);
+  background-color: color-mix(in srgb, var(--field) 92%, black);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--chalk) 12%, transparent);
+  transition: background-color 160ms ease-out, border-color 160ms ease-out, transform 120ms ease-out, opacity 160ms ease-out;
+}
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .to-top {
+    background-color: color-mix(in srgb, var(--field) 55%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    backdrop-filter: blur(16px) saturate(1.5);
+  }
+}
+.to-top:hover { background-color: color-mix(in srgb, var(--chalk) 10%, color-mix(in srgb, var(--field) 55%, transparent)); border-color: color-mix(in srgb, var(--chalk) 42%, transparent); }
+.to-top:active { transform: scale(0.96); background-color: color-mix(in srgb, var(--chalk) 6%, color-mix(in srgb, var(--field) 55%, transparent)); }
+@media (prefers-reduced-motion: reduce) { .to-top { transition: none; } .to-top:active { transform: none; } }
