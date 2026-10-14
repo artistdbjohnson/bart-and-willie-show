@@ -796,3 +796,10 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
   .np-skip, .np-remain, .np-rate { display: none; }
   .np-line { min-width: 48px; }
 }
+/* Unboxed player: sits directly on the glass bar; 44px hit areas */
+.nav-player { border: 0; background: none; height: 44px; padding: 0; }
+.np-btn { width: 44px; height: 44px; }
+.np-rate { min-width: 44px; height: 44px; }
+.np-line { height: 44px; }
+.np-body { gap: 0; }
+.np-title { margin-bottom: -10px; }
