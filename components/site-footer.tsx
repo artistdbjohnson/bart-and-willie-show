@@ -1,3 +1,4 @@
+import { PlaymakerSocial } from "@/components/playmaker-social";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { LISTEN } from "@/components/listen-row";
@@ -87,6 +88,10 @@ export function SiteFooter({ locale }: { locale: Locale }) {
               <img src="/brand/playmaker.png" alt="" width={960} height={373} loading="lazy" decoding="async" className="h-auto w-[240px] sm:w-[320px] lg:w-[360px]" />
             </picture>
           </a>
+          <p className="mt-6 max-w-[40ch] font-serif text-base leading-relaxed text-chalk/70">
+            Playmaker is the home of award-winning, unfiltered, premium athlete storytelling.
+          </p>
+          <PlaymakerSocial />
         </div>
         <p className="mt-16 font-ui text-[0.68rem] uppercase tracking-[0.22em] text-quiet">
           {t.footer.credit}
