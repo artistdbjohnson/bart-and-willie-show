@@ -68,14 +68,14 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             event.preventDefault();
             window.location.reload();
           }}
-          className="flex min-w-0 items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
+          className="flex shrink-0 items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk"
         >
           <img
             src="/brand/mark-knockout.png"
             alt="The Bart & Willie Show"
             width={387}
             height={224}
-            className="h-11 w-auto shrink-0"
+            className="h-11 w-auto max-w-none shrink-0 object-contain"
           />
           <span className="hidden whitespace-nowrap font-display text-xl leading-none tracking-tight xl:block">
             THE BART & WILLIE SHOW
