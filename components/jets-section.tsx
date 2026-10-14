@@ -31,11 +31,13 @@ export function JetsSection({
             years={t.jets.bartYears}
             name={t.jets.bartTitle}
             blocks={story.bart}
+            cutout="/hero/bart-cutout.webp"
           />
           <HostColumn
             years={t.jets.willieYears}
             name={t.jets.willieTitle}
             blocks={story.willie}
+            cutout="/hero/willie-cutout.webp"
           />
         </div>
         <SourceLine locale={locale} />
@@ -48,13 +50,23 @@ function HostColumn({
   years,
   name,
   blocks,
+  cutout,
 }: {
+  cutout: string;
   years: string;
   name: string;
   blocks: (typeof jetsStory)["en"]["bart"];
 }) {
   return (
-    <article>
+    <article className="relative isolate">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={cutout}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        className="bio-cutout pointer-events-none absolute -top-6 right-0 -z-10 h-[22rem] w-auto select-none sm:h-[30rem]"
+      />
       <InView
         once
         viewOptions={{ margin: "-10% 0px", once: true }}
