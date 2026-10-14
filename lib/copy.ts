@@ -96,7 +96,7 @@ export const copy = {
     },
     list: {
       kicker: "Join the roster",
-      title: "Your name. Their roster.",
+      title: "Join the roster",
       lede: "When a new episode drops on a Monday or a Friday, you get one note about it. Your name and email stay with this site and go nowhere else.",
       name: "Name",
       email: "Email",
