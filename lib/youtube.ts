@@ -1,3 +1,4 @@
+import { cleanTitle } from "@/lib/youtube-load";
 import { unstable_cache } from "next/cache";
 import {
   CHANNEL_URL,
@@ -43,7 +44,7 @@ const readLive = unstable_cache(
 );
 
 function withFlag(result: LoadResult, degraded: boolean, error?: string): LoadResult & { ok: true } {
-  return { ...result, degraded, error: error ?? result.error, ok: true };
+  return { ...result, videos: result.videos.map((video) => ({ ...video, title: cleanTitle(video.title) })), degraded, error: error ?? result.error, ok: true };
 }
 
 /**
