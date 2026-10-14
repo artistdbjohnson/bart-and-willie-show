@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ListenRow } from "@/components/listen-row";
+import { NavPlayer } from "@/components/player";
 import { Button } from "@/components/ui/button";
 import { copy } from "@/lib/copy";
 import { localizePath, stripLocale, type Locale } from "@/lib/paths";
@@ -77,14 +77,14 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             height={224}
             className="h-11 w-auto shrink-0"
           />
-          <span className="hidden font-display text-xl leading-none tracking-tight sm:block">
+          <span className="hidden whitespace-nowrap font-display text-xl leading-none tracking-tight xl:block">
             THE BART & WILLIE SHOW
           </span>
         </a>
 
 
-        <ListenRow className="ml-auto hidden lg:flex" />
-        <div className="ml-auto flex items-center gap-2 lg:ml-4">
+        <NavPlayer />
+        <div className="flex items-center gap-2">
           <Button
             type="button"
             variant="outline"
@@ -120,7 +120,6 @@ export function SiteHeader({ locale }: { locale: Locale }) {
               );
             })}
           </ul>
-          <ListenRow className="mt-4 border-t border-chalk/15 pt-4 lg:hidden" />
         </nav>
       ) : null}
       </div>
