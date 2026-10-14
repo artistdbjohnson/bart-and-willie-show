@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Lockup } from "@/components/lockup";
 import { SectionHeading } from "@/components/section-heading";
 import { Button } from "@/components/ui/button";
@@ -53,14 +53,17 @@ export function ShopPage({ locale }: { locale: Locale }) {
   }
 
   return (
-    <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
+    <section className="mx-auto max-w-7xl px-5 pt-[calc(var(--nav-clear)+2.5rem)] pb-20 sm:px-8 md:pb-28">
       <SectionHeading kicker={t.kicker} title={t.title} lede={t.lede} />
-      <div className="mt-14 grid gap-8 sm:grid-cols-2">
-        <PieceCard label={t.tee} piece="tee" />
-        <PieceCard label={t.hoodie} piece="hoodie" />
+      <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-16">
+      <div>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <PieceCard label={t.tee} piece="tee" index="01" selected={piece === "tee"} onSelect={() => setPiece("tee")} />
+        <PieceCard label={t.hoodie} piece="hoodie" index="02" selected={piece === "hoodie"} onSelect={() => setPiece("hoodie")} />
       </div>
-      <p className="mt-8 max-w-2xl font-serif text-lg leading-relaxed text-chalk/85">{t.sizeNote}</p>
-      <form onSubmit={onSubmit} className="mt-12 max-w-xl border-t-4 border-signal pt-8" noValidate>
+      <p className="mt-8 max-w-2xl border-t border-chalk/15 pt-6 font-serif text-lg leading-relaxed text-chalk/85">{t.sizeNote}</p>
+      </div>
+      <form onSubmit={onSubmit} className="w-full border-t-4 border-signal pt-8 lg:sticky lg:top-[calc(var(--nav-clear)+1.5rem)] lg:self-start" noValidate>
         <h2 className="font-display text-3xl leading-none tracking-tight">{t.order}</h2>
         <p className="mt-3 font-serif text-base text-chalk/80">{t.pay}</p>
         <div className="mt-8 grid gap-5">
@@ -125,6 +128,7 @@ export function ShopPage({ locale }: { locale: Locale }) {
           </p>
         </div>
       </form>
+      </div>
     </section>
   );
 }
@@ -153,19 +157,78 @@ function Choice({
   );
 }
 
-function PieceCard({ label, piece }: { label: string; piece: Piece }) {
-  return (
-    <figure className="border border-chalk/15">
-      <div className="relative flex aspect-[4/5] items-center justify-center bg-[#f7f4ea]">
-        {piece === "tee" ? <Tee /> : <Hoodie />}
-        <div className="pointer-events-none absolute top-[48%] left-1/2 w-[58%] -translate-x-1/2 -translate-y-1/2">
-          <Lockup size="shop" />
-        </div>
-        <span className="absolute inset-x-0 bottom-0 h-1 bg-signal" aria-hidden="true" />
+function PieceCard({
+  label,
+  piece,
+  index,
+  selected,
+  onSelect,
+}: {
+  label: string;
+  piece: Piece;
+  index: string;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const art = (
+    <div className="relative flex aspect-[4/5] items-center justify-center bg-[#f2eee2]">
+      {piece === "tee" ? <Tee /> : <Hoodie />}
+      <div className="pointer-events-none absolute top-[48%] left-1/2 w-[58%] -translate-x-1/2 -translate-y-1/2">
+        <Lockup size="shop" />
       </div>
-      <figcaption className="px-4 py-4 font-ui text-[0.72rem] uppercase tracking-[0.18em] text-chalk">
-        {label}
+    </div>
+  );
+  return (
+    <figure className={cn("group m-0 border transition-colors duration-300", selected ? "border-signal" : "border-chalk/15")}>
+      <button
+        type="button"
+        onClick={() => {
+          onSelect();
+          dialog.current?.showModal();
+        }}
+        aria-label={label}
+        className="block w-full cursor-zoom-in overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
+      >
+        <div className="transition-transform duration-700 ease-out group-hover:scale-[1.02] motion-reduce:transition-none">{art}</div>
+      </button>
+      <figcaption className="flex items-baseline justify-between gap-4 border-t border-chalk/15 px-4 py-4">
+        <span className="font-ui text-[11px] uppercase tracking-[0.18em] text-chalk">
+          <span className="mr-3 text-chalk/50">{index}</span>
+          {label}
+        </span>
+        <button
+          type="button"
+          aria-pressed={selected}
+          onClick={onSelect}
+          className={cn(
+            "h-9 border px-3 font-ui text-[11px] uppercase tracking-[0.16em]",
+            selected ? "border-signal bg-signal text-ink" : "border-chalk/45 text-chalk hover:border-chalk",
+          )}
+        >
+          {selected ? "✓" : "+"}
+        </button>
       </figcaption>
+      <dialog
+        ref={dialog}
+        aria-label={label}
+        onClick={(event) => {
+          if (event.target === dialog.current) dialog.current?.close();
+        }}
+        className="shop-zoom m-auto max-h-[92svh] w-[min(92vw,44rem)] bg-transparent p-0 backdrop:bg-ink/80 backdrop:backdrop-blur-sm"
+      >
+        <div className="relative">
+          {art}
+          <button
+            type="button"
+            onClick={() => dialog.current?.close()}
+            className="absolute top-3 right-3 h-10 border border-ink/30 bg-[#f2eee2] px-3 font-ui text-[11px] uppercase tracking-[0.16em] text-ink"
+          >
+            Close
+          </button>
+          <p className="bg-field px-4 py-3 font-ui text-[11px] uppercase tracking-[0.18em] text-chalk">{label}</p>
+        </div>
+      </dialog>
     </figure>
   );
 }

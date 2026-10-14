@@ -193,3 +193,8 @@ All fonts self-hosted at build via next/font (no runtime Google calls).
 - Signup is now a roster sheet: NO. / NAME / POS header, hairline rules, Bart 57 LB and Willie 66 OL as the first rows, then the visitor's row with a random open jersey number (stable per session, in yellow), real Name and Email labels, and POS FAN.
 - Copy: eyebrow "The roster", headline "Your name. Their roster.", button "Sign up and join the roster", success "You're on the roster ✓". PT twins added. Body copy unchanged.
 - The up arrow now hides whenever the signup section is in view.
+
+## 2026-10-13 (f) — Single page + shop rebuild
+- Nav: Episodes / Hosts / Shop / The roster are anchors (#episodes, #hosts, #roster) with smooth scroll and header scroll-margin. Old pages 308-redirect to /#section (EN and PT).
+- Shop (#13–#15 sweep): Inspiration: visualjournal.it, editorial merch pacing (numbered pieces, paper plates). Resource: shadcn dialog pattern, rebuilt on a native <dialog> for zoom. Color: unchanged palette, paper #f2eee2 plates on field green. Tool: mobbin checkout flows (look only), giving a sticky order column on desktop. Prompt Motion: 0.7s hover drift and a 0.32s zoom fade, both off under reduced motion. Vibe-coding 25 and the motion stack: nothing shipped (restraint). Type: no change (Archivo / Instrument Serif / Anton).
+- Products unchanged: black tee and black hoodie, S–XXL, order request with no prices (none exist on the site).
