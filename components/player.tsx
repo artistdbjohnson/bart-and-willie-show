@@ -3,24 +3,13 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import type { NowPlaying } from "@/lib/now-playing";
 
-type Mode = "spotify" | "audio";
-type SpotifyController = {
-  togglePlay: () => void;
-  play: () => void;
-  pause: () => void;
-  resume: () => void;
-  seek: (seconds: number) => void;
-  addListener: (event: string, cb: (e: { data: Record<string, unknown> }) => void) => void;
-};
 type State = {
   episode: NowPlaying | null;
-  mode: Mode;
   playing: boolean;
   loading: boolean;
   position: number;
   duration: number;
   rate: number;
-  preview: boolean;
   toggle: () => void;
   skip: (seconds: number) => void;
   seek: (seconds: number) => void;
@@ -30,31 +19,16 @@ type State = {
 const PlayerContext = createContext<State | null>(null);
 export const usePlayer = () => useContext(PlayerContext);
 
-declare global {
-  interface Window {
-    onSpotifyIframeApiReady?: (api: {
-      createController: (el: HTMLElement, opts: Record<string, unknown>, cb: (c: SpotifyController) => void) => void;
-    }) => void;
-  }
-}
-
 const RATES = [1, 1.5, 2];
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
   const [episode, setEpisode] = useState<NowPlaying | null>(null);
-  const [mode, setMode] = useState<Mode>("spotify");
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const [rate, setRate] = useState(1);
-  const [preview, setPreview] = useState(false);
   const audio = useRef<HTMLAudioElement>(null);
-  const host = useRef<HTMLDivElement>(null);
-  const controller = useRef<SpotifyController | null>(null);
-  const modeRef = useRef<Mode>("spotify");
-  const watchdog = useRef<number | null>(null);
-  const started = useRef(false);
 
   useEffect(() => {
     fetch("/api/now-playing")
@@ -62,95 +36,24 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       .then((data: NowPlaying) => {
         setEpisode(data);
         if (data.duration) setDuration(data.duration);
-        if (!data.spotifyEpisode) {
-          modeRef.current = "audio";
-          setMode("audio");
-        }
       })
       .catch(() => undefined);
   }, []);
 
-  const toAudio = useCallback((at: number, play: boolean) => {
-    if (modeRef.current === "audio") return;
-    modeRef.current = "audio";
-    setMode("audio");
-    setPreview(true);
-    try {
-      controller.current?.pause();
-    } catch {
-      /* ignore */
-    }
-    const el = audio.current;
-    if (!el) return;
-    el.currentTime = at;
-    if (play) {
-      setLoading(true);
-      el.play().catch(() => setLoading(false));
-    }
-  }, []);
-
-  // Spotify iFrame API controller, hidden; our controls drive it.
-  useEffect(() => {
-    if (!episode?.spotifyEpisode || !host.current) return;
-    const mount = host.current;
-    window.onSpotifyIframeApiReady = (api) => {
-      const target = document.createElement("div");
-      mount.appendChild(target);
-      api.createController(target, { uri: `spotify:episode:${episode.spotifyEpisode}`, width: 300, height: 80 }, (c) => {
-        controller.current = c;
-        c.addListener("playback_update", (e) => {
-          if (modeRef.current !== "spotify") return;
-          const d = e.data as { isPaused: boolean; isBuffering: boolean; duration: number; position: number };
-          if (watchdog.current) window.clearTimeout(watchdog.current);
-          if (d.duration > 0 && d.duration <= 35_000 && started.current) {
-            toAudio(d.position / 1000, !d.isPaused);
-            return;
-          }
-          if (d.duration > 0) setDuration(d.duration / 1000);
-          setPosition(d.position / 1000);
-          setPlaying(!d.isPaused);
-          setLoading(d.isBuffering);
-        });
-      });
-    };
-    const script = document.createElement("script");
-    script.src = "https://open.spotify.com/embed/iframe-api/v1";
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      script.remove();
-    };
-  }, [episode?.spotifyEpisode, toAudio]);
-
   const toggle = useCallback(() => {
-    if (!episode) return;
-    started.current = true;
-    if (modeRef.current === "spotify" && controller.current) {
-      setLoading(!playing);
-      controller.current.togglePlay();
-      if (watchdog.current) window.clearTimeout(watchdog.current);
-      // No playback from Spotify in 5s (blocked, logged out, region): use the public RSS audio.
-      if (!playing) watchdog.current = window.setTimeout(() => toAudio(position, true), 5000);
-      return;
-    }
     const el = audio.current;
     if (!el) return;
-    if (modeRef.current === "spotify") {
-      modeRef.current = "audio";
-      setMode("audio");
-    }
     if (el.paused) {
       setLoading(true);
       el.play().catch(() => setLoading(false));
     } else el.pause();
-  }, [episode, playing, position, toAudio]);
+  }, []);
 
   const seek = useCallback(
     (seconds: number) => {
       const t = Math.max(0, Math.min(seconds, duration || seconds));
       setPosition(t);
-      if (modeRef.current === "spotify" && controller.current) controller.current.seek(t);
-      else if (audio.current) audio.current.currentTime = t;
+      if (audio.current) audio.current.currentTime = t;
     },
     [duration],
   );
@@ -177,23 +80,22 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, [episode, playing, toggle, skip, seek]);
 
   return (
-    <PlayerContext.Provider value={{ episode, mode, playing, loading, position, duration, rate, preview, toggle, skip, seek, cycleRate }}>
+    <PlayerContext.Provider value={{ episode, playing, loading, position, duration, rate, toggle, skip, seek, cycleRate }}>
       {children}
-      <div ref={host} aria-hidden="true" className="pointer-events-none fixed -left-[400px] bottom-0 h-20 w-[300px] opacity-0" />
       {episode?.audio ? (
         <audio
           ref={audio}
           src={episode.audio}
-          preload="none"
+          preload="metadata"
           onPlaying={() => {
             setPlaying(true);
             setLoading(false);
           }}
           onPause={() => setPlaying(false)}
           onWaiting={() => setLoading(true)}
-          onTimeUpdate={(e) => modeRef.current === "audio" && setPosition(e.currentTarget.currentTime)}
+          onTimeUpdate={(e) => setPosition(e.currentTarget.currentTime)}
           onLoadedMetadata={(e) => {
-            if (modeRef.current === "audio" && Number.isFinite(e.currentTarget.duration)) setDuration(e.currentTarget.duration);
+            if (Number.isFinite(e.currentTarget.duration)) setDuration(e.currentTarget.duration);
             e.currentTarget.playbackRate = rate;
           }}
         />
@@ -213,7 +115,7 @@ function clock(s: number) {
 export function NavPlayer({ className = "" }: { className?: string }) {
   const p = usePlayer();
   if (!p) return null;
-  const { episode, playing, loading, position, duration, mode, rate, preview } = p;
+  const { episode, playing, loading, position, duration, rate } = p;
   const pct = duration ? Math.min(100, (position / duration) * 100) : 0;
   return (
     <div className={`nav-player ${className}`} aria-label="Latest episode player" role="group">
@@ -260,21 +162,9 @@ export function NavPlayer({ className = "" }: { className?: string }) {
           <span className="np-time">-{clock(Math.max(0, duration - position))}</span>
         </div>
       </div>
-      {mode === "audio" ? (
-        <button type="button" className="np-rate hidden sm:block" aria-label={`Playback speed ${rate}x`} onClick={p.cycleRate}>
-          {rate}x
-        </button>
-      ) : null}
-      {episode ? (
-        <a
-          href={episode.spotifyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`np-spotify ${preview ? "is-strong" : ""} hidden lg:inline`}
-        >
-          Open in Spotify
-        </a>
-      ) : null}
+      <button type="button" className="np-rate hidden sm:block" aria-label={`Playback speed ${rate}x`} onClick={p.cycleRate}>
+        {rate}x
+      </button>
     </div>
   );
 }

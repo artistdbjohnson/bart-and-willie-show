@@ -200,6 +200,7 @@ All fonts self-hosted at build via next/font (no runtime Google calls).
 - Products unchanged: black tee and black hoodie, S–XXL, order request with no prices (none exist on the site).
 
 ## 2026-10-13 (g) — Nav mini player + footer Listen index
+- Revised: the Spotify embed was dropped. The player now plays only the iHeart RSS enclosure (tracking prefix intact) in native <audio>, with no Open in Spotify link. Spotify stays in the footer.
 - Player: thin 40px glass strip between the logo and Menu. Play/pause, ±15s, 1px scrubbable line (native range input, keyboard accessible, with aria-valuetext), elapsed/remaining time, an ellipsis title, Open in Spotify, a spinner while loading, and 1x/1.5x/2x speed (RSS audio mode only; Spotify's embed has no rate control). Media Session gives lock-screen controls. The provider lives in the root layout so playback survives / ↔ /shop navigation.
 - Source: Spotify iFrame Embed API controller (hidden; our controls), so plays count on Spotify. If Spotify reports a ≤35s preview, or nothing plays within 5s, it switches to the episode's public iHeart/Omny RSS enclosure in <audio> and highlights Open in Spotify. Latest episode comes from the RSS and the Spotify show page via /api/now-playing (15-min revalidate).
 - Footer: Listen is the last column, a typographic list with small Simple Icons marks (CC0). The nav icon row is removed.
