@@ -7,7 +7,7 @@ import { copy } from "@/lib/copy";
 import type { Locale } from "@/lib/paths";
 import { CHANNEL_URL, CHANNEL_VIDEOS_URL, HERO_STILL, type ShortBeat } from "@/lib/youtube";
 
-type HeroVideo = { id: string; title: string; url: string; thumbnail: string };
+type HeroVideo = { id: string; title: string; url: string; thumbnail: string; published?: string };
 
 export function Hero({
   locale,
@@ -86,7 +86,11 @@ export function Hero({
             </div>
             <FeedNotice degraded={degraded} reason={reason} />
             {video ? (
-              <p className="hero-quiet mt-4 max-w-md font-serif text-sm text-chalk/80">{t.hero.opening}</p>
+              <p className="hero-quiet mt-4 max-w-md font-serif text-sm text-chalk/80">
+                {video.published
+                  ? `Latest episode, ${new Date(video.published).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" })}.`
+                  : "Latest episode."}
+              </p>
             ) : null}
             <nav className="hero-quiet hero-enter hero-late mt-5" aria-label={t.hero.follow}>
               <p className="font-ui text-[0.68rem] uppercase tracking-[0.18em] text-chalk/80">{t.hero.follow}</p>
