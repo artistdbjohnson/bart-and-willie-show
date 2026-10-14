@@ -741,5 +741,4 @@ html.reduce-motion .hero-wash.is-quiet {
 
 /* 2026-10-13 restyle: intro hero video + editorial type rhythm */
 .hero-intro { filter: saturate(0.92) contrast(1.04); }
-@media (prefers-reduced-motion: reduce) { .hero-intro { display: none; } }
 .font-serif { font-feature-settings: "kern", "liga"; }
