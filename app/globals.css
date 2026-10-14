@@ -916,3 +916,8 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
 .playmaker-link:hover { opacity: 1; transform: translateY(-2px); }
 .playmaker-link:focus-visible { outline: 2px solid var(--signal); outline-offset: 8px; }
 @media (prefers-reduced-motion: reduce) { .playmaker-link, .playmaker-link:hover { transition: none; transform: none; } }
+.np-title, .np-unit { white-space: pre; word-spacing: 0.22em; }
+.playmaker-icon { display: flex; width: 44px; height: 44px; align-items: center; justify-content: center; color: color-mix(in srgb, var(--chalk) 60%, transparent); transition: color 160ms ease-out; }
+.playmaker-icon svg { width: 16px; height: 16px; }
+.playmaker-icon:hover { color: var(--chalk); }
+.playmaker-icon:focus-visible { outline: 2px solid var(--signal); outline-offset: -6px; }
