@@ -75,11 +75,11 @@ export const metadata: Metadata = {
 
 const themeScript = `
 try {
-  if (localStorage.getItem('baw-theme') === 'dark') document.documentElement.classList.add('dark');
+  localStorage.removeItem('baw-theme');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) document.documentElement.classList.add('reduce-motion');
   var path = location.pathname.replace(/\\/$/, '') || '/';
-  var home = path === '/' || path === '/pt';
+  var home = path === '/';
   if (!reduce && home) {
     if (sessionStorage.getItem('baw-intro') === '1') document.documentElement.classList.add('intro-seen');
     else {

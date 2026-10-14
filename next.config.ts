@@ -3,10 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async redirects() {
     const map: [string, string][] = [["episodes", "episodes"], ["jets", "hosts"], ["about", "hosts"], ["subscribe", "roster"]];
-    return map.flatMap(([from, to]) => [
-      { source: `/${from}`, destination: `/#${to}`, permanent: true },
-      { source: `/pt/${from}`, destination: `/pt#${to}`, permanent: true },
-    ]);
+    return [
+      ...map.flatMap(([from, to]) => [
+        { source: `/${from}`, destination: `/#${to}`, permanent: true },
+        { source: `/pt/${from}`, destination: `/#${to}`, permanent: true },
+      ]),
+      { source: "/pt", destination: "/", permanent: true },
+      { source: "/pt/:path*", destination: "/:path*", permanent: true },
+    ];
   },
   async headers() {
     return [

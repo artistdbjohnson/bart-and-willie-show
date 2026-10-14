@@ -21,15 +21,11 @@ export function metadataFor(locale: Locale, key: PageKey): Metadata {
     description: meta.description,
     alternates: {
       canonical: localizePath(path, locale),
-      languages: {
-        en: localizePath(path, "en"),
-        "pt-BR": localizePath(path, "pt"),
-      },
     },
     openGraph: {
       title: meta.title,
       description: meta.description,
-      locale: locale === "pt" ? "pt_BR" : "en_US",
+      locale: "en_US",
       images: [{ url: "/brand/banner.jpg", width: 1500, height: 500 }],
     },
   };
