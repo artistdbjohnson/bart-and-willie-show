@@ -12,6 +12,13 @@ export function ToTop({ label }: { label: string }) {
         setOn(false);
         return;
       }
+      const form = document.querySelector(".signup-form")?.closest("section");
+      const r = form?.getBoundingClientRect();
+      const nearForm = r ? r.top < window.innerHeight && r.bottom > 0 : false;
+      if (nearForm) {
+        setOn(false);
+        return;
+      }
       const hero = document.querySelector("[data-hero]");
       if (hero) {
         const box = hero.getBoundingClientRect();
@@ -23,10 +30,7 @@ export function ToTop({ label }: { label: string }) {
         setOn(box.bottom <= 0 && !muteOnScreen);
         return;
       }
-      const form = document.querySelector(".signup-form")?.closest("section");
-      const r = form?.getBoundingClientRect();
-      const nearForm = r ? r.top < window.innerHeight && r.bottom > 0 : false;
-      setOn(window.scrollY > window.innerHeight * 0.75 && !nearForm);
+      setOn(window.scrollY > window.innerHeight * 0.75);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
