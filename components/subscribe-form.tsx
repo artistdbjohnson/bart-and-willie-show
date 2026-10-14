@@ -156,8 +156,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
         </div>
         <div className="min-w-0">
           <div className="@container max-w-3xl">
-            <p className="font-ui text-[11px] uppercase tracking-[0.22em] text-chalk/80">{t.kicker}</p>
-            <h2 className="mt-3 font-display text-[clamp(1.75rem,8.8cqi,3.75rem)] leading-[0.95] tracking-tight">
+            <h2 className="font-display text-[clamp(1.75rem,8.8cqi,3.75rem)] leading-[0.95] tracking-tight">
               {titleLines(t.title).map((line) => (
                 <span key={line} className="block whitespace-nowrap">
                   {line}
