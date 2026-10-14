@@ -141,7 +141,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
 
   return (
     <section id="roster" className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15">
-      <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16 max-sm:!pt-[calc(var(--nav-bar)+1.5rem)]">
+      <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 pt-3 pb-16 sm:px-8 md:pb-24 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
         <div className="newsletter-art @container relative flex w-full max-w-[26rem] min-w-0 aspect-[4/5] items-end overflow-hidden">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/hero/field.jpg)" }} aria-hidden="true" />
           {/* eslint-disable-next-line @next/next/no-img-element */}

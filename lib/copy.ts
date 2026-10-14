@@ -9,7 +9,7 @@ export const copy = {
       jets: "Jets",
       hosts: "Hosts",
       shop: "Shop",
-      list: "The roster",
+      list: "Join the roster",
       menu: "Menu",
       close: "Close",
     },
@@ -96,7 +96,7 @@ export const copy = {
       sources: "Sources",
     },
     list: {
-      kicker: "The roster",
+      kicker: "Join the roster",
       title: "Your name. Their roster.",
       lede: "Mondays and Fridays, straight from the show. Your name and your email stay here. Not on YouTube. Not in somebody else’s funnel.",
       name: "Name",
