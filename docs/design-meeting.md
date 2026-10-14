@@ -187,3 +187,9 @@ All fonts self-hosted at build via next/font (no runtime Google calls).
 - Willie and Bart attributions: the date never wraps.
 - Header solid on mobile (fixes the grey strip and covered card). To-top sits at max(16px, safe-area) and hides while the form has focus; the form has right padding on mobile.
 - Eyebrows and labels 11px at 0.8. The YouTube channel button is a ghost (1px cream) the same min width as the primary.
+
+## 2026-10-13 (e) — Roster signup
+- Research: newyorkjets.com roster (Player | # | Pos | HT | WT … ruled table rows), plus NFL.com rosters and printed depth charts and game-day programs, used for structure only.
+- Signup is now a roster sheet: NO. / NAME / POS header, hairline rules, Bart 57 LB and Willie 66 OL as the first rows, then the visitor's row with a random open jersey number (stable per session, in yellow), real Name and Email labels, and POS FAN.
+- Copy: eyebrow "The roster", headline "Your name. Their roster.", button "Sign up and join the roster", success "You're on the roster ✓". PT twins added. Body copy unchanged.
+- The up arrow now hides whenever the signup section is in view.

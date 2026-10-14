@@ -45,6 +45,17 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
   const [message, setMessage] = useState("");
   const [fieldError, setFieldError] = useState<"name" | "email" | null>(null);
   const [operator, setOperator] = useState(false);
+  const [jersey, setJersey] = useState("##");
+  useEffect(() => {
+    const key = "bw-jersey";
+    let n = sessionStorage.getItem(key);
+    if (!n) {
+      const open = Array.from({ length: 99 }, (_, i) => i + 1).filter((v) => v !== 57 && v !== 66);
+      n = String(open[Math.floor(Math.random() * open.length)]);
+      sessionStorage.setItem(key, n);
+    }
+    setJersey(n);
+  }, []);
 
   useEffect(() => {
     setOperator(new URLSearchParams(window.location.search).get("operator") === "1");
@@ -157,33 +168,52 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
           </div>
         <form
           onSubmit={onSubmit}
-          className="signup-form mt-8 border-t-4 border-signal pt-8 pb-4 max-sm:pr-14"
+          className="signup-form mt-8 border-t-4 border-signal pt-6 pb-4"
           noValidate
         >
           <div className="grid gap-5">
-            <div className="grid gap-2">
-              <Label htmlFor="signup-name">{t.name}</Label>
-              <Input
-                id="signup-name"
-                name="name"
-                autoComplete="name"
-                value={name}
-                aria-invalid={fieldError === "name"}
-                onChange={(event) => setName(event.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="signup-email">{t.email}</Label>
-              <Input
-                id="signup-email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                inputMode="email"
-                value={email}
-                aria-invalid={fieldError === "email"}
-                onChange={(event) => setEmail(event.target.value)}
-              />
+            <div role="presentation" className="roster">
+              <div className="roster-row roster-head" aria-hidden="true">
+                <span>{t.no}</span><span>{t.name}</span><span>{t.pos}</span>
+              </div>
+              <div className="roster-row roster-host" aria-hidden="true">
+                <span className="roster-no">57</span><span>Bart Scott</span><span>LB</span>
+              </div>
+              <div className="roster-row roster-host" aria-hidden="true">
+                <span className="roster-no">66</span><span>Willie Colon</span><span>OL</span>
+              </div>
+              <div className="roster-row roster-you">
+                <span className="roster-no text-signal" aria-hidden="true">{jersey}</span>
+                <div className="grid min-w-0 gap-1.5">
+                  <Label htmlFor="signup-name">{t.name}</Label>
+                  <Input
+                    id="signup-name"
+                    name="name"
+                    autoComplete="name"
+                    value={name}
+                    aria-invalid={fieldError === "name"}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </div>
+                <span className="roster-pos" aria-hidden="true">{t.fan}</span>
+              </div>
+              <div className="roster-row roster-you">
+                <span aria-hidden="true" />
+                <div className="grid min-w-0 gap-1.5">
+                  <Label htmlFor="signup-email">{t.email}</Label>
+                  <Input
+                    id="signup-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    inputMode="email"
+                    value={email}
+                    aria-invalid={fieldError === "email"}
+                    onChange={(event) => setEmail(event.target.value)}
+                  />
+                </div>
+                <span aria-hidden="true" />
+              </div>
             </div>
             <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
               <label htmlFor="company">Company</label>
@@ -191,7 +221,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
             </div>
             <div className="flex flex-wrap gap-3 pt-2">
               <Button type="submit" disabled={status === "sending" || !email.trim()} aria-busy={status === "sending"} className="disabled:opacity-50">
-                {status === "sending" ? "…" : status === "done" ? "✓ " + t.submit : t.submit}
+                {status === "sending" ? "…" : t.submit}
               </Button>
               {operator ? (
                 <Button type="button" variant="outline" onClick={exportCsv}>

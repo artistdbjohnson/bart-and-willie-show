@@ -23,7 +23,10 @@ export function ToTop({ label }: { label: string }) {
         setOn(box.bottom <= 0 && !muteOnScreen);
         return;
       }
-      setOn(window.scrollY > window.innerHeight * 0.75);
+      const form = document.querySelector(".signup-form")?.closest("section");
+      const r = form?.getBoundingClientRect();
+      const nearForm = r ? r.top < window.innerHeight && r.bottom > 0 : false;
+      setOn(window.scrollY > window.innerHeight * 0.75 && !nearForm);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
