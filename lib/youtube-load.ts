@@ -44,7 +44,7 @@ const PAGE_HEADERS = {
   Cookie: "CONSENT=YES+1; SOCS=CAI",
 };
 
-const RSS_FEED = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+export const RSS_FEED = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
 const UPLOADS_FEED = `https://www.youtube.com/feeds/videos.xml?playlist_id=${UPLOADS_PLAYLIST}`;
 const LATEST_EPISODES = 6;
 const LATEST_SHORTS = 8;
