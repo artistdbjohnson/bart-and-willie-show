@@ -750,3 +750,13 @@ body:has(.signup-form:focus-within) .to-top { opacity: 0; pointer-events: none; 
 .signup-form input:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 .signup-form input[aria-invalid="true"] { border-color: var(--signal); }
 .hero-actions > * { width: 100%; justify-content: center; }
+/* Roster-sheet signup */
+.roster { border-top: 1px solid color-mix(in srgb, var(--chalk) 55%, transparent); }
+.roster-row { display: grid; grid-template-columns: 3.25rem minmax(0,1fr) 3.5rem; align-items: center; gap: 0 1rem;
+  padding: .7rem 0; border-bottom: 1px solid color-mix(in srgb, var(--chalk) 18%, transparent); }
+.roster-head { padding: .45rem 0; font-family: var(--font-ui); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: color-mix(in srgb, var(--chalk) 80%, transparent); }
+.roster-host { font-family: var(--font-serif); font-size: 1.05rem; color: color-mix(in srgb, var(--chalk) 62%, transparent); }
+.roster-host > span:last-child, .roster-pos { font-family: var(--font-ui); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+.roster-no { font-family: var(--font-display); font-size: 1.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.roster-you { padding: .9rem 0; }
+.roster-pos { color: var(--signal); }
