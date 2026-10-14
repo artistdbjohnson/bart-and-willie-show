@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { LISTEN } from "@/components/listen-row";
 import { Lockup } from "@/components/lockup";
 import { copy } from "@/lib/copy";
 import { localizePath, type Locale } from "@/lib/paths";
@@ -25,7 +26,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
         <Lockup script={false} size="footer" />
         <p className="mt-8 max-w-sm font-serif text-lg text-chalk/80">{t.footer.schedule}</p>
-        <div className="mt-14 grid gap-10 sm:grid-cols-3">
+        <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <FooterColumn title={t.footer.watch}>
             {watch.map((item) => (
               <a key={item.href} href={item.href} className="footer-link">
@@ -52,6 +53,23 @@ export function SiteFooter({ locale }: { locale: Locale }) {
               <Link key={item.href} href={item.href.startsWith("/#") ? `${localizePath("/", locale)}${item.href.slice(1)}` : localizePath(item.href, locale)} className="footer-link">
                 {item.label}
               </Link>
+            ))}
+          </FooterColumn>
+          <FooterColumn title="Listen">
+            {LISTEN.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link listen-icon inline-flex items-center gap-2.5"
+                style={{ ["--brand" as string]: item.color }}
+              >
+                <svg viewBox="0 0 24 24" className="size-3.5 shrink-0 fill-current" aria-hidden="true">
+                  <path d={item.path} />
+                </svg>
+                <span>{item.label}</span>
+              </a>
             ))}
           </FooterColumn>
         </div>

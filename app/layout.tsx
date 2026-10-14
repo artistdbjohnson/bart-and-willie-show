@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Anton, Archivo, Instrument_Serif, Yellowtail } from "next/font/google";
 import { RegisterServiceWorker } from "@/components/register-sw";
+import { PlayerProvider } from "@/components/player";
 import "./globals.css";
 
 const anton = Anton({
@@ -105,7 +106,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           <style>{`.blur-fade,.in-view{opacity:1!important;filter:none!important;transform:none!important}`}</style>
         </noscript>
         <RegisterServiceWorker />
-        {children}
+        <PlayerProvider>{children}</PlayerProvider>
       </body>
     </html>
   );
