@@ -68,8 +68,9 @@ export const metadata: Metadata = {
   },
   title: "The Bart & Willie Show",
   description:
-    "Bart Scott and Willie Colon, former New York Jets, with new episodes Mondays and Fridays.",
+    "Two NFL vets. Zero filter. New episodes dropping Mondays & Fridays all season long.",
   openGraph: {
+    description: "Two NFL vets. Zero filter. New episodes dropping Mondays & Fridays all season long.",
     images: [{ url: "/brand/banner.jpg", width: 1500, height: 500 }],
   },
 };

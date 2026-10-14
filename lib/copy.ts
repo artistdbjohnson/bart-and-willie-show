@@ -17,10 +17,10 @@ export const copy = {
     theme: { day: "Day", night: "Night", label: "Field" },
     hero: {
       kicker: "New episodes on Mondays and Fridays",
-      lede: "Bart Scott and Willie Colon have been friends for a long time, and both made their living in the NFL. Every Monday and Friday they sit down together and work through whatever the league is arguing about that week. Subscribe on YouTube and the next one will find you.",
+      lede: "Two NFL vets. Zero filter. New episodes dropping Mondays & Fridays all season long.",
       intro: [
-        "Bart Scott and Willie Colon have been friends for a long time, and both made their living in the NFL. Every Monday and Friday they sit down together and work through whatever the league is arguing about that week.",
-        "Subscribe on YouTube and the next one will find you.",
+        "Two NFL vets. Zero filter.",
+        "New episodes dropping Mondays & Fridays all season long.",
       ],
       follow: "Follow us",
       follows: [
@@ -144,7 +144,7 @@ export const copy = {
       home: {
         title: "The Bart & Willie Show",
         description:
-          "Former New York Jets Bart Scott and Willie Colon talk football every Monday and Friday.",
+          "Two NFL vets. Zero filter. New episodes dropping Mondays & Fridays all season long.",
       },
       episodes: {
         title: "Episodes · The Bart & Willie Show",
