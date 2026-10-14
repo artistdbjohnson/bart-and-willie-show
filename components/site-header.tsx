@@ -89,7 +89,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
             type="button"
             variant="outline"
             size="sm"
-            className="glass-btn h-11 min-w-11"
+            className="glass-btn nav-menu-btn"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
           >
