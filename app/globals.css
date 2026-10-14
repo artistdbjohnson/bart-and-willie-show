@@ -921,3 +921,5 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
 .playmaker-icon svg { width: 16px; height: 16px; }
 .playmaker-icon:hover { color: var(--chalk); }
 .playmaker-icon:focus-visible { outline: 2px solid var(--signal); outline-offset: -6px; }
+/* Footer bottom edge == back-to-top bottom edge (fixed at max(16px, safe-area)). */
+.footer-inner { padding-bottom: max(16px, env(safe-area-inset-bottom)); }

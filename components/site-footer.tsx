@@ -24,7 +24,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
 
   return (
     <footer className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15">
-      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 md:py-24">
+      <div className="footer-inner mx-auto max-w-6xl px-5 pt-16 sm:px-8 md:pt-24">
         <Lockup script={false} size="footer" />
         <p className="mt-8 max-w-sm font-serif text-lg text-chalk/80">{t.footer.schedule}</p>
         <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
@@ -93,9 +93,11 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           </p>
           <PlaymakerSocial />
         </div>
-        <p className="mt-16 font-ui text-[0.68rem] uppercase tracking-[0.22em] text-quiet">
-          {t.footer.credit}
-        </p>
+        {/* Same row as the fixed back-to-top box: a 44px row whose bottom sits where the box's bottom sits. */}
+        <div className="footer-base mt-16 flex h-11 items-end justify-between">
+          <p className="font-ui text-[0.68rem] leading-none uppercase tracking-[0.22em] text-quiet">{t.footer.credit}</p>
+          <span aria-hidden="true" className="size-11" />
+        </div>
       </div>
     </footer>
   );
