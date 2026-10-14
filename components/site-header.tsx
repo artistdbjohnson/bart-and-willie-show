@@ -31,6 +31,23 @@ export function SiteHeader({ locale }: { locale: Locale }) {
   }, [pathname]);
 
   useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    const onDown = (event: PointerEvent) => {
+      const header = document.querySelector(".site-header-plate");
+      if (header && !header.contains(event.target as Node)) setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onDown);
+    };
+  }, [open]);
+
+  useEffect(() => {
     document.documentElement.lang = locale === "pt" ? "pt" : "en";
   }, [locale]);
 

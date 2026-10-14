@@ -53,7 +53,7 @@ export function ShopPage({ locale }: { locale: Locale }) {
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-5 pt-[calc(var(--nav-clear)+2.5rem)] pb-20 sm:px-8 md:pb-28">
+    <section className="mx-auto max-w-7xl px-5 pt-[calc(var(--nav-clear)+28px)] pb-20 sm:px-8 md:pb-28">
       <SectionHeading kicker={t.kicker} title={t.title} lede={t.lede} />
       <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-16">
       <div>
