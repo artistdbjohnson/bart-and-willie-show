@@ -268,7 +268,8 @@ function EpisodeMenu() {
     const plate = btn.current?.closest(".site-header-plate") ?? btn.current?.closest("header");
     const b = btn.current?.closest(".nav-player")?.getBoundingClientRect();
     const top = plate ? plate.getBoundingClientRect().bottom : 64;
-    setPos({ top, right: b ? Math.max(12, window.innerWidth - b.right) : 12, mobile: window.innerWidth < 640 });
+    void b;
+    setPos({ top, right: 0, mobile: window.innerWidth < 640 });
   }, []);
 
   const close = useCallback((refocus: boolean) => {
@@ -291,6 +292,7 @@ function EpisodeMenu() {
     document.addEventListener("pointerdown", onDown);
     window.addEventListener("keydown", onKey);
     window.addEventListener("resize", place);
+    document.documentElement.classList.add("ep-open");
     const prev = document.body.style.overflow;
     if (window.innerWidth < 640) document.body.style.overflow = "hidden";
     return () => {
@@ -298,6 +300,7 @@ function EpisodeMenu() {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("resize", place);
       document.body.style.overflow = prev;
+      document.documentElement.classList.remove("ep-open");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -351,13 +354,10 @@ function EpisodeMenu() {
         ? createPortal(
             <div
               ref={panel}
-              className={`ep-panel ${pos.mobile ? "is-mobile" : ""}`}
-              style={
-                (pos.mobile
-                  ? { top: pos.top, ["--ep-top" as string]: `${pos.top}px` }
-                  : { top: pos.top + 8, right: pos.right }) as React.CSSProperties
-              }
+              className="ep-panel"
+              style={{ top: pos.top, ["--ep-top" as string]: `${pos.top}px` } as React.CSSProperties}
             >
+              <div className="ep-inner mx-auto max-w-6xl px-5 sm:px-8">
               <p className="ep-head" id="np-episodes-label">Latest episodes</p>
               <ul id="np-episodes" role="listbox" aria-labelledby="np-episodes-label" className="ep-list" onKeyDown={onListKey}>
                 {episodes.map((ep, i) => {
@@ -397,6 +397,7 @@ function EpisodeMenu() {
                   );
                 })}
               </ul>
+              </div>
             </div>,
             document.body,
           )
