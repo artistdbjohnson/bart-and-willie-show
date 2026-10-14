@@ -761,3 +761,6 @@ body:has(.signup-form:focus-within) .to-top { opacity: 0; pointer-events: none; 
 .roster-you { padding: .9rem 0; }
 .roster-pos { color: var(--signal); }
 html { scroll-behavior: smooth; } section[id] { scroll-margin-top: var(--nav-clear); } @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.shop-zoom[open] { animation: shop-zoom-in .32s ease-out; }
+@keyframes shop-zoom-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .shop-zoom[open] { animation: none; } }
