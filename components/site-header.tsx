@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ListenRow } from "@/components/listen-row";
 import { Button } from "@/components/ui/button";
 import { copy } from "@/lib/copy";
 import { localizePath, stripLocale, type Locale } from "@/lib/paths";
@@ -82,7 +83,8 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         </a>
 
 
-        <div className="ml-auto flex items-center gap-2">
+        <ListenRow className="ml-auto hidden lg:flex" />
+        <div className="ml-auto flex items-center gap-2 lg:ml-4">
           <Button
             type="button"
             variant="outline"
@@ -118,6 +120,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
               );
             })}
           </ul>
+          <ListenRow className="mt-4 border-t border-chalk/15 pt-4 lg:hidden" />
         </nav>
       ) : null}
       </div>
