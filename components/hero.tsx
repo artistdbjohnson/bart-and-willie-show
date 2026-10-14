@@ -88,7 +88,7 @@ export function Hero({
             {video ? (
               <p className="hero-quiet mt-4 max-w-md font-serif text-sm text-chalk/80">
                 {video.published
-                  ? `Latest episode, ${new Date(video.published).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/New_York" })}.`
+                  ? `Latest episode, ${new Date(video.published).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}.`
                   : "Latest episode."}
               </p>
             ) : null}
