@@ -666,7 +666,16 @@ function finish(
   };
 }
 
+export function cleanTitle(title: string) {
+  return title.replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, "").replace(/\s{2,}/g, " ").trim();
+}
+
 export async function loadEpisodes(options: LoadOptions = {}): Promise<LoadResult> {
+  const result = await loadEpisodesRaw(options);
+  return { ...result, videos: result.videos.map((video) => ({ ...video, title: cleanTitle(video.title) })) };
+}
+
+async function loadEpisodesRaw(options: LoadOptions = {}): Promise<LoadResult> {
   const now = options.now ?? new Date();
   const fetchImpl = options.fetch ?? fetch;
   const timeoutMs = options.timeoutMs ?? SOURCE_TIMEOUT_MS;
