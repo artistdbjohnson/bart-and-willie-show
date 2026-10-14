@@ -64,33 +64,13 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           </span>
         </a>
 
-        <nav className="ml-auto hidden items-center gap-6 md:flex" aria-label={t.nav.menu}>
-          {links.map((link) => {
-            const current = "href" in link && bare === link.href;
-            return (
-              <Link
-                key={link.key}
-                href={linkHref(link, locale, bare === "/")}
-                aria-current={current ? "page" : undefined}
-                className={cn(
-                  "inline-flex h-11 items-center font-ui text-[0.72rem] uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk",
-                  current ? "text-signal" : "text-quiet hover:text-chalk",
-                )}
-              >
-                {t.nav[link.key]}
-              </Link>
-            );
-          })}
-        </nav>
 
-        <div className="ml-auto flex items-center gap-2 md:ml-4">
-          <LanguageToggle locale={locale} />
-          <ThemeToggle locale={locale} />
+        <div className="ml-auto flex items-center gap-2">
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="h-11 min-w-11 md:hidden"
+            className="glass-btn h-11 min-w-11"
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
           >
@@ -100,7 +80,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       </div>
 
       {open ? (
-        <nav className="px-5 py-4 md:hidden" aria-label={t.nav.menu}>
+        <nav className="site-menu mx-auto max-w-6xl px-5 py-4 sm:px-8" aria-label={t.nav.menu}>
           <ul className="grid gap-1">
             {links.map((link) => {
               const current = "href" in link && bare === link.href;
@@ -127,78 +107,5 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       <div className="nav-fade" aria-hidden="true" />
       <div className="nav-haze" aria-hidden="true" />
     </header>
-  );
-}
-
-function LanguageToggle({ locale }: { locale: Locale }) {
-  const pathname = usePathname();
-  const t = copy[locale];
-  return (
-    <div className="flex h-11 items-center border border-chalk/30" aria-label={t.lang.label}>
-      {(["en", "pt"] as const).map((item) => {
-        const current = item === locale;
-        return (
-          <Link
-            key={item}
-            href={localizePath(pathname, item)}
-            hrefLang={item}
-            aria-current={current ? "true" : undefined}
-            className={cn(
-              "flex h-11 min-w-11 items-center px-2.5 font-ui text-[0.68rem] tracking-[0.16em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chalk",
-              current ? "bg-signal text-ink" : "text-quiet hover:text-chalk",
-            )}
-          >
-            {t.lang[item]}
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
-
-function ThemeToggle({ locale }: { locale: Locale }) {
-  const t = copy[locale];
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-
-  useEffect(() => {
-    setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
-  }, []);
-
-  function choose(next: "light" | "dark") {
-    setTheme(next);
-    document.documentElement.classList.toggle("dark", next === "dark");
-    try {
-      localStorage.setItem("baw-theme", next);
-    } catch {
-      /* storage can be blocked; the class still changes for this view */
-    }
-  }
-
-  return (
-    <div className="flex h-11 items-center border border-chalk/30" aria-label={t.theme.label}>
-      {(
-        [
-          ["light", t.theme.day],
-          ["dark", t.theme.night],
-        ] as const
-      ).map(([value, label]) => {
-        const current = theme === value;
-        return (
-          <button
-            key={value}
-            type="button"
-            aria-pressed={current}
-            onClick={() => choose(value)}
-            data-theme-choice={value}
-            className={cn(
-              "theme-choice h-11 min-w-11 px-2.5 font-ui text-[0.68rem] uppercase tracking-[0.16em] transition-colors duration-500 ease-out motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chalk",
-              current ? "" : "text-quiet hover:text-chalk",
-            )}
-          >
-            {label}
-          </button>
-        );
-      })}
-    </div>
   );
 }
