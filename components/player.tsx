@@ -282,7 +282,6 @@ function EpisodeMenu() {
     place();
     const start = current >= 0 ? current : 0;
     setActive(start);
-    requestAnimationFrame(() => items.current[start]?.focus());
     const onDown = (e: PointerEvent) => {
       const t = e.target as Node;
       if (panel.current?.contains(t) || btn.current?.contains(t)) return;
@@ -304,6 +303,12 @@ function EpisodeMenu() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  // Focus the current row once the tray is actually in the DOM.
+  useEffect(() => {
+    if (open && pos) items.current[active]?.focus({ preventScroll: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, pos]);
 
   const pick = (i: number) => {
     const ep = episodes[i];
