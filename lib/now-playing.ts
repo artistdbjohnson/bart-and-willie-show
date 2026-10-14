@@ -7,6 +7,7 @@ export type NowPlaying = {
   title: string;
   audio: string | null;
   duration: number | null;
+  date?: string | null;
 };
 
 const FALLBACK: NowPlaying = { title: "The Bart & Willie Show", audio: null, duration: null };
@@ -34,4 +35,32 @@ export async function getNowPlaying(): Promise<NowPlaying> {
     /* keep fallback */
   }
   return result;
+}
+
+/** Latest full episodes (with an audio enclosure) from the same RSS and 15-min cache the cron revalidates. */
+export async function getEpisodes(limit = 10): Promise<NowPlaying[]> {
+  try {
+    const xml = await (await fetch(SHOW_RSS, { next: { revalidate: 900 }, signal: AbortSignal.timeout(10000) })).text();
+    const out: NowPlaying[] = [];
+    for (const item of xml.split("<item>").slice(1)) {
+      const type = item.match(/<itunes:episodeType>([\s\S]*?)<\/itunes:episodeType>/)?.[1]?.trim();
+      if (type && type !== "full") continue;
+      const audio = item.match(/<enclosure[^>]*url="([^"]+)"/)?.[1];
+      const title = item.match(/<title>([\s\S]*?)<\/title>/)?.[1];
+      if (!audio || !title) continue;
+      const duration = item.match(/<itunes:duration>(\d+)<\/itunes:duration>/)?.[1];
+      const pub = item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1];
+      const d = pub ? new Date(decode(pub)) : null;
+      out.push({
+        title: cleanTitle(decode(title)),
+        audio: decode(audio),
+        duration: duration ? Number(duration) : null,
+        date: d && !Number.isNaN(d.getTime()) ? d.toISOString() : null,
+      });
+      if (out.length >= limit) break;
+    }
+    return out;
+  } catch {
+    return [];
+  }
 }
