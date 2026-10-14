@@ -1,7 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { getInstagram } from "@/lib/instagram";
 import { fullEpisodes, getChannel } from "@/lib/youtube";
-import { RSS_FEED, isShort, parseFeed } from "@/lib/youtube-load";
+import { RSS_FEED, fullEpisodes as fullFrom, isShort, loadEpisodes, parseFeed } from "@/lib/youtube-load";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
@@ -32,6 +32,17 @@ export async function GET(request: Request) {
     rssError = error instanceof Error ? error.message : "rss failed";
   }
 
+  let via = "rss";
+  if (!newest) {
+    // YouTube often 404s the RSS feed for datacenter IPs. Use the site's other live sources.
+    const live = await loadEpisodes();
+    const lead = live.degraded ? null : fullFrom(live.videos)[0];
+    if (lead) {
+      newest = { id: lead.id, title: lead.title, published: lead.published };
+      via = live.source;
+    }
+  }
+
   let updated: "youtube" | "instagram" | "none" = "none";
   let instagram: { ok: boolean; posts: number } | null = null;
   if (newest && newest.id !== cached?.id) {
@@ -47,7 +58,7 @@ export async function GET(request: Request) {
   }
   revalidatePath("/");
 
-  const result = { ok: true, at: new Date().toISOString(), updated, cachedLead: cached?.id ?? null, newest, rssError, instagram };
+  const result = { ok: true, at: new Date().toISOString(), updated, cachedLead: cached?.id ?? null, newest, via, rssError, instagram };
   console.log("[cron/daily]", JSON.stringify(result));
   return Response.json(result);
 }
