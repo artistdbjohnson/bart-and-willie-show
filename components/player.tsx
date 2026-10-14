@@ -119,7 +119,7 @@ export function NavPlayer({ className = "" }: { className?: string }) {
   const pct = duration ? Math.min(100, (position / duration) * 100) : 0;
   return (
     <div className={`nav-player ${className}`} aria-label="Latest episode player" role="group">
-      <button type="button" className="np-btn hidden sm:flex" aria-label="Back 15 seconds" onClick={() => p.skip(-15)} disabled={!episode}>
+      <button type="button" className="np-btn np-skip" aria-label="Back 15 seconds" onClick={() => p.skip(-15)} disabled={!episode}>
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M7 3 3 6l4 3V7.2A3.8 3.8 0 1 1 4.2 11" fill="none" stroke="currentColor" strokeWidth="1.2" /></svg>
       </button>
       <button
@@ -138,7 +138,7 @@ export function NavPlayer({ className = "" }: { className?: string }) {
           <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10l8-5z" fill="currentColor" /></svg>
         )}
       </button>
-      <button type="button" className="np-btn hidden sm:flex" aria-label="Forward 15 seconds" onClick={() => p.skip(15)} disabled={!episode}>
+      <button type="button" className="np-btn np-skip" aria-label="Forward 15 seconds" onClick={() => p.skip(15)} disabled={!episode}>
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3l4 3-4 3V7.2A3.8 3.8 0 1 0 11.8 11" fill="none" stroke="currentColor" strokeWidth="1.2" /></svg>
       </button>
       <div className="np-body">
@@ -159,10 +159,10 @@ export function NavPlayer({ className = "" }: { className?: string }) {
               disabled={!episode}
             />
           </div>
-          <span className="np-time">-{clock(Math.max(0, duration - position))}</span>
+          <span className="np-time np-remain">-{clock(Math.max(0, duration - position))}</span>
         </div>
       </div>
-      <button type="button" className="np-rate hidden sm:block" aria-label={`Playback speed ${rate}x`} onClick={p.cycleRate}>
+      <button type="button" className="np-rate" aria-label={`Playback speed ${rate}x`} onClick={p.cycleRate}>
         {rate}x
       </button>
     </div>
