@@ -9,12 +9,16 @@ import { localizePath, stripLocale, type Locale } from "@/lib/paths";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/episodes", key: "episodes" },
-  { href: "/jets", key: "jets" },
-  { href: "/about", key: "hosts" },
+  { hash: "episodes", key: "episodes" },
+  { hash: "hosts", key: "hosts" },
   { href: "/shop", key: "shop" },
-  { href: "/subscribe", key: "list" },
+  { hash: "roster", key: "list" },
 ] as const;
+
+function linkHref(link: (typeof links)[number], locale: Locale, onHome: boolean) {
+  if ("hash" in link) return onHome ? `#${link.hash}` : `${localizePath("/", locale)}#${link.hash}`;
+  return localizePath(link.href, locale);
+}
 
 export function SiteHeader({ locale }: { locale: Locale }) {
   const pathname = usePathname();
@@ -62,12 +66,11 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
         <nav className="ml-auto hidden items-center gap-6 md:flex" aria-label={t.nav.menu}>
           {links.map((link) => {
-            const current = bare === link.href;
-            const inPage = bare === "/" && link.href === "/episodes";
+            const current = "href" in link && bare === link.href;
             return (
               <Link
-                key={link.href}
-                href={inPage ? "#episodes" : localizePath(link.href, locale)}
+                key={link.key}
+                href={linkHref(link, locale, bare === "/")}
                 aria-current={current ? "page" : undefined}
                 className={cn(
                   "inline-flex h-11 items-center font-ui text-[0.72rem] uppercase tracking-[0.18em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chalk",
@@ -100,12 +103,11 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         <nav className="px-5 py-4 md:hidden" aria-label={t.nav.menu}>
           <ul className="grid gap-1">
             {links.map((link) => {
-              const current = bare === link.href;
-              const inPage = bare === "/" && link.href === "/episodes";
+              const current = "href" in link && bare === link.href;
               return (
-                <li key={link.href}>
+                <li key={link.key}>
                   <Link
-                    href={inPage ? "#episodes" : localizePath(link.href, locale)}
+                    href={linkHref(link, locale, bare === "/")}
                     aria-current={current ? "page" : undefined}
                     onClick={() => setOpen(false)}
                     className={cn(
