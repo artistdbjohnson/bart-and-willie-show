@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Anton, Barlow_Condensed, Newsreader, Yellowtail } from "next/font/google";
+import { Anton, Archivo, Instrument_Serif, Yellowtail } from "next/font/google";
 import { RegisterServiceWorker } from "@/components/register-sw";
 import "./globals.css";
 
@@ -11,15 +11,16 @@ const anton = Anton({
   display: "swap",
 });
 
-const barlow = Barlow_Condensed({
+const barlow = Archivo({
   weight: ["400", "600"],
   subsets: ["latin"],
   variable: "--font-barlow",
   display: "swap",
 });
 
-const newsreader = Newsreader({
-  weight: ["400", "500"],
+const newsreader = Instrument_Serif({
+  weight: "400",
+  style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-newsreader",
   display: "swap",

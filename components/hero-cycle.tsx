@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -355,19 +354,23 @@ export function HeroCycle({
         </div>
         ) : null}
         <div className={`hero-fade absolute inset-0 z-[2] ${playing ? "is-hidden" : "is-shown"}`}>
-          <Image
-            src={photo || HERO_STILL}
-            alt={stillAlt}
-            fill
-            priority
-            unoptimized={Boolean(photo) && photo !== HERO_STILL}
-            sizes="100vw"
-            className="object-cover object-[25%_center]"
-            onError={() => {
-              if (photo !== HERO_STILL) setPhoto(HERO_STILL);
-            }}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url(/hero/intro-poster.jpg)" }}
+            aria-hidden="true"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-field via-field/75 to-field/35" />
+          <video
+            className="hero-intro absolute inset-0 h-full w-full object-cover"
+            src="/hero/intro.mp4"
+            poster="/hero/intro-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label={stillAlt}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-field via-field/65 to-field/10" />
         </div>
       </div>
       <div className={`hero-wash pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[68%] bg-gradient-to-t from-field via-field/80 to-transparent ${playing ? "is-quiet" : ""}`} />

@@ -146,3 +146,26 @@ The list is first-party. Name and email. CSV export on the subscribe page. No Ma
 Persistence: `POST /api/subscribe` appends to `data/subscribers.json` when the process can write that file. A long-running Node server can. Vercel serverless cannot keep a shared file: the project disk is read-only and `/tmp` is not a shared database. When the write fails, the API returns `persisted: false`, the browser keeps the row in `localStorage` under `baw-subscribers`, and the CSV export merges that browser list with whatever the server file actually returned. The interface says which of those happened. It does not say a row was stored on the show's list when it was not.
 
 Limit, exactly: on Vercel, the owner cannot download other people's signups, because those rows never leave the visitor's browser. The export URL is unauthenticated when a writable server does have the file, because no auth secret is configured. `data/subscribers.json` is gitignored.
+
+## 2026-10-13 — Hero intro video + restyle (Grok lead, Glyph type)
+
+**Brief:** Doug's 9s show intro as the hero (muted/autoplay/loop/playsinline, poster painted underneath). Keep structure, copy, branding, real photos. No generated media. Drop emoji from episode titles at render.
+
+**#14 Typography hunt (Glyph)** — all seven searched 2026-10-13:
+- fontalog.xyz — Archivo, Oswald, Bebas surfaced. **Pick: Archivo (SIL OFL)** for UI/labels, replacing Barlow Condensed — wider, calmer, reads more expensive at small caps.
+- fontba.se — browsed; nothing beat current display (Anton, OFL). Rejected.
+- open-foundry.com — Archivo/Oswald confirmed in the OFL catalogue; confirms the Archivo pick.
+- fontmojo.com — browsed; mostly commercial/unclear licences. Rejected.
+- typescale.io — tool only: kept the existing 1.25 scale; no change.
+- freefaces.gallery — **Pick: Instrument Serif (SIL OFL)** for the editorial body, replacing Newsreader — sharper, more magazine.
+- fontbrief.com — pairing check: condensed grotesk display + high-contrast serif + neutral grotesk UI. Passes.
+All fonts self-hosted at build via next/font (no runtime Google calls).
+
+**#13 Full-shelf sweep**
+- Resource (#6): Magic UI / shadcn browsed — rejected; the site already has shadcn Button. Nothing added (restraint).
+- Color (#7): colorable.jxnblk.com contrast check, chalk on field passes AA. Lighter hero wash (via-field/45) so the video carries. No new ramp.
+- Tool (#8): footer.design, mobbin looked at — footer unchanged.
+- Inspiration (#9): visualjournal.it — took editorial pacing: serif lede under heavy display.
+- Prompt Motion (#11): attitude = "quiet loop" hero; rebuilt as a native looping <video>, reduced-motion hides it and shows the poster.
+- Vibe-coding 25 (#12): Kinetics / CSS Text Effects reviewed — rejected; one effect max and the video is it.
+- Material (#10): broadcast-studio matte, with the field green, chalk and print paper.
