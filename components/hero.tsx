@@ -48,7 +48,7 @@ export function Hero({
         </figure>
         <div className="hero-copy relative z-10 px-5 sm:px-0">
           <div className="max-w-xl lg:max-w-2xl">
-            <p className="hero-quiet font-ui text-[0.72rem] uppercase tracking-[0.22em] text-chalk/80">
+            <p className="hero-quiet font-ui text-[11px] uppercase tracking-[0.22em] text-chalk/80">
               {t.hero.kicker}
             </p>
             <Lockup enter className="hero-quiet mt-5" />
@@ -79,7 +79,7 @@ export function Hero({
                 </Button>
               )}
               {video ? (
-                <Button asChild variant="outline" className="border-chalk/55 bg-ink text-chalk hover:border-chalk hover:bg-ink hover:text-signal">
+                <Button asChild variant="outline" className="min-w-[13.5rem] border border-chalk bg-transparent text-chalk hover:border-signal hover:bg-transparent hover:text-signal">
                   <a href={CHANNEL_URL}>{t.hero.channel}</a>
                 </Button>
               ) : null}

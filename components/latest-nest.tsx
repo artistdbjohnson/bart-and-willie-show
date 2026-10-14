@@ -45,7 +45,7 @@ export function LatestNest({
     <section id="episodes" aria-label={t.episodes.title} className="border-t border-chalk/15 bg-field">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <div className="stack-head">
-          <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">{t.episodes.kicker}</p>
+          <p className="font-ui text-[11px] uppercase tracking-[0.22em] text-chalk/80">{t.episodes.kicker}</p>
           <h2 className="font-display text-[clamp(2rem,5vw,2.75rem)] leading-none">{t.episodes.title}</h2>
         </div>
         <CardNest>{cards}</CardNest>

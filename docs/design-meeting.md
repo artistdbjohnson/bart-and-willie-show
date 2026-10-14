@@ -179,3 +179,11 @@ All fonts self-hosted at build via next/font (no runtime Google calls).
 - Signup: replaced the chalk play diagram with real intro graphics: the field frame (3.6s), both host cutouts with sticker borders and a soft drop shadow, and the wordmark lockup over a green fade. Copy, colours and fields are unchanged. No generated media.
 - Shelves #13–#15 checked: motion stack (three/motion/rive…) rejected, since stills carry this and motion would be gimmicky. Prompt Motion: none. Vibe-coding 25: none. Restraint wins (Hallmark anti-slop).
 - Reed/Nia: couldn't message them from this run, so their standards were applied directly (readability, no overlap of text on faces, 390/1440 checked).
+
+## 2026-10-13 (d) — Reed 8/10 + Nia UI polish
+- Bio cutouts: sticker outline eroded away (17px) so the fade carries. Card cutouts trimmed to a ~2px edge.
+- Lockup: kept the deliberate fixed step (0.55em), which both reviewers accepted.
+- Signup: headline leading 0.95, fine print 24px under the button, card offset below the header on mobile, client-side email check with an error message, disabled/loading/success button states, 2px yellow focus ring.
+- Willie and Bart attributions: the date never wraps.
+- Header solid on mobile (fixes the grey strip and covered card). To-top sits at max(16px, safe-area) and hides while the form has focus; the form has right padding on mobile.
+- Eyebrows and labels 11px at 0.8. The YouTube channel button is a ghost (1px cream) the same min width as the primary.

@@ -12,7 +12,7 @@ export function ProseBlocks({ blocks }: { blocks: Block[] }) {
           <figure key={index} className="border-l border-signal pl-4">
             <blockquote className="text-xl leading-snug text-chalk">“{block.text}”</blockquote>
             <figcaption className="mt-3 font-ui text-[0.66rem] uppercase tracking-[0.16em] text-quiet">
-              {block.by}
+              {block.by.split(/(\b[A-Za-z]+ \d{1,2}, \d{4})$/).map((part, i) => (i === 1 ? <span key={i} className="whitespace-nowrap">{part}</span> : part))}
             </figcaption>
             {block.translation ? (
               <p className="mt-3 text-base text-chalk/75">{block.translation}</p>
