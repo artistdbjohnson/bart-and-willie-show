@@ -895,7 +895,7 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
 @media (prefers-reduced-motion: reduce) { .ep-panel, .ep-bars i { animation: none; } }
 
 /* Nav grid: logo | player | menu. Equal side tracks keep the player optically centered. */
-.nav-grid { display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 560px) minmax(max-content, 1fr); align-items: center; column-gap: 16px; }
+.nav-grid { display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, 500px) minmax(max-content, 1fr); align-items: center; column-gap: 16px; }
 .nav-grid > .nav-player { margin: 0; width: 100%; min-width: 0; display: flex; align-items: center; gap: 12px; height: 44px; padding: 0; }
 .nav-grid > .nav-player .np-skip { margin: 0 -8px; }
 .nav-grid .np-body { flex: 1 1 auto; min-width: 0; padding: 0; height: 44px; align-content: center; display: grid; grid-template-rows: 22px 14px; }
