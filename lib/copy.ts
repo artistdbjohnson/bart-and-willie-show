@@ -357,7 +357,7 @@ export function formatWhen(iso: string, locale: Locale) {
     month: "short",
     day: "numeric",
     year: "numeric",
-    timeZone: "UTC",
+    timeZone: "America/New_York",
   }).format(date);
 }
 
