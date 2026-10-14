@@ -14,11 +14,10 @@ const watch = [
 export function SiteFooter({ locale }: { locale: Locale }) {
   const t = copy[locale];
   const pages = [
-    { href: "/episodes", label: t.nav.episodes },
-    { href: "/jets", label: t.nav.jets },
-    { href: "/about", label: t.nav.hosts },
+    { href: "/#episodes", label: t.nav.episodes },
+    { href: "/#hosts", label: t.nav.hosts },
     { href: "/shop", label: t.nav.shop },
-    { href: "/subscribe", label: t.nav.list },
+    { href: "/#roster", label: t.nav.list },
   ];
 
   return (
@@ -50,7 +49,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           </FooterColumn>
           <FooterColumn title={t.footer.pages}>
             {pages.map((item) => (
-              <Link key={item.href} href={localizePath(item.href, locale)} className="footer-link">
+              <Link key={item.href} href={item.href.startsWith("/#") ? `${localizePath("/", locale)}${item.href.slice(1)}` : localizePath(item.href, locale)} className="footer-link">
                 {item.label}
               </Link>
             ))}

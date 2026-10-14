@@ -80,7 +80,7 @@ export const copy = {
         total == null ? `${shown}` : `${shown} of ${total}`,
     },
     jets: {
-      kicker: "Former New York Jets",
+      kicker: "Hosts · Former New York Jets",
       title: "The Jets years",
       lede: "Both of them played here. The show still says the name. What follows is the club’s profiles and the public record. Nothing added.",
       bartYears: "Jets, 2009–2012",
@@ -251,7 +251,7 @@ export const copy = {
         total == null ? `${shown}` : `${shown} de ${total}`,
     },
     jets: {
-      kicker: "Ex-jogadores do New York Jets",
+      kicker: "Apresentadores · Ex-jogadores do New York Jets",
       title: "Os anos nos Jets",
       lede: "Os dois jogaram aqui. O programa ainda diz o nome. O que vem abaixo está no perfil do clube e no registro público. Nada acrescentado.",
       bartYears: "Jets, 2009–2012",

@@ -16,7 +16,7 @@ export function JetsSection({
   const story = jetsStory[locale];
 
   return (
-    <section className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15 bg-field">
+    <section id="hosts" className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15 bg-field">
       <div
         className={
           compactTop
