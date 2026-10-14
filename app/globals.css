@@ -803,3 +803,16 @@ html { scroll-behavior: smooth; } section[id] { scroll-margin-top: calc(var(--na
 .np-line { height: 44px; }
 .np-body { gap: 0; }
 .np-title { margin-bottom: -10px; }
+/* Title marquee under the player */
+.np-body { align-content: center; gap: 0; height: 44px; }
+.np-line { height: 22px; }
+.np-line input { top: -11px; bottom: -11px; height: auto; }
+.np-title { display: block !important; margin: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 10px; line-height: 14px; color: color-mix(in srgb, var(--chalk) 80%, transparent); }
+.np-title > span { display: inline-block; }
+.np-title.is-moving { text-overflow: clip; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 14px), transparent); mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 14px), transparent); }
+.np-title.is-moving > span { animation: np-marquee var(--dur, 12s) ease-in-out infinite alternate; }
+@keyframes np-marquee { 0%, 12% { transform: translateX(0); } 88%, 100% { transform: translateX(var(--shift)); } }
+@media (prefers-reduced-motion: reduce) {
+  .np-title.is-moving { text-overflow: ellipsis; -webkit-mask-image: none; mask-image: none; }
+  .np-title.is-moving > span { animation: none; display: inline; }
+}

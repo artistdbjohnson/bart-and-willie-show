@@ -142,7 +142,6 @@ export function NavPlayer({ className = "" }: { className?: string }) {
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9 3l4 3-4 3V7.2A3.8 3.8 0 1 0 11.8 11" fill="none" stroke="currentColor" strokeWidth="1.2" /></svg>
       </button>
       <div className="np-body">
-        <p className="np-title hidden md:block" title={episode?.title}>{episode ? episode.title : "Loading latest episode…"}</p>
         <div className="np-track">
           <span className="np-time">{clock(position)}</span>
           <div className="np-line">
@@ -161,10 +160,38 @@ export function NavPlayer({ className = "" }: { className?: string }) {
           </div>
           <span className="np-time np-remain">-{clock(Math.max(0, duration - position))}</span>
         </div>
+        <Marquee text={episode ? episode.title : "Loading latest episode…"} />
       </div>
       <button type="button" className="np-rate" aria-label={`Playback speed ${rate}x`} onClick={p.cycleRate}>
         {rate}x
       </button>
+    </div>
+  );
+}
+
+function Marquee({ text }: { text: string }) {
+  const box = useRef<HTMLDivElement>(null);
+  const inner = useRef<HTMLSpanElement>(null);
+  const [shift, setShift] = useState(0);
+  useEffect(() => {
+    const measure = () => {
+      if (!box.current || !inner.current) return;
+      setShift(Math.max(0, inner.current.scrollWidth - box.current.clientWidth));
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (box.current) ro.observe(box.current);
+    return () => ro.disconnect();
+  }, [text]);
+  const moving = shift > 2;
+  return (
+    <div ref={box} className={`np-title ${moving ? "is-moving" : ""}`} title={text}>
+      <span
+        ref={inner}
+        style={moving ? ({ ["--shift" as string]: `-${shift}px`, ["--dur" as string]: `${Math.max(8, shift / 22 + 4)}s` } as React.CSSProperties) : undefined}
+      >
+        {text}
+      </span>
     </div>
   );
 }
