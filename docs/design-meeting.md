@@ -169,3 +169,7 @@ All fonts self-hosted at build via next/font (no runtime Google calls).
 - Prompt Motion (#11): attitude = "quiet loop" hero; rebuilt as a native looping <video>, reduced-motion hides it and shows the poster.
 - Vibe-coding 25 (#12): Kinetics / CSS Text Effects reviewed — rejected; one effect max and the video is it.
 - Material (#10): broadcast-studio matte, with the field green, chalk and print paper.
+
+## 2026-10-13 (b) — Framed hero, native 16:9
+- Doug: the clip was cropped full-bleed behind the text. Now it's an uncropped 16:9 frame (object-fit contain, poster underneath, muted/autoplay/loop/playsinline) with no text over it. Mobile: nav, full-width video, then copy. Desktop: large framed video with the title and CTAs beside it.
+- Code rebuild of the intro (Prompt Motion attitude: slow, restrained reveal): rejected for this pass. Doug's bar is "don't make it tacky" and "ship the clip unless the rebuild is clearly better". The clip is his real broadcast intro, and a rebuild from stills would read as an imitation. Look/motion shelves were checked again: nothing beats his own footage. Revisit only with Reed sign-off.

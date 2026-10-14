@@ -1,6 +1,4 @@
-import { ChalkPlay } from "@/components/chalk-play";
 import { FeedNotice } from "@/components/feed-notice";
-import { HeroCycle } from "@/components/hero-cycle";
 import { IntroOnce } from "@/components/intro-once";
 import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
@@ -31,17 +29,24 @@ export function Hero({
   const watch = video?.url ?? CHANNEL_VIDEOS_URL;
 
   return (
-    <section data-hero className="section-snap relative -mt-[var(--nav-clear)] min-h-[100svh] overflow-hidden">
+    <section data-hero className="section-snap relative -mt-[var(--nav-clear)] overflow-hidden bg-field pt-[var(--nav-clear)]">
       <IntroOnce />
-      <HeroCycle still={splash} stillAlt={t.hero.stillAlt} shorts={[]} mute={t.hero.mute} unmute={t.hero.unmute}>
-        <p
-          aria-hidden
-          className="yard-spot hero-quiet pointer-events-none absolute top-8 -left-4 font-display text-[clamp(6.5rem,28vw,10rem)] leading-none text-chalk/[0.07]"
-        >
-          40
-        </p>
-        <ChalkPlay className="hero-quiet pointer-events-none absolute right-2 bottom-8 z-[1] hidden h-72 w-auto text-chalk sm:block lg:right-8 lg:bottom-12 lg:h-80" />
-        <div className="hero-copy relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-5 pt-28 pb-10 sm:px-8 sm:pb-14">
+      <div className="mx-auto grid max-w-7xl gap-8 px-0 pt-4 pb-12 sm:px-8 sm:pt-10 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:items-center lg:gap-14 lg:pb-20">
+        <figure className="relative m-0 aspect-video w-full overflow-hidden bg-ink sm:border sm:border-chalk/15 sm:shadow-[0_30px_80px_-30px_rgba(0,0,0,0.55)]">
+          <div className="absolute inset-0 bg-contain bg-center bg-no-repeat" style={{ backgroundImage: "url(/hero/intro-poster.jpg)" }} aria-hidden="true" />
+          <video
+            className="hero-intro absolute inset-0 h-full w-full object-contain"
+            src="/hero/intro.mp4"
+            poster="/hero/intro-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label={t.hero.stillAlt}
+          />
+        </figure>
+        <div className="hero-copy relative z-10 px-5 sm:px-0">
           <div className="max-w-xl lg:max-w-2xl">
             <p className="hero-quiet font-ui text-[0.72rem] uppercase tracking-[0.22em] text-chalk/80">
               {t.hero.kicker}
@@ -98,7 +103,7 @@ export function Hero({
             </nav>
           </div>
         </div>
-      </HeroCycle>
+      </div>
     </section>
   );
 }
