@@ -89,18 +89,18 @@ export const hostStory: Record<
   en: {
     bart: {
       before: [
-      { type: "p", text: "Before the Jets, Bart: Bartholomew Edward Scott was born August 18, 1980, in Detroit. Southeastern High School. Southern Illinois, where he later finished an economics degree. Undrafted in 2002. Linebacker for the Baltimore Ravens, 2002 through 2008. Pro Bowl and second-team All-Pro in 2006." },
+      { type: "p", text: "Bartholomew Edward Scott was born in Detroit on August 18, 1980. He went to Southeastern High School and then to Southern Illinois, where he later finished a degree in economics. No team drafted him in 2002, yet he spent the next seven years at linebacker for the Baltimore Ravens, through 2008, and in 2006 he made the Pro Bowl and the All-Pro second team." },
       ],
       after: [
-      { type: "p", text: "On camera: he had already started that first Jets season, in Barking with Bart with Eric Allen. Wikipedia records later work as an NFL analyst for CBS, including The NFL Today from 2014, and as a co-host on ESPN Radio in New York. The Jets’ 2025 profile also has him as a studio analyst on SNY’s Jets Post Game Live. That desk is not this show. The Wikipedia infobox and its game table don’t agree on the counting totals, so those numbers stay off this page. Pro Football Reference has the line." },
+      { type: "p", text: "He was already working on camera during his first Jets season, on Barking with Bart alongside Eric Allen. Wikipedia records what came after: NFL analysis for CBS, including The NFL Today from 2014, and a co-host’s chair on ESPN Radio in New York. The Jets’ 2025 profile adds a seat as a studio analyst on SNY’s Jets Post Game Live. His career totals differ between the Wikipedia infobox and its game table, so they are left off this page, and Pro Football Reference keeps the full record." },
       ],
     },
     willie: {
       before: [
-      { type: "p", text: "Before the Jets, Willie: Born April 9, 1983, in the Bronx. Cardinal Hayes High School. Hofstra. Pittsburgh drafted him in the fourth round of 2006, 131st overall. Steelers from 2006 through 2012, including the Super Bowl XLIII championship team. Wikipedia lists 100 games played and 100 starts. The counting line is on Pro Football Reference." },
+      { type: "p", text: "Willie Colon was born in the Bronx on April 9, 1983. He went to Cardinal Hayes High School and on to Hofstra, and in 2006 Pittsburgh drafted him in the fourth round, 131st overall. He stayed with the Steelers through 2012, long enough to win Super Bowl XLIII with them, and Wikipedia credits him with 100 games, every one of them a start. Pro Football Reference keeps the rest of his record." },
       ],
       after: [
-      { type: "p", text: "The Jets’ 2024 profile has him as the club’s pregame and postgame analyst on SportsNet New York. That job is not this show. Wikipedia has him as an analyst on First Things First: OT on FS1. The bios don’t name the same desk, so both stay on the page and neither gets called his only job." },
+      { type: "p", text: "The Jets’ 2024 profile has him back with the club on television, as its pregame and postgame analyst on SportsNet New York. Wikipedia also lists him as an analyst on FS1’s First Things First: OT." },
       ],
     },
   },
