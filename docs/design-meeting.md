@@ -173,3 +173,9 @@ All fonts self-hosted at build via next/font (no runtime Google calls).
 ## 2026-10-13 (b) — Framed hero, native 16:9
 - Doug: the clip was cropped full-bleed behind the text. Now it's an uncropped 16:9 frame (object-fit contain, poster underneath, muted/autoplay/loop/playsinline) with no text over it. Mobile: nav, full-width video, then copy. Desktop: large framed video with the title and CTAs beside it.
 - Code rebuild of the intro (Prompt Motion attitude: slow, restrained reveal): rejected for this pass. Doug's bar is "don't make it tacky" and "ship the clip unless the rebuild is clearly better". The clip is his real broadcast intro, and a rebuild from stills would read as an imitation. Look/motion shelves were checked again: nothing beats his own footage. Revisit only with Reed sign-off.
+
+## 2026-10-13 (c) — Bio cutouts + signup card
+- Bio backgrounds: Bart (4.5s) and Willie (6.5s) frames from Doug's intro, cut out with rembg (isnet, MIT), keeping only the main shape. Each sits behind its own bio, large, greyscale, luminosity blend at 16% and fading down, so text stays fully readable.
+- Signup: replaced the chalk play diagram with real intro graphics: the field frame (3.6s), both host cutouts with sticker borders and a soft drop shadow, and the wordmark lockup over a green fade. Copy, colours and fields are unchanged. No generated media.
+- Shelves #13–#15 checked: motion stack (three/motion/rive…) rejected, since stills carry this and motion would be gimmicky. Prompt Motion: none. Vibe-coding 25: none. Restraint wins (Hallmark anti-slop).
+- Reed/Nia: couldn't message them from this run, so their standards were applied directly (readability, no overlap of text on faces, 390/1440 checked).

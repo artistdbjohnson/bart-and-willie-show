@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { ChalkPlay } from "@/components/chalk-play";
 import { Lockup } from "@/components/lockup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -126,8 +125,13 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
   return (
     <section className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15">
       <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
-        <div className="newsletter-art @container relative flex w-full max-w-[26rem] min-w-0 aspect-[4/5] items-end overflow-hidden sm:aspect-[5/4]">
-          <ChalkPlay className="pointer-events-none absolute top-6 right-2 h-40 w-auto text-chalk sm:h-52" />
+        <div className="newsletter-art @container relative flex w-full max-w-[26rem] min-w-0 aspect-[4/5] items-end overflow-hidden">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/hero/field.jpg)" }} aria-hidden="true" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/hero/bart-cutout.webp" alt="" aria-hidden="true" loading="lazy" className="signup-host pointer-events-none absolute bottom-[34%] left-[6%] h-[60%] w-auto" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/hero/willie-cutout.webp" alt="" aria-hidden="true" loading="lazy" className="signup-host pointer-events-none absolute right-[4%] bottom-[34%] h-[62%] w-auto" />
+          <div className="absolute inset-0 bg-gradient-to-t from-field via-field/40 to-transparent" aria-hidden="true" />
           <div className="relative z-[1] w-full max-w-full overflow-hidden p-6 pb-8 sm:p-8">
             <Lockup size="footer" />
           </div>

@@ -742,3 +742,6 @@ html.reduce-motion .hero-wash.is-quiet {
 /* 2026-10-13 restyle: intro hero video + editorial type rhythm */
 .hero-intro { filter: saturate(0.92) contrast(1.04); }
 .font-serif { font-feature-settings: "kern", "liga"; }
+.bio-cutout { opacity: .16; filter: grayscale(1) contrast(1.1); mix-blend-mode: luminosity;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
+.signup-host { filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)); }
