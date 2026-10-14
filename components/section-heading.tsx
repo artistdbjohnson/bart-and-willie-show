@@ -12,7 +12,7 @@ export function SectionHeading({
   return (
     <div className="max-w-3xl">
       <BlurFade inView duration={0.8} offset={8} blur="4px">
-        <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">{kicker}</p>
+        <p className="font-ui text-[11px] uppercase tracking-[0.22em] text-chalk/80">{kicker}</p>
         <h2 className="mt-3 font-display text-[2.7rem] leading-[0.84] tracking-tight sm:text-5xl lg:text-[3.35rem]">
           {title}
         </h2>

@@ -22,7 +22,7 @@ export function InstagramRail({
     <>
       {compact ? (
         <div className={nested ? "shrink-0 pr-14 sm:pr-0" : undefined}>
-          <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">
+          <p className="font-ui text-[11px] uppercase tracking-[0.22em] text-chalk/80">
             {t.instagram.kicker}
           </p>
           <h2 className="mt-2 font-serif text-[clamp(1.6rem,3.4vw,2.4rem)] leading-tight">

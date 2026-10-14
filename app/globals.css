@@ -745,3 +745,8 @@ html.reduce-motion .hero-wash.is-quiet {
 .bio-cutout { opacity: .16; filter: grayscale(1) contrast(1.1); mix-blend-mode: luminosity;
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
 .signup-host { filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)); }
+@media (max-width: 639px) { .site-header-plate { background-color: var(--field); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+body:has(.signup-form:focus-within) .to-top { opacity: 0; pointer-events: none; }
+.signup-form input:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+.signup-form input[aria-invalid="true"] { border-color: var(--signal); }
+.hero-actions > * { min-width: 13.5rem; justify-content: center; }

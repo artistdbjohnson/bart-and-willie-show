@@ -55,6 +55,12 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
     const form = event.currentTarget;
     const company = String(new FormData(form).get("company") ?? "");
     setFieldError(null);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setStatus("error");
+      setFieldError("email");
+      setMessage(t.failed);
+      return;
+    }
     setStatus("sending");
     setMessage("");
     try {
@@ -124,13 +130,13 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
 
   return (
     <section className="section-snap scroll-mt-[var(--nav-clear)] border-t border-chalk/15">
-      <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16">
+      <div className="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 sm:px-8 md:py-24 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16 max-sm:!pt-[calc(var(--nav-bar)+1.5rem)]">
         <div className="newsletter-art @container relative flex w-full max-w-[26rem] min-w-0 aspect-[4/5] items-end overflow-hidden">
           <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/hero/field.jpg)" }} aria-hidden="true" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/hero/bart-cutout.webp" alt="" aria-hidden="true" loading="lazy" className="signup-host pointer-events-none absolute bottom-[34%] left-[6%] h-[60%] w-auto" />
+          <img src="/hero/bart-card.webp" alt="" aria-hidden="true" loading="lazy" className="signup-host pointer-events-none absolute bottom-[34%] left-[6%] h-[60%] w-auto" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/hero/willie-cutout.webp" alt="" aria-hidden="true" loading="lazy" className="signup-host pointer-events-none absolute right-[4%] bottom-[34%] h-[62%] w-auto" />
+          <img src="/hero/willie-card.webp" alt="" aria-hidden="true" loading="lazy" className="signup-host pointer-events-none absolute right-[4%] bottom-[34%] h-[62%] w-auto" />
           <div className="absolute inset-0 bg-gradient-to-t from-field via-field/40 to-transparent" aria-hidden="true" />
           <div className="relative z-[1] w-full max-w-full overflow-hidden p-6 pb-8 sm:p-8">
             <Lockup size="footer" />
@@ -139,8 +145,8 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
         </div>
         <div className="min-w-0">
           <div className="@container max-w-3xl">
-            <p className="font-ui text-[0.72rem] uppercase tracking-[0.22em] text-quiet">{t.kicker}</p>
-            <h2 className="mt-3 font-display text-[clamp(1.75rem,8.8cqi,3.75rem)] leading-[0.84] tracking-tight">
+            <p className="font-ui text-[11px] uppercase tracking-[0.22em] text-chalk/80">{t.kicker}</p>
+            <h2 className="mt-3 font-display text-[clamp(1.75rem,8.8cqi,3.75rem)] leading-[0.95] tracking-tight">
               {titleLines(t.title).map((line) => (
                 <span key={line} className="block whitespace-nowrap">
                   {line}
@@ -151,7 +157,7 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
           </div>
         <form
           onSubmit={onSubmit}
-          className="mt-8 border-t-4 border-signal pt-8"
+          className="signup-form mt-8 border-t-4 border-signal pt-8 pb-4 max-sm:pr-14"
           noValidate
         >
           <div className="grid gap-5">
@@ -184,8 +190,8 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
               <input id="company" name="company" tabIndex={-1} autoComplete="off" />
             </div>
             <div className="flex flex-wrap gap-3 pt-2">
-              <Button type="submit" disabled={status === "sending"} aria-busy={status === "sending"}>
-                {t.submit}
+              <Button type="submit" disabled={status === "sending" || !email.trim()} aria-busy={status === "sending"} className="disabled:opacity-50">
+                {status === "sending" ? "…" : status === "done" ? "✓ " + t.submit : t.submit}
               </Button>
               {operator ? (
                 <Button type="button" variant="outline" onClick={exportCsv}>
@@ -195,13 +201,13 @@ export function SubscribeForm({ locale }: { locale: Locale }) {
             </div>
             <p
               role={status === "error" ? "alert" : "status"}
-              className="min-h-6 font-serif text-base text-chalk/85"
+              className={`font-serif text-base empty:hidden ${status === "error" ? "text-signal" : "text-chalk"}`}
             >
               {message}
             </p>
           </div>
         </form>
-        <p className="mt-6 max-w-md font-serif text-base leading-relaxed text-chalk/85">{t.note}</p>
+        <p className="mt-2 max-w-md font-serif text-base leading-relaxed text-chalk/85">{t.note}</p>
         </div>
       </div>
     </section>

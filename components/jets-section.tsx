@@ -31,13 +31,13 @@ export function JetsSection({
             years={t.jets.bartYears}
             name={t.jets.bartTitle}
             blocks={story.bart}
-            cutout="/hero/bart-cutout.webp"
+            cutout="/hero/bart-bio.webp"
           />
           <HostColumn
             years={t.jets.willieYears}
             name={t.jets.willieTitle}
             blocks={story.willie}
-            cutout="/hero/willie-cutout.webp"
+            cutout="/hero/willie-bio.webp"
           />
         </div>
         <SourceLine locale={locale} />
