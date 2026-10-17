@@ -1,6 +1,6 @@
 # Report-only harness check (dglxss harness kit). Never blocks merges or deploys:
 # job is continue-on-error and must NOT be added as a required status check.
-# Fires when a Vercel deployment for bart-and-willie-show succeeds (preview or production), or by hand.
+# Fires when a Vercel deployment (single-project repo) succeeds (preview or production), or by hand.
 # Vercel previews are SSO-protected: with repo secret VERCEL_AUTOMATION_BYPASS_SECRET it checks the
 # preview; without it, it checks the production URL in harness/base-url.txt and says so.
 name: harness-check (report only)
@@ -14,8 +14,7 @@ jobs:
   check:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.deployment_status.state == 'success' &&
-       contains(github.event.deployment.environment, 'bart-and-willie-show'))
+      github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 20
