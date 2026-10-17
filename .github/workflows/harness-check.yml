@@ -1,0 +1,50 @@
+# Report-only harness check (dglxss harness kit). Never blocks merges or deploys:
+# job is continue-on-error and must NOT be added as a required status check.
+# Fires when a Vercel deployment (single-project repo) succeeds (preview or production), or by hand.
+# Vercel previews are SSO-protected: with repo secret VERCEL_AUTOMATION_BYPASS_SECRET it checks the
+# preview; without it, it checks the production URL in harness/base-url.txt and says so.
+name: harness-check (report only)
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      url: { description: 'Base URL to check (blank = harness/base-url.txt)', required: false }
+permissions: { contents: read }
+jobs:
+  check:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: { sparse-checkout: harness }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Install Playwright in an isolated temp dir (repo package.json untouched)
+        run: |
+          mkdir -p /tmp/hc && cd /tmp/hc && npm init -y >/dev/null && npm i --no-audit --no-fund playwright@1 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+          cp "$GITHUB_WORKSPACE/harness/harness-check.mjs" /tmp/hc/
+      - name: Run harness-check
+        continue-on-error: true
+        env:
+          INPUT_URL: ${{ github.event.inputs.url }}
+          DEPLOY_URL: ${{ github.event.deployment_status.environment_url || github.event.deployment_status.target_url }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: |
+          PROD=$(head -1 harness/base-url.txt)
+          if [ -n "$INPUT_URL" ]; then BASE="$INPUT_URL"
+          elif [ -n "$DEPLOY_URL" ] && [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then BASE="$DEPLOY_URL"
+          else BASE="$PROD"; echo "No bypass secret: checking production ($PROD), not the preview." | tee harness-note.txt; fi
+          PATHS=$(grep -v '^\s*#' harness/check-paths.txt | xargs)
+          node /tmp/hc/harness-check.mjs "$BASE" $PATHS --out harness-out --known harness/known-issues.json | tee harness-summary.txt
+      - name: Summary
+        if: always()
+        run: |
+          { cat harness-note.txt 2>/dev/null; echo '```'; tail -c 60000 harness-summary.txt 2>/dev/null; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: harness-out, path: harness-out, retention-days: 7, if-no-files-found: ignore }
