@@ -1,0 +1,5 @@
+# one path per line
+/
+/shop
+/pt
+/pt/shop
