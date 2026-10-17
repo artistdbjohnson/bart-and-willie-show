@@ -44,7 +44,8 @@ jobs:
           node /tmp/hc/harness-check.mjs "$BASE" $PATHS --out harness-out --known harness/known-issues.json | tee harness-summary.txt
       - name: Summary
         if: always()
-        run: { cat harness-note.txt 2>/dev/null; echo '```'; tail -c 60000 harness-summary.txt 2>/dev/null; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          { cat harness-note.txt 2>/dev/null; echo '```'; tail -c 60000 harness-summary.txt 2>/dev/null; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: harness-out, path: harness-out, retention-days: 7, if-no-files-found: ignore }
