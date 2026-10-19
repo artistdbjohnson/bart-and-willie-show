@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Anton, Archivo, Instrument_Serif, Yellowtail } from "next/font/google";
 import { RegisterServiceWorker } from "@/components/register-sw";
 import { PlayerProvider } from "@/components/player";
+import { heroIntroBoot } from "@/lib/hero-intro";
 import "./globals.css";
 
 const anton = Anton({
@@ -90,6 +91,7 @@ try {
     }
   }
 } catch (e) {}
+${heroIntroBoot}
 `;
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

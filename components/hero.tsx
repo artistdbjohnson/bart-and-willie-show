@@ -1,6 +1,8 @@
 import { FeedNotice } from "@/components/feed-notice";
+import { HeroIntroMount } from "@/components/hero-intro";
 import { IntroOnce } from "@/components/intro-once";
 import { Lockup } from "@/components/lockup";
+import { heroIntroBind } from "@/lib/hero-intro";
 import { Button } from "@/components/ui/button";
 import { HeroWatch } from "@/components/watch-dialog";
 import { copy } from "@/lib/copy";
@@ -33,18 +35,20 @@ export function Hero({
       <IntroOnce />
       <div className="mx-auto grid max-w-7xl gap-8 px-0 pt-4 pb-12 sm:px-8 sm:pt-10 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:items-center lg:gap-14 lg:pb-20">
         <figure className="relative m-0 aspect-video w-full overflow-hidden bg-ink sm:border sm:border-chalk/15 sm:shadow-[0_30px_80px_-30px_rgba(0,0,0,0.55)]">
-          <div className="absolute inset-0 bg-contain bg-center bg-no-repeat" style={{ backgroundImage: "url(/hero/intro-poster.jpg)" }} aria-hidden="true" />
+          <div className="hero-poster absolute inset-0 bg-cover bg-center bg-no-repeat" aria-hidden="true" />
           <video
-            className="hero-intro absolute inset-0 h-full w-full object-contain"
-            src="/hero/intro.mp4"
-            poster="/hero/intro-poster.jpg"
+            id="hero-intro"
+            className="hero-intro absolute inset-0 h-full w-full object-cover"
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
             aria-label={t.hero.stillAlt}
+            suppressHydrationWarning
           />
+          <script dangerouslySetInnerHTML={{ __html: heroIntroBind }} />
+          <HeroIntroMount />
         </figure>
         <div className="hero-copy relative z-10 px-5 sm:px-0">
           <div className="max-w-xl lg:max-w-2xl">
