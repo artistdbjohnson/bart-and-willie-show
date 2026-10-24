@@ -2,7 +2,7 @@ export const HERO_INTRO_KEY = "baw-hero-intro";
 
 export const heroIntros = {
   a: { src: "/hero/intro.mp4", poster: "/hero/intro-poster.jpg" },
-  b: { src: "/hero/intro-v2.mp4", poster: "/hero/intro-v2-poster.jpg" },
+  b: { src: "/hero/intro-v2-clean.mp4", poster: "/hero/intro-v2-poster.jpg" },
 } as const;
 
 export type HeroIntroId = keyof typeof heroIntros;
@@ -41,7 +41,7 @@ export function applyHeroIntro(video: HTMLVideoElement, id: HeroIntroId) {
 function takeNextHeroIntro(): HeroIntroId {
   try {
     const previous = localStorage.getItem(HERO_INTRO_KEY);
-    const choice: HeroIntroId = previous === "a" ? "b" : "a";
+    const choice: HeroIntroId = previous === "b" ? "a" : "b";
     localStorage.setItem(HERO_INTRO_KEY, choice);
     return choice;
   } catch {
@@ -70,23 +70,24 @@ function writeFallback(choice: HeroIntroId) {
 }
 
 function takeNextHeroIntroFallback(): HeroIntroId {
-  const choice: HeroIntroId = readFallback() === "a" ? "b" : "a";
+  const choice: HeroIntroId = readFallback() === "b" ? "a" : "b";
   writeFallback(choice);
   return choice;
 }
 
 /**
  * Runs from the document head, before paint. localStorage remembers the
- * last intro. If Storage throws, a cookie keeps the next refresh in turn.
+ * last intro. The new intro (b) plays first; the original (a) follows.
+ * If Storage throws, a cookie keeps the next refresh in turn.
  */
 export const heroIntroBoot = `
 try {
   var heroPath = location.pathname.replace(/\\/$/, '') || '/';
   if (heroPath === '/') {
-    var heroIntro = 'a';
+    var heroIntro = 'b';
     try {
       var prevHero = localStorage.getItem('${HERO_INTRO_KEY}');
-      heroIntro = prevHero === 'a' ? 'b' : 'a';
+      heroIntro = prevHero === 'b' ? 'a' : 'b';
       localStorage.setItem('${HERO_INTRO_KEY}', heroIntro);
     } catch (heroErr) {
       var heroPrev = null;
@@ -94,7 +95,7 @@ try {
         var heroMatch = document.cookie.match(/(?:^|; )baw-hero-intro=(a|b)(?:;|$)/);
         if (heroMatch) heroPrev = heroMatch[1];
       } catch (e1) {}
-      heroIntro = heroPrev === 'a' ? 'b' : 'a';
+      heroIntro = heroPrev === 'b' ? 'a' : 'b';
       try {
         document.cookie = '${FALLBACK_COOKIE}=' + heroIntro + '; Path=/; Max-Age=31536000; SameSite=Lax';
       } catch (e2) {}
