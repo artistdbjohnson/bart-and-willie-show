@@ -30,13 +30,13 @@ export function JetsSection({
             years={t.jets.bartYears}
             name={t.jets.bartTitle}
             blocks={story.bart}
-            cutout="/hero/bart-bio.webp"
+            cutout="/hero/bart-card.webp"
           />
           <HostColumn
             years={t.jets.willieYears}
             name={t.jets.willieTitle}
             blocks={story.willie}
-            cutout="/hero/willie-bio.webp"
+            cutout="/hero/willie-card.webp"
           />
         </div>
         <SourceLine locale={locale} />
@@ -57,26 +57,30 @@ function HostColumn({
   blocks: (typeof jetsStory)["en"]["bart"];
 }) {
   return (
-    <article className="relative isolate">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={cutout}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        className="bio-cutout pointer-events-none absolute -top-6 right-0 -z-10 h-[22rem] w-auto select-none sm:h-[30rem]"
-      />
-      <InView
-        once
-        viewOptions={{ margin: "-10% 0px", once: true }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-      >
-        <p className="inline-block bg-signal px-2 py-1 font-ui text-[0.68rem] uppercase tracking-[0.16em] text-ink">
-          {years}
-        </p>
-      </InView>
-      <h3 className="mt-4 font-display text-5xl leading-none tracking-tight">{name}</h3>
+    <article>
+      <div className="mb-6 flex flex-col items-center gap-5 sm:mb-8 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-x-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={cutout}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="bio-sticker pointer-events-none order-first h-[14rem] w-auto select-none sm:h-[16.5rem] lg:h-[17.5rem]"
+        />
+        <div className="w-full min-w-0 sm:order-first">
+          <InView
+            once
+            viewOptions={{ margin: "-10% 0px", once: true }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+          >
+            <p className="inline-block bg-signal px-2 py-1 font-ui text-[0.68rem] uppercase tracking-[0.16em] text-ink">
+              {years}
+            </p>
+          </InView>
+          <h3 className="mt-4 font-display text-5xl leading-none tracking-tight">{name}</h3>
+        </div>
+      </div>
       <ProseBlocks blocks={blocks} />
     </article>
   );
