@@ -30,13 +30,15 @@ export function JetsSection({
             years={t.jets.bartYears}
             name={t.jets.bartTitle}
             blocks={story.bart}
-            cutout="/hero/bart-card.webp"
+            fill="/hero/bart-bio-fill.webp"
+            ring="/hero/bart-bio-ring.webp"
           />
           <HostColumn
             years={t.jets.willieYears}
             name={t.jets.willieTitle}
             blocks={story.willie}
-            cutout="/hero/willie-card.webp"
+            fill="/hero/willie-bio-fill.webp"
+            ring="/hero/willie-bio-ring.webp"
           />
         </div>
         <SourceLine locale={locale} />
@@ -49,38 +51,37 @@ function HostColumn({
   years,
   name,
   blocks,
-  cutout,
+  fill,
+  ring,
 }: {
-  cutout: string;
+  fill: string;
+  ring: string;
   years: string;
   name: string;
   blocks: (typeof jetsStory)["en"]["bart"];
 }) {
   return (
-    <article>
-      <div className="mb-6 flex flex-col items-center gap-5 sm:mb-8 sm:flex-row sm:items-end sm:justify-start sm:gap-5 xl:justify-between">
+    <article className="relative isolate">
+      <div
+        className="bio-cutout-stack pointer-events-none absolute -top-6 right-0 -z-10 h-[22rem] w-auto select-none sm:h-[30rem]"
+        aria-hidden="true"
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={cutout}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          className="bio-sticker pointer-events-none h-[14rem] w-auto select-none sm:h-[16.5rem] xl:h-[17.5rem]"
-        />
-        <div className="w-full min-w-0 sm:w-auto sm:shrink-0">
-          <InView
-            once
-            viewOptions={{ margin: "-10% 0px", once: true }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-          >
-            <p className="inline-block bg-signal px-2 py-1 font-ui text-[0.68rem] uppercase tracking-[0.16em] text-ink">
-              {years}
-            </p>
-          </InView>
-          <h3 className="mt-4 font-display text-5xl leading-none tracking-tight whitespace-nowrap">{name}</h3>
-        </div>
+        <img src={fill} alt="" loading="lazy" className="bio-cutout-fill" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={ring} alt="" loading="lazy" className="bio-cutout-ring" />
       </div>
+      <InView
+        once
+        viewOptions={{ margin: "-10% 0px", once: true }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+      >
+        <p className="inline-block bg-signal px-2 py-1 font-ui text-[0.68rem] uppercase tracking-[0.16em] text-ink">
+          {years}
+        </p>
+      </InView>
+      <h3 className="mt-4 font-display text-5xl leading-none tracking-tight">{name}</h3>
       <ProseBlocks blocks={blocks} />
     </article>
   );
