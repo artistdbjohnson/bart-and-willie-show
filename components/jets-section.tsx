@@ -63,7 +63,7 @@ function HostColumn({
   return (
     <article className="relative isolate">
       <div
-        className="bio-cutout-wrap pointer-events-none absolute -top-6 right-0 -z-10 h-[22rem] w-auto select-none sm:h-[30rem]"
+        className="bio-cutout-wrap pointer-events-none absolute -top-6 right-[-1rem] -z-10 h-[22rem] w-auto select-none sm:right-[-1.25rem] sm:h-[30rem]"
         aria-hidden="true"
       >
         <div className="bio-cutout-stack">
