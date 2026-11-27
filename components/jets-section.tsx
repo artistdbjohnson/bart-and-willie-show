@@ -58,16 +58,16 @@ function HostColumn({
 }) {
   return (
     <article>
-      <div className="mb-6 flex flex-col items-center gap-5 sm:mb-8 sm:flex-row sm:items-end sm:justify-start sm:gap-5 lg:justify-between lg:gap-4">
+      <div className="mb-6 flex flex-col items-center gap-5 sm:mb-8 sm:flex-row sm:items-end sm:justify-start sm:gap-5 xl:justify-between">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cutout}
           alt=""
           aria-hidden="true"
           loading="lazy"
-          className="bio-sticker pointer-events-none h-[14rem] w-auto select-none sm:h-[16.5rem] lg:h-[17.5rem]"
+          className="bio-sticker pointer-events-none h-[14rem] w-auto select-none sm:h-[16.5rem] xl:h-[17.5rem]"
         />
-        <div className="w-full min-w-0 sm:w-auto">
+        <div className="w-full min-w-0 sm:w-auto sm:shrink-0">
           <InView
             once
             viewOptions={{ margin: "-10% 0px", once: true }}
@@ -78,7 +78,7 @@ function HostColumn({
               {years}
             </p>
           </InView>
-          <h3 className="mt-4 font-display text-5xl leading-none tracking-tight">{name}</h3>
+          <h3 className="mt-4 font-display text-5xl leading-none tracking-tight whitespace-nowrap">{name}</h3>
         </div>
       </div>
       <ProseBlocks blocks={blocks} />
