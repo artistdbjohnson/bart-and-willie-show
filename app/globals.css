@@ -748,12 +748,12 @@ html[data-hero-intro="b"] .hero-poster { background-image: url("/hero/intro-v2-p
 .font-serif { font-feature-settings: "kern", "liga"; }
 .bio-cutout { opacity: .16; filter: grayscale(1) contrast(1.1); mix-blend-mode: luminosity;
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
-.bio-cutout-stack { position: absolute; }
+.bio-cutout-wrap { filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)); }
+.bio-cutout-stack { position: relative; height: 100%; width: auto;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
 .bio-cutout-fill, .bio-cutout-ring { height: 100%; width: auto; max-width: none; display: block; }
-.bio-cutout-fill { opacity: .16; filter: grayscale(1) contrast(1.1); mix-blend-mode: luminosity;
-  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
-.bio-cutout-ring { position: absolute; top: 0; left: 0; opacity: .86;
-  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent); mask-image: linear-gradient(to bottom, #000 55%, transparent); }
+.bio-cutout-fill { opacity: .16; filter: grayscale(1) contrast(1.1); mix-blend-mode: luminosity; }
+.bio-cutout-ring { position: absolute; top: 0; left: 0; height: 100%; opacity: .92; }
 .signup-host { filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)); }
 body:has(.signup-form:focus-within) .to-top { opacity: 0; pointer-events: none; }
 .signup-form input:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
