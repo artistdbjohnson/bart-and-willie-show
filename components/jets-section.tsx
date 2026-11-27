@@ -30,15 +30,15 @@ export function JetsSection({
             years={t.jets.bartYears}
             name={t.jets.bartTitle}
             blocks={story.bart}
-            fill="/hero/bart-cutout.webp"
-            ring="/hero/bart-bio-ring.webp"
+            fill="/hero/bart-intro-cutout.webp"
+            ring="/hero/bart-intro-ring.webp"
           />
           <HostColumn
             years={t.jets.willieYears}
             name={t.jets.willieTitle}
             blocks={story.willie}
-            fill="/hero/willie-cutout.webp"
-            ring="/hero/willie-bio-ring.webp"
+            fill="/hero/willie-intro-cutout.webp"
+            ring="/hero/willie-intro-ring.webp"
           />
         </div>
         <SourceLine locale={locale} />
