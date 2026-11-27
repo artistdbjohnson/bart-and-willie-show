@@ -30,13 +30,15 @@ export function JetsSection({
             years={t.jets.bartYears}
             name={t.jets.bartTitle}
             blocks={story.bart}
-            cutout="/hero/bart-bio.webp"
+            fill="/hero/bart-intro-cutout.webp"
+            ring="/hero/bart-intro-ring.webp"
           />
           <HostColumn
             years={t.jets.willieYears}
             name={t.jets.willieTitle}
             blocks={story.willie}
-            cutout="/hero/willie-bio.webp"
+            fill="/hero/willie-intro-cutout.webp"
+            ring="/hero/willie-intro-ring.webp"
           />
         </div>
         <SourceLine locale={locale} />
@@ -49,23 +51,28 @@ function HostColumn({
   years,
   name,
   blocks,
-  cutout,
+  fill,
+  ring,
 }: {
-  cutout: string;
+  fill: string;
+  ring: string;
   years: string;
   name: string;
   blocks: (typeof jetsStory)["en"]["bart"];
 }) {
   return (
     <article className="relative isolate">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={cutout}
-        alt=""
+      <div
+        className="bio-cutout-wrap pointer-events-none absolute -top-6 right-[-1rem] -z-10 h-[22rem] w-auto select-none sm:right-[-1.25rem] sm:h-[30rem]"
         aria-hidden="true"
-        loading="lazy"
-        className="bio-cutout pointer-events-none absolute -top-6 right-0 -z-10 h-[22rem] w-auto select-none sm:h-[30rem]"
-      />
+      >
+        <div className="bio-cutout-stack">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={fill} alt="" loading="lazy" className="bio-cutout-fill" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={ring} alt="" loading="lazy" className="bio-cutout-ring" />
+        </div>
+      </div>
       <InView
         once
         viewOptions={{ margin: "-10% 0px", once: true }}
