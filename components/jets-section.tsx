@@ -58,16 +58,16 @@ function HostColumn({
 }) {
   return (
     <article>
-      <div className="mb-6 flex flex-col items-center gap-5 sm:mb-8 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-x-4">
+      <div className="mb-6 flex flex-col items-center gap-5 sm:mb-8 sm:flex-row sm:items-end sm:justify-start sm:gap-5 lg:justify-between lg:gap-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cutout}
           alt=""
           aria-hidden="true"
           loading="lazy"
-          className="bio-sticker pointer-events-none order-first h-[14rem] w-auto select-none sm:h-[16.5rem] lg:h-[17.5rem]"
+          className="bio-sticker pointer-events-none h-[14rem] w-auto select-none sm:h-[16.5rem] lg:h-[17.5rem]"
         />
-        <div className="w-full min-w-0 sm:order-first">
+        <div className="w-full min-w-0 sm:w-auto">
           <InView
             once
             viewOptions={{ margin: "-10% 0px", once: true }}
